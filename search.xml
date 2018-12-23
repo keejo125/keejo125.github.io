@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[关于这个”博客“]]></title>
+    <url>%2F2018%2F12%2F23%2F%E5%85%B3%E4%BA%8E%E8%BF%99%E4%B8%AA%E2%80%9D%E5%8D%9A%E5%AE%A2%E2%80%9C%2F</url>
+    <content type="text"><![CDATA[最初是在腾讯的云开发者平台上知道的hexo，好像很方便的样子，又很Geek的样子，于是打算尝试一下。 后来发现hexo作为博客的话，缺少了很大一部分功能——评论。 虽然可以使用第三方插件，但总觉得有点怪怪的。 于是乎，我打算把这里作为记录自己日常知识积累，或是感悟的地方。所以在标题中用了有引号的”博客“。 把每次百度或是谷歌出来的答案都记下来，希望不会再搜第二次。 感觉上好像有点跌跌撞撞，但方向是往前不就好了么，是吧]]></content>
+      <categories>
+        <category>生活随笔</category>
+        <category>感悟</category>
+      </categories>
+  </entry>
+  <entry>
+    <title><![CDATA[Hello World]]></title>
+    <url>%2F2018%2F12%2F06%2Fhello-world%2F</url>
+    <content type="text"><![CDATA[这是一个新的开始。 马东说：我的底色的悲凉的。 蔡康永说：只有底色悲凉的乐观，才是真的乐观啊。 乐观起来，哪怕人间不值得。]]></content>
+      <categories>
+        <category>生活随笔</category>
+        <category>感悟</category>
+      </categories>
+  </entry>
+</search>

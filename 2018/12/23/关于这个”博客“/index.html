@@ -23,6 +23,10 @@
 
 
 
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
 
 
 
@@ -105,7 +109,7 @@
   <meta name="description" content="最初是在腾讯的云开发者平台上知道的hexo，好像很方便的样子，又很Geek的样子，于是打算尝试一下。 后来发现hexo作为博客的话，缺少了很大一部分功能——评论。 虽然可以使用第三方插件，但总觉得有点怪怪的。 于是乎，我打算把这里作为记录自己日常知识积累，或是感悟的地方。所以在标题中用了有引号的”博客“。 把每次百度或是谷歌出来的答案都记下来，希望不会再搜第二次。 感觉上好像有点跌跌撞撞，但方向是">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于这个”博客“">
-<meta property="og:url" content="https://torandom.com/2018/12/23/关于这个”博客“/index.html">
+<meta property="og:url" content="http://keejo.coding.me/2018/12/23/关于这个”博客“/index.html">
 <meta property="og:site_name" content="郑小凯的个人博客">
 <meta property="og:description" content="最初是在腾讯的云开发者平台上知道的hexo，好像很方便的样子，又很Geek的样子，于是打算尝试一下。 后来发现hexo作为博客的话，缺少了很大一部分功能——评论。 虽然可以使用第三方插件，但总觉得有点怪怪的。 于是乎，我打算把这里作为记录自己日常知识积累，或是感悟的地方。所以在标题中用了有引号的”博客“。 把每次百度或是谷歌出来的答案都记下来，希望不会再搜第二次。 感觉上好像有点跌跌撞撞，但方向是">
 <meta property="og:locale" content="zh-CN">
@@ -119,7 +123,7 @@
 
 
 
-  <link rel="canonical" href="https://torandom.com/2018/12/23/关于这个”博客“/">
+  <link rel="canonical" href="http://keejo.coding.me/2018/12/23/关于这个”博客“/">
 
 
 
@@ -361,7 +365,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://torandom.com/2018/12/23/关于这个”博客“/">
+    <link itemprop="mainEntityOfPage" href="http://keejo.coding.me/2018/12/23/关于这个”博客“/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="郑小凯">
@@ -521,6 +525,26 @@
 
       
       
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div class="social_share">
+            
+            
+               <div id="needsharebutton-postbottom">
+                 <span class="btn">
+                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                 </span>
+               </div>
+            
+          </div>
+        
+        </div>
+      
       
 
       
@@ -536,6 +560,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/25/开启又关闭icloud云盘，我的桌面文件去哪里了！/" rel="prev" title="开启又关闭icloud云盘，我的桌面文件去哪里了！">
+                开启又关闭icloud云盘，我的桌面文件去哪里了！ <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -598,7 +626,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -615,12 +643,31 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
               
 
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
               
             </nav>
           
@@ -727,6 +774,12 @@
       </div>
     
 
+    
+      <div id="needsharebutton-float">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
     
 
     
@@ -1182,10 +1235,46 @@
 
   
   
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+      flOptions = {};
+      
+          flOptions.iconStyle = "box";
+      
+          flOptions.boxForm = "horizontal";
+      
+          flOptions.position = "middleRight";
+      
+          flOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-float', flOptions);
+    
+  </script>
 
   
 
   
+
+  
+  <script src="/js/src/js.cookie.js?v=6.6.0"></script>
+  <script src="/js/src/scroll-cookie.js?v=6.6.0"></script>
+
 
   
 

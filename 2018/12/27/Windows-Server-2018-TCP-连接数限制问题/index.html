@@ -106,24 +106,29 @@
 
 
 
-  <meta name="description" content="这是一个新的开始。 马东说：我的底色的悲凉的。 蔡康永说：只有底色悲凉的乐观，才是真的乐观啊。 乐观起来，哪怕人间不值得。">
+  <meta name="description" content="背景最近在查一个并发问题，在压测的时候，Nginx的error.log显示connect() failed(111: Connection refused)。而后端应用并未手工设置过拒绝连接。于是怀疑是在高并发的情况下，windows服务器可能存在自行拒绝连接的情况。 排查过程首先打开windows服务器上的 任务管理器  - 性能 - 资源监控器。TCP连接这儿显示总数为100。  然后开启压测">
+<meta name="keywords" content="操作系统,windows">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://keejo.coding.me/2018/12/23/hello-world/index.html">
+<meta property="og:title" content="Windows Server 2018 TCP 连接数限制问题">
+<meta property="og:url" content="http://keejo.coding.me/2018/12/27/Windows-Server-2018-TCP-连接数限制问题/index.html">
 <meta property="og:site_name" content="郑小凯的个人博客">
-<meta property="og:description" content="这是一个新的开始。 马东说：我的底色的悲凉的。 蔡康永说：只有底色悲凉的乐观，才是真的乐观啊。 乐观起来，哪怕人间不值得。">
+<meta property="og:description" content="背景最近在查一个并发问题，在压测的时候，Nginx的error.log显示connect() failed(111: Connection refused)。而后端应用并未手工设置过拒绝连接。于是怀疑是在高并发的情况下，windows服务器可能存在自行拒绝连接的情况。 排查过程首先打开windows服务器上的 任务管理器  - 性能 - 资源监控器。TCP连接这儿显示总数为100。  然后开启压测">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-23T14:43:31.000Z">
+<meta property="og:image" content="http://keejo.coding.me/2018/12/27/Windows-Server-2018-TCP-连接数限制问题/tcp_conn_100.PNG">
+<meta property="og:image" content="http://keejo.coding.me/2018/12/27/Windows-Server-2018-TCP-连接数限制问题/tcp_conn_10.PNG">
+<meta property="og:image" content="http://keejo.coding.me/2018/12/27/Windows-Server-2018-TCP-连接数限制问题/tcp_perfmon.PNG">
+<meta property="og:updated_time" content="2018-12-27T17:16:16.976Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="这是一个新的开始。 马东说：我的底色的悲凉的。 蔡康永说：只有底色悲凉的乐观，才是真的乐观啊。 乐观起来，哪怕人间不值得。">
+<meta name="twitter:title" content="Windows Server 2018 TCP 连接数限制问题">
+<meta name="twitter:description" content="背景最近在查一个并发问题，在压测的时候，Nginx的error.log显示connect() failed(111: Connection refused)。而后端应用并未手工设置过拒绝连接。于是怀疑是在高并发的情况下，windows服务器可能存在自行拒绝连接的情况。 排查过程首先打开windows服务器上的 任务管理器  - 性能 - 资源监控器。TCP连接这儿显示总数为100。  然后开启压测">
+<meta name="twitter:image" content="http://keejo.coding.me/2018/12/27/Windows-Server-2018-TCP-连接数限制问题/tcp_conn_100.PNG">
 
 
 
 
 
 
-  <link rel="canonical" href="http://keejo.coding.me/2018/12/23/hello-world/">
+  <link rel="canonical" href="http://keejo.coding.me/2018/12/27/Windows-Server-2018-TCP-连接数限制问题/">
 
 
 
@@ -133,7 +138,7 @@
   };
 </script>
 
-  <title>Hello World | 郑小凯的个人博客</title>
+  <title>Windows Server 2018 TCP 连接数限制问题 | 郑小凯的个人博客</title>
   
 
 
@@ -365,7 +370,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://keejo.coding.me/2018/12/23/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://keejo.coding.me/2018/12/27/Windows-Server-2018-TCP-连接数限制问题/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="郑小凯">
@@ -382,7 +387,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World
+          <h1 class="post-title" itemprop="name headline">Windows Server 2018 TCP 连接数限制问题
 
               
             
@@ -408,9 +413,25 @@
                 
               
 
-              <time title="创建时间：2018-12-23 22:43:31" itemprop="dateCreated datePublished" datetime="2018-12-23T22:43:31+08:00">2018-12-23</time>
+              <time title="创建时间：2018-12-27 18:48:26" itemprop="dateCreated datePublished" datetime="2018-12-27T18:48:26+08:00">2018-12-27</time>
             
 
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-12-28 01:16:16" itemprop="dateModified" datetime="2018-12-28T01:16:16+08:00">2018-12-28</time>
+              
             
           </span>
 
@@ -426,14 +447,14 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/生活随笔/" itemprop="url" rel="index"><span itemprop="name">生活随笔</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/操作系统/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a></span>
 
                 
                 
                   ，
                 
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/生活随笔/感悟/" itemprop="url" rel="index"><span itemprop="name">感悟</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/操作系统/windows/" itemprop="url" rel="index"><span itemprop="name">windows</span></a></span>
 
                 
                 
@@ -467,10 +488,24 @@
       
 
       
-        <p>这是一个新的开始。</p>
-<p>马东说：我的底色的悲凉的。</p>
-<p>蔡康永说：只有底色悲凉的乐观，才是真的乐观啊。</p>
-<p>乐观起来，哪怕人间不值得。</p>
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近在查一个并发问题，在压测的时候，Nginx的<code>error.log</code>显示<code>connect() failed(111: Connection refused)</code>。而后端应用并未手工设置过拒绝连接。于是怀疑是在高并发的情况下，windows服务器可能存在自行拒绝连接的情况。</p>
+<h2 id="排查过程"><a href="#排查过程" class="headerlink" title="排查过程"></a>排查过程</h2><p>首先打开windows服务器上的 任务管理器  - 性能 - 资源监控器。TCP连接这儿显示总数为100。</p>
+<p><img src="/2018/12/27/Windows-Server-2018-TCP-连接数限制问题/tcp_conn_100.PNG" alt="tcp_conn_100"></p>
+<p>然后开启压测，TCP连接开始飙升，然后问题出现了。</p>
+<p><img src="/2018/12/27/Windows-Server-2018-TCP-连接数限制问题/tcp_conn_10.PNG" alt="tcp_conn_10"></p>
+<p>TCP连接满了，怎么就变成10了！不过瓶颈应该就是这儿了！</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>经过各种百度，谷歌，发现我好像被误导了。</p>
+<p>微软官方说从Windows Vista，Window server 2008 SP2 起，不在限制<a href="https://en.wikipedia.org/wiki/TCP_half-open" target="_blank" rel="noopener">half-open TCP connections</a>，也就是理论上不再有连接数的限制。</p>
+<p>官方说明见这个地址：<a href="https://support.microsoft.com/zh-cn/help/969710/how-to-enable-the-half-open-tcp-connections-limit-in-windows-vista-wit" target="_blank" rel="noopener">https://support.microsoft.com/zh-cn/help/969710/how-to-enable-the-half-open-tcp-connections-limit-in-windows-vista-wit</a></p>
+<p>然后根据国外有个问答网站的结论，这个“10”，“100”这个显示应该是个Bug，并不是一共就10个或者100个。</p>
+<p>可参考如下这个解释：</p>
+<p><a href="https://serverfault.com/questions/448589/increasing-of-max-more-than-10-tcp-connections" target="_blank" rel="noopener">https://serverfault.com/questions/448589/increasing-of-max-more-than-10-tcp-connections</a>   </p>
+<p>那么怎么看确定的连接数呢？</p>
+<p>在 开始 - 运行 中输入 <code>perfmon.exe</code>打开性能监视器，然后添加<code>TCPv4</code>的计数器。</p>
+<p><img src="/2018/12/27/Windows-Server-2018-TCP-连接数限制问题/tcp_perfmon.PNG" alt="tcp_perfmon"></p>
+<p>这里就可以看到当前的实际连接数了，图里当前最新连接数是“824“，远超前面显示的”10“或者”100“。</p>
+<p>看来一不小心又碰到坑了。</p>
+<p>那么最开始要查的<code>Connection refused</code>到底是什么原因呢，还得继续努力了。。。</p>
 
       
     </div>
@@ -516,6 +551,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/操作系统/" rel="tag"># 操作系统</a>
+          
+            <a href="/tags/windows/" rel="tag"># windows</a>
+          
+        </div>
+      
 
       
       
@@ -545,15 +588,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/12/26/获取当当网的书籍分类目录/" rel="next" title="获取当当网的书籍分类目录">
+                <i class="fa fa-chevron-left"></i> 获取当当网的书籍分类目录
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/12/23/关于这个”博客“/" rel="prev" title="关于这个”博客“">
-                关于这个”博客“ <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -598,8 +641,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -616,7 +668,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -637,7 +689,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">4</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -654,7 +712,17 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -705,6 +773,22 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#排查过程"><span class="nav-number">2.</span> <span class="nav-text">排查过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">3.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       

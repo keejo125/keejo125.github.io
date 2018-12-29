@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title><![CDATA[JavaScript中的Json、Map、Set]]></title>
-    <url>%2F2018%2F12%2F28%2FJavaScript%E4%B8%AD%E7%9A%84Json%E3%80%81Map%E3%80%81Set%2F</url>
+    <url>%2FJavaScript%E4%B8%AD%E7%9A%84Json%E3%80%81Map%E3%80%81Set.html</url>
     <content type="text"><![CDATA[问题之前在一个项目中，需要根据申请的部门来获取对应的邮箱地址，想当然的使用了Map对象，结果在调试中完全没有问题，却在实际使用上失效了，查看了下后台log，提示获取到的邮箱地址是undefined。 排查及原因经过百度之后发现原来JS的Map对象的浏览器支持不好，虽然很多地方写IE11开始支持，但其实IE11是不支持new Map()这种方式新建的。 详见如下链接：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Map#浏览器兼容 于是我把换成了用Json对象，果然就解决了。 所以尽量还是用Json吧。 总结Map对象JS的Map存放的是键值对，key值不允许重复。特别要注意的是在一些旧的浏览器中并不支持Map对象。 基本使用 12345678910111213141516171819202122// 新建Map对象&gt; m = new Map()Map &#123;&#125;// 新增Map键值对&gt; m.set('key1','value1')Map &#123; 'key1' =&gt; 'value1' &#125;// 获取Map中的key值&gt; m.get('key1')'value1'// 判断是否存在某key&gt; m.has('key1')true&gt; m.set('key2','value2')Map &#123; 'key1' =&gt; 'value1', 'key2' =&gt; 'value2' &#125;// 删除某键值对&gt; m.delete('key1')true&gt; mMap &#123; 'key2' =&gt; 'value2' &#125;// 清空Map对象&gt; m.clear()undefined 遍历 12345678910&gt; m.set('key1','value1')Map &#123; 'key1' =&gt; 'value1' &#125;&gt; m.set('key2','value2')Map &#123; 'key1' =&gt; 'value1', 'key2' =&gt; 'value2' &#125;&gt; m.forEach(function (value, key, map) &#123;... console.log(key + ":" + value)... &#125;)key1:value1key2:value2undefined Set对象Set对象可以理解为没有值的Map对象，一般用于存放一个不允许重复的列表 基本使用 123456789101112131415161718// 新建Set对象&gt; s = new Set()Set &#123;&#125;// 新增Set值&gt; s.add('key1')Set &#123; 'key1' &#125;&gt; s.add('key2')Set &#123; 'key1', 'key2' &#125;// 删除某值&gt; s.delete('key1')true&gt; sSet &#123; 'key2' &#125;// 清空Set对象&gt; s.clear()undefined&gt; sSet &#123;&#125; 遍历 Set对象的礼遍历和Map基本一样，但是由于Set对象没有value值，所以遍历的时候key和value是一样的。 12345678910&gt; s.add('key1')Set &#123; 'key1' &#125;&gt; s.add('key2')Set &#123; 'key1', 'key2' &#125;&gt; s.forEach(function (value, key, set) &#123;... console.log(key + ":" + value)... &#125;)key1:key1key2:key2undefined Json对象 基本使用 123456\\ 新建Json对象&gt; let currencyItems = &#123; '人民币': 1, '港币': 0.88, '澳门元': 0.86, '新台币': 0.2241, '美元': 6.905, '日元': 0.06, '英镑': 8.69, '欧元': 7.8, '韩元': 0.006, '泰铢': 0.21, '新西兰元': 4.69, '澳大利亚元': 4.96, '菲律宾比索': 0.13, '加拿大元': 5.16, '瑞士法郎': 6.92, '瑞典克朗': 0.76, '丹麦克朗': 1.05, '挪威克朗': 0.8 &#125;undefined\\ 获取Json对象某值&gt; currencyItems['人民币']1 获取Json对象的所有Key值 12345678910111213141516171819&gt; Object.keys(currencyItems)[ '人民币', '港币', '澳门元', '新台币', '美元', '日元', '英镑', '欧元', '韩元', '泰铢', '新西兰元', '澳大利亚元', '菲律宾比索', '加拿大元', '瑞士法郎', '瑞典克朗', '丹麦克朗', '挪威克朗' ] 获取Json对象的长度 12&gt; Object.keys(currencyItems).length18 遍历 12345678910111213141516171819202122&gt; for ( var i in currencyItems) &#123;... console.log(i + ":" + currencyItems[i])... &#125;人民币:1港币:0.88澳门元:0.86新台币:0.2241美元:6.905日元:0.06英镑:8.69欧元:7.8韩元:0.006泰铢:0.21新西兰元:4.69澳大利亚元:4.96菲律宾比索:0.13加拿大元:5.16瑞士法郎:6.92瑞典克朗:0.76丹麦克朗:1.05挪威克朗:0.8undefined]]></content>
       <tags>
         <tag>JavaScript</tag>
@@ -13,7 +13,7 @@
   </entry>
   <entry>
     <title><![CDATA[Windows Server 2018 TCP 连接数限制问题]]></title>
-    <url>%2F2018%2F12%2F27%2FWindows-Server-2018-TCP-%E8%BF%9E%E6%8E%A5%E6%95%B0%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98%2F</url>
+    <url>%2FWindows-Server-2018-TCP-%E8%BF%9E%E6%8E%A5%E6%95%B0%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景最近在查一个并发问题，在压测的时候，Nginx的error.log显示connect() failed(111: Connection refused)。而后端应用并未手工设置过拒绝连接。于是怀疑是在高并发的情况下，windows服务器可能存在自行拒绝连接的情况。 排查过程首先打开windows服务器上的 任务管理器 - 性能 - 资源监控器。TCP连接这儿显示总数为100。 然后开启压测，TCP连接开始飙升，然后问题出现了。 TCP连接满了，怎么就变成10了！不过瓶颈应该就是这儿了！ 结论经过各种百度，谷歌，发现我好像被误导了。 微软官方说从Windows Vista，Window server 2008 SP2 起，不在限制half-open TCP connections，也就是理论上不再有连接数的限制。 官方说明见这个地址：https://support.microsoft.com/zh-cn/help/969710/how-to-enable-the-half-open-tcp-connections-limit-in-windows-vista-wit 然后根据国外有个问答网站的结论，这个“10”，“100”这个显示应该是个Bug，并不是一共就10个或者100个。 可参考如下这个解释： https://serverfault.com/questions/448589/increasing-of-max-more-than-10-tcp-connections 那么怎么看确定的连接数呢？ 在 开始 - 运行 中输入 perfmon.exe打开性能监视器，然后添加TCPv4的计数器。 这里就可以看到当前的实际连接数了，图里当前最新连接数是“824“，远超前面显示的”10“或者”100“。 看来一不小心又碰到坑了。 那么最开始要查的Connection refused到底是什么原因呢，还得继续努力了。。。]]></content>
       <categories>
         <category>操作系统</category>
@@ -26,7 +26,7 @@
   </entry>
   <entry>
     <title><![CDATA[获取当当网的书籍分类目录]]></title>
-    <url>%2F2018%2F12%2F26%2F%E8%8E%B7%E5%8F%96%E5%BD%93%E5%BD%93%E7%BD%91%E7%9A%84%E4%B9%A6%E7%B1%8D%E5%88%86%E7%B1%BB%E7%9B%AE%E5%BD%95%2F</url>
+    <url>%2F%E8%8E%B7%E5%8F%96%E5%BD%93%E5%BD%93%E7%BD%91%E7%9A%84%E4%B9%A6%E7%B1%8D%E5%88%86%E7%B1%BB%E7%9B%AE%E5%BD%95.html</url>
     <content type="text"><![CDATA[背景之前单位新建了一个小图书馆，然后就有了这么一个需求，需要设置一下图书的分类与目录。要怎么定义呢，当然是百度咯。然后想到了卖书发家的当当网，打算把当当网上的所有图书分类全部抓下来提供给行政来作参考。 思路打开当当网的图书页面http://book.dangdang.com/，图书分类就在网页的左边，开启F12看源代码。 多看看就看出来规律了，关注红框部分。所有的分类其实都在&lt;a&gt;标签里，其中的href属性里的网址很有规律，去掉前面的域名之后，都以cp + 数字来命名，其中数字与数字之间用.来分割，代表一级目录和二级目录。 所以大体思路就是通过正则表达式先抓取href属性中含有cp开头的元素，然后找出所有第一节数字不同的元素，获取其text属性来当一级目录，然后把域名+cp+一级目录序号当做固定前缀来找对应的二级目录。 要注意就是去重还有一些删除一些网址不符合这个过滤的，以及所有的text记得用strip()来删除一下多余的空格和换行符号。 具体实现按上面的思路，主要用requests bs4就差不多了，详细代码就参考github吧，https://github.com/keejo125/ 有更好的方法的也欢迎分享。]]></content>
       <categories>
         <category>python</category>
@@ -40,7 +40,7 @@
   </entry>
   <entry>
     <title><![CDATA[开启又关闭icloud云盘，我的桌面文件去哪里了！]]></title>
-    <url>%2F2018%2F12%2F25%2F%E5%BC%80%E5%90%AF%E5%8F%88%E5%85%B3%E9%97%ADicloud%E4%BA%91%E7%9B%98%EF%BC%8C%E6%88%91%E7%9A%84%E6%A1%8C%E9%9D%A2%E6%96%87%E4%BB%B6%E5%8E%BB%E5%93%AA%E9%87%8C%E4%BA%86%EF%BC%81%2F</url>
+    <url>%2F%E5%BC%80%E5%90%AF%E5%8F%88%E5%85%B3%E9%97%ADicloud%E4%BA%91%E7%9B%98%EF%BC%8C%E6%88%91%E7%9A%84%E6%A1%8C%E9%9D%A2%E6%96%87%E4%BB%B6%E5%8E%BB%E5%93%AA%E9%87%8C%E4%BA%86%EF%BC%81.html</url>
     <content type="text"><![CDATA[最近更换笔记本，又不想直接通过时间胶囊设置新mac，于是乎在整理好旧资料之后，准备拷贝到新电脑时发现了iCloud云盘这个东西，可以自动备份桌面和文稿的内容到iCloud，那么在新电脑中再通过iCloud下载就好了，完美！ 结果，高估了iCloud的效果，开启之后，mac会上传桌面和文稿，速度超级慢，然后mac风扇呼呼的转，果断放弃，关闭了iCloud云盘。 关闭也很慢，卡了一会儿，提示 慢的不行，反正也没上传多少东西，于是就点了“停止更新并关闭” 然后就问题出现了！！！ 桌面空空如也，我的东西呢！！！ 在翻翻iCloud云盘，只有已经上传了的那一丢丢！！！ 急中生智，赶紧百度，翻了好结果贴，结论如下： 其实前面已经提示了，文件都能被放在了一个叫做 “iCloud云盘（归档）”中了。路径如下：/User/xxx/中。 真是虚惊一场，看到网上好多碰到一样问题的，好多人以为就没有了。 特地记录一下。]]></content>
       <categories>
         <category>操作系统</category>
@@ -53,7 +53,7 @@
   </entry>
   <entry>
     <title><![CDATA[关于这个”博客“]]></title>
-    <url>%2F2018%2F12%2F23%2F%E5%85%B3%E4%BA%8E%E8%BF%99%E4%B8%AA%E2%80%9D%E5%8D%9A%E5%AE%A2%E2%80%9C%2F</url>
+    <url>%2F%E5%85%B3%E4%BA%8E%E8%BF%99%E4%B8%AA%E2%80%9D%E5%8D%9A%E5%AE%A2%E2%80%9C.html</url>
     <content type="text"><![CDATA[最初是在腾讯的云开发者平台上知道的hexo，好像很方便的样子，又很Geek的样子，于是打算尝试一下。 后来发现hexo作为博客的话，缺少了很大一部分功能——评论。 虽然可以使用第三方插件，但总觉得有点怪怪的。 于是乎，我打算把这里作为记录自己日常知识积累，或是感悟的地方。所以在标题中用了有引号的”博客“。 把每次百度或是谷歌出来的答案都记下来，希望不会再搜第二次。 感觉上好像有点跌跌撞撞，但方向是往前不就好了么，是吧]]></content>
       <categories>
         <category>生活随笔</category>
@@ -62,7 +62,7 @@
   </entry>
   <entry>
     <title><![CDATA[Hello World]]></title>
-    <url>%2F2018%2F12%2F23%2Fhello-world%2F</url>
+    <url>%2Fhello-world.html</url>
     <content type="text"><![CDATA[这是一个新的开始。 马东说：我的底色的悲凉的。 蔡康永说：只有底色悲凉的乐观，才是真的乐观啊。 乐观起来，哪怕人间不值得。]]></content>
       <categories>
         <category>生活随笔</category>

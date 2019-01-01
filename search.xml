@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[用node-schedule实现node后台定时任务]]></title>
+    <url>%2F%E7%94%A8node-schedule%E5%AE%9E%E7%8E%B0node%E5%90%8E%E5%8F%B0%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1.html</url>
+    <content type="text"><![CDATA[背景最近在自己的小程序中增加了多币种支持涉及到汇率的更新，于是需要在后台服务端设置一个定时任务来自动通过响应的接口更新最新的汇率。获取汇率的接口目前通过聚合数据提供的免费接口实现（调到需要实名注册）。 node-schedule由于小程序后端服务器是基于node，查一下，果然是有对应的npm包的——node-schedule。 node-schedule可以使用多种方式定义定时任务的，一般使用类似liunx的cron方式就可以满足绝大部分需求了。cron的定义方式参考如下表： 123456789* * * * * *┬ ┬ ┬ ┬ ┬ ┬│ │ │ │ │ ││ │ │ │ │ └ 星期 day of week (0 - 7) (0 or 7 is Sun)│ │ │ │ └───── 月 month (1 - 12)│ │ │ └────────── 日期 day of month (1 - 31)│ │ └─────────────── 小时 hour (0 - 23)│ └──────────────────── 分钟 minute (0 - 59)└───────────────────────── 秒 second (0 - 59, OPTIONAL) 如果你熟悉linux系统的crontab定时任务的话，那就相当简单了。 它还支持基于日期的定时任务以及基于rule的定时任务。详细可以见一下官方说明。 https://www.npmjs.com/package/node-schedule 实现方法首先需要安装node-schedule包，并保存在项目的package.json中。 1cnpm install node-schedule --save 我的需求是每三十分钟自动更新一次数据，那么通过cron的方式就可以定义为如下规则： 10 */30 * * * * 其中*/30是指可以被30整除的，也就是0分和30分的时候。规则确定了，那么代码就很简单了： 12345678910const schedule = require('node-schedule')function scheduleCron () &#123; schedule.scheduleJob('0 */30 * * * *', function () &#123; console.log('scheduleCron ' + new Date()) // do something &#125;)&#125;scheduleCron() 输出结果： 12scheduleCron Wed Jan 02 2019 00:00:00 GMT+0800 (CST)scheduleCron Wed Jan 02 2019 00:30:00 GMT+0800 (CST) 注意！根据官方说明node-schedule是基本上支持所有的cron表达式，除了一下几个： W：最近的工作日，放在日期(day of month)字段，比如15W指到本月15日最近的工作日。 L：表示最后，放在星期(day of month)或者星期(day of week)字段。 #：表示每月的周几，放在星期(day of week)字段。 cron拓展配置规则时几个常用的符号： *：表示匹配任意值。 /：x/y表示等步长序列，可以理解为从x开始，每y个单位执行一次。其中*/5与0/5是等效的，都是指每5分钟执行一次。 ,：表示序列的分割，比如3,4指在3和4的时候执行。 -：表示一个范围，比如3-5指在3到5的时候执行。 ?：仅用在日期和星期字段，表示任意的值，相当于占位。]]></content>
+      <categories>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>javascript</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[小程序腾讯云环境安装依赖错误]]></title>
     <url>%2F%E5%B0%8F%E7%A8%8B%E5%BA%8F%E8%85%BE%E8%AE%AF%E4%BA%91%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96%E9%94%99%E8%AF%AF.html</url>
     <content type="text"><![CDATA[背景开发工具：微信开发者工具 操作系统：Mac 腾讯云环境：Node 问题最近使用node-sechedule开发了一个后台定时任务，这个是新增的node模块，所以需要安装依赖，即在package.json中增加对应的依赖： 1234"dependencies": &#123; ... "node-schedule": "^1.3.1" &#125;, 在本地测试通过之后，点击开发工具上面的“腾讯云”-“上传测试代码” 并勾选安装依赖。问题就出现了！！！ 排查及原因 感觉这是权限问题啊，于是切换了小程序的管理员用户，点击上传，情况一样。 无奈只能先恢复开发环境了，然后再次上传。根据文档推荐，首次上传最好使用模块上传，全部勾选，结果情况还是一样。 看了node_modules文件夹中，的确有node-schedule文件夹啊，不过有一点奇怪的是，安装每个安装的npm包都有一个_开头的文件夹： 看来得找专家了，于是在腾讯云控制台上提交了一个工单，过了半个小时的样子就有工程师电话来了。他首先在自己的环境里试了一下我的package.json包，竟然没有问题。。。 工程师登录我的后台服务器看了下： 感觉可能是因为上面这种奇怪的包文件夹造成的。于是乎，再恢复一次环境，然后我再次上传，这次不再勾选“上传node_modules代码”。 这样也即是让后台服务器自动安装所有的依赖。最后，成功了！ 这时候再看一下后台服务器上目录： 没有了那种_开头的目录，就成功了。 插曲有了上面的经验，本以为上传到生产环境就妥妥的了。结果点击“上传正式代码”之后，坑爹了。 正式代码上传是没有上面的这种选项的，mac本机上的那些_开头的node_modules文件也上传了，再一次入坑。 于是乎，只能再次联系腾讯云的工程师，删除了我工程的node_modules文件夹，然后点击控制台上的安装依赖。待依赖安装完成后，再次部署代码。 这时候后端启动已经没有问题，但是小程序竟然无法直接访问，最后发现是由于小程序解决方案里本来是自带ssl证书的，这个证书最近到期了，需要自己购买新的证书（选免费的）联系后台更新。 至此问题彻底解决。 结论可以看出，Mac环境下安装的npm包直接传到其他平台是会有冲突的。 自己在本地开发的时候，server目录下还是把node_modules给删除了，以免后续一不小心又上传了问题文件。]]></content>

@@ -108,21 +108,25 @@
 
 
 
-  <meta name="keywords" content="keejo">
-<meta property="og:type" content="website">
-<meta property="og:title" content="郑小凯的个人博客">
-<meta property="og:url" content="http://keejo.coding.me/tags/Set/index.html">
+  <meta name="description" content="背景最近在自己的小程序中增加了多币种支持涉及到汇率的更新，于是需要在后台服务端设置一个定时任务来自动通过响应的接口更新最新的汇率。获取汇率的接口目前通过聚合数据提供的免费接口实现（调到需要实名注册）。 node-schedule由于小程序后端服务器是基于node，查一下，果然是有对应的npm包的——node-schedule。 node-schedule可以使用多种方式定义定时任务的，一般使用类似">
+<meta name="keywords" content="node,javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用node-schedule实现node后台定时任务">
+<meta property="og:url" content="http://keejo.coding.me/用node-schedule实现node后台定时任务.html">
 <meta property="og:site_name" content="郑小凯的个人博客">
+<meta property="og:description" content="背景最近在自己的小程序中增加了多币种支持涉及到汇率的更新，于是需要在后台服务端设置一个定时任务来自动通过响应的接口更新最新的汇率。获取汇率的接口目前通过聚合数据提供的免费接口实现（调到需要实名注册）。 node-schedule由于小程序后端服务器是基于node，查一下，果然是有对应的npm包的——node-schedule。 node-schedule可以使用多种方式定义定时任务的，一般使用类似">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-01-01T16:46:16.384Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="郑小凯的个人博客">
+<meta name="twitter:title" content="用node-schedule实现node后台定时任务">
+<meta name="twitter:description" content="背景最近在自己的小程序中增加了多币种支持涉及到汇率的更新，于是需要在后台服务端设置一个定时任务来自动通过响应的接口更新最新的汇率。获取汇率的接口目前通过聚合数据提供的免费接口实现（调到需要实名注册）。 node-schedule由于小程序后端服务器是基于node，查一下，果然是有对应的npm包的——node-schedule。 node-schedule可以使用多种方式定义定时任务的，一般使用类似">
 
 
 
 
 
 
-  <link rel="canonical" href="http://keejo.coding.me/tags/Set/">
+  <link rel="canonical" href="http://keejo.coding.me/用node-schedule实现node后台定时任务.html">
 
 
 
@@ -132,7 +136,7 @@
   };
 </script>
 
-  <title>标签: Set | 郑小凯的个人博客</title>
+  <title>用node-schedule实现node后台定时任务 | 郑小凯的个人博客</title>
   
 
 
@@ -180,7 +184,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -239,7 +243,7 @@
         
         
           
-          <li class="menu-item menu-item-tags menu-item-active">
+          <li class="menu-item menu-item-tags">
 
     
     
@@ -344,79 +348,304 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h2>Set<small>标签</small>
-        </h2>
-      </div>
+  
 
-      
-        
+  
+  
+  
+
+  
 
   <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://keejo.coding.me/用node-schedule实现node后台定时任务.html">
 
-      <h3 class="post-title">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郑小凯">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/random.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郑小凯的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/JavaScript中的Json、Map、Set.html" itemprop="url">
-              
-                <span itemprop="name">JavaScript中的Json、Map、Set</span>
-              
-            </a>
         
-      </h3>
+          <h2 class="post-title" itemprop="name headline">用node-schedule实现node后台定时任务
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-12-28T20:24:47+08:00" content="2018-12-28">
-          12-28
-        </time>
-      </div>
+              
+            
+          </h2>
+        
 
-    </header>
-  </article>
+        <div class="post-meta">
+          <span class="post-time">
 
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-01-01 23:55:55" itemprop="dateCreated datePublished" datetime="2019-01-01T23:55:55+08:00">2019-01-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-01-02 00:46:16" itemprop="dateModified" datetime="2019-01-02T00:46:16+08:00">2019-01-02</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/node/" itemprop="url" rel="index"><span itemprop="name">node</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/用node-schedule实现node后台定时任务.html#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/用node-schedule实现node后台定时任务.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/用node-schedule实现node后台定时任务.html" class="leancloud_visitors" data-flag-title="用node-schedule实现node后台定时任务">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近在自己的小程序中增加了多币种支持涉及到汇率的更新，于是需要在后台服务端设置一个定时任务来自动通过响应的接口更新最新的汇率。获取汇率的接口目前通过<span class="exturl" data-url="aHR0cHM6Ly93d3cuanVoZS5jbg==" title="https://www.juhe.cn">聚合数据<i class="fa fa-external-link"></i></span>提供的免费接口实现（调到需要实名注册）。</p>
+<h2 id="node-schedule"><a href="#node-schedule" class="headerlink" title="node-schedule"></a>node-schedule</h2><p>由于小程序后端服务器是基于<code>node</code>，查一下，果然是有对应的npm包的——<code>node-schedule</code>。</p>
+<p><code>node-schedule</code>可以使用多种方式定义定时任务的，一般使用类似liunx的cron方式就可以满足绝大部分需求了。cron的定义方式参考如下表：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">*    *    *    *    *    *</span><br><span class="line">┬    ┬    ┬    ┬    ┬    ┬</span><br><span class="line">│    │    │    │    │    │</span><br><span class="line">│    │    │    │    │    └ 星期 day of week (0 - 7) (0 or 7 is Sun)</span><br><span class="line">│    │    │    │    └───── 月 month (1 - 12)</span><br><span class="line">│    │    │    └────────── 日期 day of month (1 - 31)</span><br><span class="line">│    │    └─────────────── 小时 hour (0 - 23)</span><br><span class="line">│    └──────────────────── 分钟 minute (0 - 59)</span><br><span class="line">└───────────────────────── 秒 second (0 - 59, OPTIONAL)</span><br></pre></td></tr></table></figure>
+<p>如果你熟悉linux系统的crontab定时任务的话，那就相当简单了。</p>
+<p>它还支持基于日期的定时任务以及基于rule的定时任务。详细可以见一下官方说明。</p>
+<blockquote>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cubnBtanMuY29tL3BhY2thZ2Uvbm9kZS1zY2hlZHVsZQ==" title="https://www.npmjs.com/package/node-schedule">https://www.npmjs.com/package/node-schedule<i class="fa fa-external-link"></i></span></p>
+</blockquote>
+<h2 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h2><p>首先需要安装<code>node-schedule</code>包，并保存在项目的<code>package.json</code>中。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install node-schedule --save</span><br></pre></td></tr></table></figure>
+<p>我的需求是每三十分钟自动更新一次数据，那么通过cron的方式就可以定义为如下规则：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 */30 * * * *</span><br></pre></td></tr></table></figure>
+<p>其中<code>*/30</code>是指可以被30整除的，也就是0分和30分的时候。规则确定了，那么代码就很简单了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> schedule = <span class="built_in">require</span>(<span class="string">'node-schedule'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">scheduleCron</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    schedule.scheduleJob(<span class="string">'0 */30 * * * *'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'scheduleCron '</span> + <span class="keyword">new</span> <span class="built_in">Date</span>())</span><br><span class="line">        <span class="comment">// do something</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">scheduleCron()</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scheduleCron Wed Jan 02 2019 00:00:00 GMT+0800 (CST)</span><br><span class="line">scheduleCron Wed Jan 02 2019 00:30:00 GMT+0800 (CST)</span><br></pre></td></tr></table></figure>
+<h2 id="注意！"><a href="#注意！" class="headerlink" title="注意！"></a>注意！</h2><p>根据官方说明<code>node-schedule</code>是基本上支持所有的<code>cron</code>表达式，除了一下几个：</p>
+<p><code>W</code>：最近的工作日，放在日期(day of month)字段，比如<code>15W</code>指到本月15日最近的工作日。</p>
+<p><code>L</code>：表示最后，放在星期(day of month)或者星期(day of week)字段。</p>
+<p><code>#</code>：表示每月的周几，放在星期(day of week)字段。</p>
+<h2 id="cron拓展"><a href="#cron拓展" class="headerlink" title="cron拓展"></a>cron拓展</h2><p>配置规则时几个常用的符号：</p>
+<p><code>*</code>：表示匹配任意值。</p>
+<p><code>/</code>：<code>x/y</code>表示等步长序列，可以理解为从x开始，每y个单位执行一次。其中<code>*/5</code>与<code>0/5</code>是等效的，都是指每5分钟执行一次。</p>
+<p><code>,</code>：表示序列的分割，比如<code>3,4</code>指在3和4的时候执行。</p>
+<p><code>-</code>：表示一个范围，比如<code>3-5</code>指在3到5的时候执行。</p>
+<p><code>?</code>：仅用在日期和星期字段，表示任意的值，相当于占位。</p>
 
       
     </div>
 
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="郑小凯 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/node/" rel="tag"># node</a>
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div class="social_share">
+            
+            
+               <div id="needsharebutton-postbottom">
+                 <span class="btn">
+                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                 </span>
+               </div>
+            
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/小程序腾讯云环境安装依赖错误.html" rel="next" title="小程序腾讯云环境安装依赖错误">
+                <i class="fa fa-chevron-left"></i> 小程序腾讯云环境安装依赖错误
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
 
         </div>
         
@@ -437,8 +666,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -602,6 +840,22 @@
       </div>
 
       
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#node-schedule"><span class="nav-number">2.</span> <span class="nav-text">node-schedule</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现方法"><span class="nav-number">3.</span> <span class="nav-text">实现方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意！"><span class="nav-number">4.</span> <span class="nav-text">注意！</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cron拓展"><span class="nav-number">5.</span> <span class="nav-text">cron拓展</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
       
 
@@ -742,6 +996,10 @@
 
 
   
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
 
   
 

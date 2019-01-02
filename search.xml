@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Mac常用装机及开发软件分享]]></title>
+    <url>%2FMac%E5%B8%B8%E7%94%A8%E8%A3%85%E6%9C%BA%E5%8F%8A%E5%BC%80%E5%8F%91%E8%BD%AF%E4%BB%B6%E5%88%86%E4%BA%AB.html</url>
+    <content type="text"><![CDATA[其实软件也不多，主要几个专业软件和开发软件要收费，经常会有一些失效的破解和假的破解版。亲测可用，在这里记录和分享，以备万一。 办公软件 Office2019 + 激活：链接:https://pan.baidu.com/s/1YgGS6AI-XdI5vCcyfPA8OQ 密码:f2dl 专业软件 Photoshop CC2018 + 激活：链接:https://pan.baidu.com/s/1ZdPU1GkkOmYYfgvtLOwpBA 密码:zv6u Auto CAD 2018 + 激活：链接:https://pan.baidu.com/s/1IYWly6SJuGvh8l0LI33hcg 密码:2tpg typora（markdown编辑器）：https://www.typora.io/ 开发软件 PyCharm：http://www.jetbrains.com/pycharm/download/#section=mac idea：https://www.jetbrains.com/idea/download/#section=mac WebStrom：https://www.jetbrains.com/webstorm/download/download-thanks.html Navcat Premium：链接:https://pan.baidu.com/s/1egvUoYnoi21980vo38vQUw 密码:7zn6 SubLime：http://www.sublimetext.com/3 其他 Parallel Desktop（虚拟机）+ 激活：链接:https://pan.baidu.com/s/1dPfTfCDVpzXMrivbt9OUqg 密码:ztns Win10官方镜像：链接:https://pan.baidu.com/s/11iOX061WNDlt9oSpNJh6lw 密码:xn7r Win10 激活工具：链接:https://pan.baidu.com/s/1FNbLuXKG5TPW9y_hvr5YmA 密码:jn9b Keka118（压缩软件）：链接:https://pan.baidu.com/s/16Yjo44uRRPk0aZY6ugZ4qg 密码:cli2]]></content>
+      <categories>
+        <category>操作系统</category>
+        <category>mac</category>
+      </categories>
+      <tags>
+        <tag>mac</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[用node-schedule实现node后台定时任务]]></title>
     <url>%2F%E7%94%A8node-schedule%E5%AE%9E%E7%8E%B0node%E5%90%8E%E5%8F%B0%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1.html</url>
     <content type="text"><![CDATA[背景最近在自己的小程序中增加了多币种支持涉及到汇率的更新，于是需要在后台服务端设置一个定时任务来自动通过响应的接口更新最新的汇率。获取汇率的接口目前通过聚合数据提供的免费接口实现（调到需要实名注册）。 node-schedule由于小程序后端服务器是基于node，查一下，果然是有对应的npm包的——node-schedule。 node-schedule可以使用多种方式定义定时任务的，一般使用类似liunx的cron方式就可以满足绝大部分需求了。cron的定义方式参考如下表： 123456789* * * * * *┬ ┬ ┬ ┬ ┬ ┬│ │ │ │ │ ││ │ │ │ │ └ 星期 day of week (0 - 7) (0 or 7 is Sun)│ │ │ │ └───── 月 month (1 - 12)│ │ │ └────────── 日期 day of month (1 - 31)│ │ └─────────────── 小时 hour (0 - 23)│ └──────────────────── 分钟 minute (0 - 59)└───────────────────────── 秒 second (0 - 59, OPTIONAL) 如果你熟悉linux系统的crontab定时任务的话，那就相当简单了。 它还支持基于日期的定时任务以及基于rule的定时任务。详细可以见一下官方说明。 https://www.npmjs.com/package/node-schedule 实现方法首先需要安装node-schedule包，并保存在项目的package.json中。 1cnpm install node-schedule --save 我的需求是每三十分钟自动更新一次数据，那么通过cron的方式就可以定义为如下规则： 10 */30 * * * * 其中*/30是指可以被30整除的，也就是0分和30分的时候。规则确定了，那么代码就很简单了： 12345678910const schedule = require('node-schedule')function scheduleCron () &#123; schedule.scheduleJob('0 */30 * * * *', function () &#123; console.log('scheduleCron ' + new Date()) // do something &#125;)&#125;scheduleCron() 输出结果： 12scheduleCron Wed Jan 02 2019 00:00:00 GMT+0800 (CST)scheduleCron Wed Jan 02 2019 00:30:00 GMT+0800 (CST) 注意！根据官方说明node-schedule是基本上支持所有的cron表达式，除了一下几个： W：最近的工作日，放在日期(day of month)字段，比如15W指到本月15日最近的工作日。 L：表示最后，放在星期(day of month)或者星期(day of week)字段。 #：表示每月的周几，放在星期(day of week)字段。 cron拓展配置规则时几个常用的符号： *：表示匹配任意值。 /：x/y表示等步长序列，可以理解为从x开始，每y个单位执行一次。其中*/5与0/5是等效的，都是指每5分钟执行一次。 ,：表示序列的分割，比如3,4指在3和4的时候执行。 -：表示一个范围，比如3-5指在3到5的时候执行。 ?：仅用在日期和星期字段，表示任意的值，相当于占位。]]></content>

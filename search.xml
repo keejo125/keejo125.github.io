@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[oracle regexp_substr函数实现字符串split]]></title>
+    <url>%2Foracle-regexp-substr%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0%E5%AD%97%E7%AC%A6%E4%B8%B2split.html</url>
+    <content type="text"><![CDATA[背景数据库中有一个owner字段，里面存了多个有权限用户的账号，通过,分割。现前台返回一个用户账号，需要判断该用户是否有权限。首先要把这个字段进行分割成列，然后就可以判断是否存在。 思路 首先oracle是可以使用regexp_substr实现按照分隔符获取元素的。 1234567REGEXP_SUBSTR(source_char, pattern [, position [, occurrence [, match_parameter ] ] ] ) 其中： source_char是需要分割的字符串。 pattern为正则表达。 position是起始位置，默认为1。 occurrence是表示第几个匹配组，默认为1。 match_parameter是匹配参数： i：大小写不敏感 c：大小写敏感 n：允许(.)匹配换行符 m：oracle将把字符串当做多行字符处理，^和$是起始和结束 x：忽略空格 https://docs.oracle.com/cd/B19306_01/server.102/b14200/functions131.htm 于是我们通过下面的表达式获取分割后的某个值： 1select regexp_substr('1,2,3', '[^,]+', 1, 2) from dual; --获取第二个数 结果如下： 现在我们需要把其中的occurrence变成一个和分割后等长的列即可。 获取分割后元素的个数 使用length()可以获取字符串的个数，而字符串是通过,分割的。使用replece()可以替换删除所有的分割符。分割后的字符串个数即是两者的差加1。 1select length('1,2,3') - length(replace('1,2,3',',')) + 1 from dual; 结果如下： 获取一个空列 可以通过level加上connect by来获取一个空列： 1select level from dual connect by level &lt;= 5; 结果如下： 把上述连起来就可以获取分割后的列了。 结论虽然有点长，但是总体思路还是比较清晰的。代码如下： 1select regexp_substr('1,2,3','[^,]+' , 1, level) from dual connect by level &lt;= (select length('1,2,3') - length(replace('1,2,3',',')) + 1 from dual); 结果如下： 最后我们需要判断某个人是否有权限，即某人的账号是否在我们获取的分割后的列里面。直接用count(1)是否大于0即可。 12345select count(1) from (select regexp_substr('1,2,3','[^,]+' , 1, level) as owner from dual connect by level &lt;= (select length('1,2,3') - length(replace('1,2,3',',')) + 1 from dual) twhere t.owner = i_owner]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>oracle</category>
+      </categories>
+      <tags>
+        <tag>oracle</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Mac常用装机及开发软件分享]]></title>
     <url>%2FMac%E5%B8%B8%E7%94%A8%E8%A3%85%E6%9C%BA%E5%8F%8A%E5%BC%80%E5%8F%91%E8%BD%AF%E4%BB%B6%E5%88%86%E4%BA%AB.html</url>
     <content type="text"><![CDATA[其实软件也不多，主要几个专业软件和开发软件要收费，经常会有一些失效的破解和假的破解版。亲测可用，在这里记录和分享，以备万一。 办公软件 Office2019 + 激活：链接:https://pan.baidu.com/s/1YgGS6AI-XdI5vCcyfPA8OQ 密码:f2dl 专业软件 Photoshop CC2018 + 激活：链接:https://pan.baidu.com/s/1ZdPU1GkkOmYYfgvtLOwpBA 密码:zv6u Auto CAD 2018 + 激活：链接:https://pan.baidu.com/s/1IYWly6SJuGvh8l0LI33hcg 密码:2tpg typora（markdown编辑器）：https://www.typora.io/ 开发软件 PyCharm：http://www.jetbrains.com/pycharm/download/#section=mac idea：https://www.jetbrains.com/idea/download/#section=mac WebStrom：https://www.jetbrains.com/webstorm/download/download-thanks.html Navcat Premium：链接:https://pan.baidu.com/s/1egvUoYnoi21980vo38vQUw 密码:7zn6 SubLime：http://www.sublimetext.com/3 其他 Parallel Desktop（虚拟机）+ 激活：链接:https://pan.baidu.com/s/1dPfTfCDVpzXMrivbt9OUqg 密码:ztns Win10官方镜像：链接:https://pan.baidu.com/s/11iOX061WNDlt9oSpNJh6lw 密码:xn7r Win10 激活工具：链接:https://pan.baidu.com/s/1FNbLuXKG5TPW9y_hvr5YmA 密码:jn9b Keka118（压缩软件）：链接:https://pan.baidu.com/s/16Yjo44uRRPk0aZY6ugZ4qg 密码:cli2]]></content>

@@ -4,6 +4,10 @@
     <title><![CDATA[Navcat连MySQL提示Autentication错误]]></title>
     <url>%2FNavicat%E8%BF%9EMySQL%E6%8F%90%E7%A4%BAAutentication%E9%94%99%E8%AF%AF.html</url>
     <content type="text"><![CDATA[背景Mysql版本：8.0.13 Navicat版本：Navicat Premium Version 12 问题在MySQL中创建好用户，数据库，并将数据库的权限授权给用户之后 1234567891011mysql&gt; create user 'flask'@'%' identified by 'xxxx';Query OK, 0 rows affected (0.01 sec)mysql&gt; create database FlaskDB default charset utf8 collate utf8_general_ci;Query OK, 1 row affected (0.00 sec)mysql&gt; grant all privileges on FlaskDB.* to "flask"@"%"; Query OK, 0 rows affected (0.00 sec)mysql&gt; flush privileges;Query OK, 0 rows affected (0.00 sec) 然后通过Navicat使用连接数据库，出现了下面的报错： 结论这个问题百度一下有很多帖子，是由于新版的MySQL8更新了认证方式，而其他的数据库软件没有跟上。大部分忒子会推荐我们重新配置MySQL，不启用新的认证方式，甚至有些建议删了重装。 个人还是推荐下面这种方式： 1ALTER USER 'username'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; 不重新配置MySQL，暂时先指定使用旧版本的认证方式来设置密码。待后续软件更新了自然就可以使用新版本功能了。 https://stackoverflow.com/questions/49194719/authentication-plugin-caching-sha2-password-cannot-be-loaded]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>MySQL</category>
+      </categories>
       <tags>
         <tag>数据库</tag>
         <tag>MySQL</tag>
@@ -19,6 +23,7 @@
         <category>oracle</category>
       </categories>
       <tags>
+        <tag>数据库</tag>
         <tag>oracle</tag>
         <tag>sql</tag>
       </tags>
@@ -68,9 +73,9 @@
         <category>微信小程序</category>
       </categories>
       <tags>
+        <tag>小程序</tag>
         <tag>node</tag>
         <tag>javascript</tag>
-        <tag>小程序</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>
       </tags>
@@ -83,10 +88,10 @@
         <category>node</category>
       </categories>
       <tags>
+        <tag>node</tag>
         <tag>hexo</tag>
         <tag>gulp</tag>
         <tag>seo</tag>
-        <tag>node</tag>
       </tags>
   </entry>
   <entry>

@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Navcat连MySQL提示Autentication错误]]></title>
+    <url>%2FNavicat%E8%BF%9EMySQL%E6%8F%90%E7%A4%BAAutentication%E9%94%99%E8%AF%AF.html</url>
+    <content type="text"><![CDATA[背景Mysql版本：8.0.13 Navicat版本：Navicat Premium Version 12 问题在MySQL中创建好用户，数据库，并将数据库的权限授权给用户之后 1234567891011mysql&gt; create user 'flask'@'%' identified by 'xxxx';Query OK, 0 rows affected (0.01 sec)mysql&gt; create database FlaskDB default charset utf8 collate utf8_general_ci;Query OK, 1 row affected (0.00 sec)mysql&gt; grant all privileges on FlaskDB.* to "flask"@"%"; Query OK, 0 rows affected (0.00 sec)mysql&gt; flush privileges;Query OK, 0 rows affected (0.00 sec) 然后通过Navicat使用连接数据库，出现了下面的报错： 结论这个问题百度一下有很多帖子，是由于新版的MySQL8更新了认证方式，而其他的数据库软件没有跟上。大部分忒子会推荐我们重新配置MySQL，不启用新的认证方式，甚至有些建议删了重装。 个人还是推荐下面这种方式： 1ALTER USER 'username'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; 不重新配置MySQL，暂时先指定使用旧版本的认证方式来设置密码。待后续软件更新了自然就可以使用新版本功能了。 https://stackoverflow.com/questions/49194719/authentication-plugin-caching-sha2-password-cannot-be-loaded]]></content>
+      <tags>
+        <tag>数据库</tag>
+        <tag>MySQL</tag>
+        <tag>navicat</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[oracle wm_concat实现字符串分割替换]]></title>
     <url>%2Foracle-wm-concat%E5%AE%9E%E7%8E%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%86%E5%89%B2%E6%9B%BF%E6%8D%A2.html</url>
     <content type="text"><![CDATA[背景在数据库中有一个存储有权限用户的字段，通过,分割来存储了多个用户的账号。可以通过用户账号在用户表中查询出用户的姓名，现在需要将这个字段的账号转换成用户姓名在前台展示。 用户表user： id name 0001 小明 0002 小刚 需要处理的字段：0001,0002。 要求的返回结果：小明,小刚。 思路 首先我们需要把user表中id字段存在在处理字段中的值给查出来。 最开始考虑使用instr函数： 1select * from user where instr('0001,0002', id)&gt;0 instr()函数可以判断值在字符串中的位置，如果大于0，也就是存在。但是这是模糊匹配的，会有问题。比如上面场景中，如果有用户id是000那么也会匹配出来。 所以使用regexp_like()，通过正则来判断。 这里的正则表达如为：^0001|0002$。使用^确定开通，$确认结尾，|用来分割允许的值。对应到实际的就变成如下： 1select name from user where regexp_like(id, '^' || replace('0001,0002', ',', '|') || '$') 输出结果： name 小明 小刚 然后可以使用wm_concat函数把连起来即可。 wm_concat是一个未被记录的函数，但是可以实现将列通过,连成一个字段的作用。 1select to_char(wmsys.wm_concat(name)) from user where id = '0001' or id = '0002' https://community.oracle.com/thread/1090158 结论连起来结果如下： 1select to_char(wmsys.wm_concat(name)) name from user where regexp_like(id, '^'|| replace('0001,0002', ',', '|')||'$') 输出结果： name 小明,小刚 注意由于wm_concat未被官方记录，不同版本的oracle有区别，如果输出是个clob类型，那么可以使用to_char()来转换。也可以考虑使用listagg()来实现。]]></content>
@@ -58,9 +68,9 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
         <tag>javascript</tag>
+        <tag>小程序</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>
       </tags>
@@ -73,10 +83,10 @@
         <category>node</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>hexo</tag>
         <tag>gulp</tag>
         <tag>seo</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>

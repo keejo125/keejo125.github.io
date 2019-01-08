@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[flask - sqlalchemy.orm.exc.DetachedInstanceError]]></title>
+    <url>%2Fflask-sqlalchemy-orm-exc-DetachedInstanceError.html</url>
+    <content type="text"><![CDATA[背景在一个基于Flask的项目中，使用到flask-sqlachemy的数据库orm工具。在一次数据插入之后再次查询数据时出现了如下的错误： 1DetachedInstanceError: Instance &lt;User at 0x7f2f54fc8750&gt; is not bound to a Session; attribute refresh operation cannot proceed 原因经查，由于之前开发的时候，参考《Flask Web开发 基于Python的Web应用开发实战》这本书时，作者建议在配置flask-sqlachemy时，加入如下配置： 1SQLALCHEMY_COMMIT_ON_TEARDOWN = Ture 这个配置是用来涉及在db操作时，自动提交的。以下两种情况是等效的。123456# SQLALCHEMY_COMMIT_ON_TEARDOWN = True 时db.add(User)# SQLALCHEMY_COMMIT_ON_TEARDOWN = False 时db.add(User)db.commit() 但其实自动提交时，系统会一并删除当前数据库的session，所以导致了上面出现的问题。目前flask-sqlachemy官方也认为这个设置可能存在问题，已经在文档中移除了。 http://flask-sqlalchemy.pocoo.org/2.3/changelog/ 结论那么建议的方法就是删除这条配置，手动提交了。在每次进行数据库新增、修改、删除时，手动的commit()。]]></content>
+      <categories>
+        <category>python</category>
+        <category>flask</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>flask</tag>
+        <tag>sqlachemy</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Navcat连MySQL提示Autentication错误]]></title>
     <url>%2FNavicat%E8%BF%9EMySQL%E6%8F%90%E7%A4%BAAutentication%E9%94%99%E8%AF%AF.html</url>
     <content type="text"><![CDATA[背景Mysql版本：8.0.13 Navicat版本：Navicat Premium Version 12 问题在MySQL中创建好用户，数据库，并将数据库的权限授权给用户之后 1234567891011mysql&gt; create user 'flask'@'%' identified by 'xxxx';Query OK, 0 rows affected (0.01 sec)mysql&gt; create database FlaskDB default charset utf8 collate utf8_general_ci;Query OK, 1 row affected (0.00 sec)mysql&gt; grant all privileges on FlaskDB.* to "flask"@"%"; Query OK, 0 rows affected (0.00 sec)mysql&gt; flush privileges;Query OK, 0 rows affected (0.00 sec) 然后通过Navicat使用连接数据库，出现了下面的报错： 结论这个问题百度一下有很多帖子，是由于新版的MySQL8更新了认证方式，而其他的数据库软件没有跟上。大部分忒子会推荐我们重新配置MySQL，不启用新的认证方式，甚至有些建议删了重装。 个人还是推荐下面这种方式： 1ALTER USER 'username'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; 不重新配置MySQL，暂时先指定使用旧版本的认证方式来设置密码。待后续软件更新了自然就可以使用新版本功能了。 https://stackoverflow.com/questions/49194719/authentication-plugin-caching-sha2-password-cannot-be-loaded]]></content>
@@ -73,8 +87,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>
@@ -88,10 +102,10 @@
         <category>node</category>
       </categories>
       <tags>
+        <tag>node</tag>
         <tag>hexo</tag>
         <tag>gulp</tag>
         <tag>seo</tag>
-        <tag>node</tag>
       </tags>
   </entry>
   <entry>

@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://keejo.coding.me/MySQL%E7%9A%84%E5%AE%89%E8%A3%85.html</loc>
+    
+    <lastmod>2019-01-09T11:55:18.977Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://keejo.coding.me/flask-sqlalchemy-orm-exc-DetachedInstanceError.html</loc>
     
     <lastmod>2019-01-08T12:07:46.108Z</lastmod>

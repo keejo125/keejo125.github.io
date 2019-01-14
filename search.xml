@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[用exceljs实现Json对象导出excel]]></title>
+    <url>%2F%E7%94%A8exceljs%E5%AE%9E%E7%8E%B0Json%E5%AF%B9%E8%B1%A1%E5%AF%BC%E5%87%BAexcel.html</url>
+    <content type="text"><![CDATA[背景在做随手记账本项目的时候，很多网友在意见反馈中建议提供导出功能。由于小程序的后台是基于node的，于是在npm里找了下关于excel的包，也参考了百度建议，推荐比较多的是excelexport，但是我最后选了exceljs。主要是一直在持续更新，文档也很全面。 思路由于后台数据库保存的账本数据是采用json格式的，最简单的方法就是通过遍历账本中的所有条目逐行写入excel。但是发现在exceljs这个包中，是提供列定义的，通过定义每列的key，就可以直接把json数据写入了，这个功能非常赞。 这部分的文档说明如下： 123456789101112// Add column headers and define column keys and widths// Note: these column structures are a workbook-building convenience only,// apart from the column width, they will not be fully persisted.worksheet.columns = [ &#123; header: 'Id', key: 'id', width: 10 &#125;, &#123; header: 'Name', key: 'name', width: 32 &#125;, &#123; header: 'D.O.B.', key: 'DOB', width: 10, outlineLevel: 1 &#125;];// Add a couple of Rows by key-value, after the last current row, using the column keysworksheet.addRow(&#123;id: 1, name: 'John Doe', dob: new Date(1970,1,1)&#125;);worksheet.addRow(&#123;id: 2, name: 'Jane Doe', dob: new Date(1965,1,7)&#125;); 需要说明的说，文档里定义的column里的header，会自动写在表格的第一行当做表头，不需要另起一行。 实现主要有这么几个步骤： 新建workbook对象 新建sheet 定义column 写入row 导出 代码如下： 1234567891011121314151617181920212223242526272829303132333435const Excel = require('exceljs')// 测试数据let data = &#123; "subtitle":"偶遇美食节", "comment":"鲷鱼烧，烤鱼，年糕丸子。600+200+350", "cost":1150, "date":"2018-01-20", "time":"14:24", "member":1, "type":"餐饮", "currency":"日元", "location":"Ueno Park (上野恩賜公園)"&#125;// 新建workbook对象let workbook = new Excel.Workbook()// 设置workbook属性，比如作者workbook.creator = 'ToRandom'// 新建sheetlet tempWorksheet = workbook.addWorksheet('东京之旅')// 定义column, 日期比较长，设置为15 可以展示yyyy-mm-ddtempWorksheet.columns = [ &#123;header: '标题', key: 'subtitle'&#125;, &#123;header: '消费类型', key: 'type'&#125;, &#123;header: '评论', key: 'comment'&#125;, &#123;header: '币种', key: 'currency'&#125;, &#123;header: '费用', key: 'cost'&#125;, &#123;header: '日期', key: 'date', width: 15&#125;, &#123;header: '时间', key: 'time'&#125;, &#123;header: '人数', key: 'member'&#125;, &#123;header: '位置信息', key: 'location'&#125; ]// 写入tempWorksheet.addRow(data)// 保存文件，如有需要，前面加await等待执行workbook.xlsx.writeFile("随手记账本.xlsx) 注意 一般node默认是异步执行的，如有后续操作（比如先生成excel文件之后，以附件的形式发送），那么就需要在最后一步保存文件的代码前面加上await。 1await workbook.xlsx.writeFile("随手记账本.xlsx") 如果生成之后，处理完了要删除的话，可以使用fs.unlink来删除。但注意的是，这个unlink也是一个异步函数，删除效果会有延迟。 其他关于exceljs的操作，可以参考原文档，还是相当丰富的。 https://www.npmjs.com/package/exceljs]]></content>
+      <categories>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>Json</tag>
+        <tag>node</tag>
+        <tag>excel</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[CentOS下部署selenium环境]]></title>
     <url>%2FCentOS%E4%B8%8B%E9%83%A8%E7%BD%B2selenium%E7%8E%AF%E5%A2%83.html</url>
     <content type="text"><![CDATA[背景最近写了一个循环抓取某网站数据的代码，其中涉及到页面登陆，采用了selenium来做。考虑到循环抓取，本机跑容易因系统休眠断网造成爬取失败，于是在自己的服务器上部署一下。 操作系统：CentOS 7 Python版本：Python3.7 问题由于服务器抓取，其实不需要展示浏览器的界面，可以考虑使用PhantomJS来做，结果发现有如下的警告提示： 1UserWarning: Selenium support for PhantomJS has been deprecated, please use headless versions of Chrome or Firefox instead 既然后续不支持了，那么就按照官方建议，我选chrome。 不同于PhamtomJS，chromedriver需要和chrome配合使用，也就是如果不安装chrome，直接加载chromedriver那么就会有如下的报错： 123raise exception_class(message, screen, stacktrace)selenium.common.exceptions.WebDriverException: Message: unknown error: cannot find Chrome binary (Driver info: chromedriver=2.45.615279 (12b89733300bd268cff3b78fc76cb8f3a7cc44e5),platform=Linux 3.10.0-693.2.2.el7.x86_64 x86_64) 而且MacOS和CentOS的chromedriver是不同的。如果在linux下直接加载mac版的chromedriver就会如下的报错： 12raise child_exception_type(errno_num, err_msg, err_filename)OSError: [Errno 8] Exec format error: './chromedriver' 部署正确的部署应该是这样的： 安装chromeCentOS服务器是用ssh登陆的，就直接用yum来安装好了，由于存在翻墙的问题，要手动配置下源： 12cd /etc/yum.repos.d/vim google-chrome.repo 然后添加如下语句： 123456[google-chrome]name=google-chromebaseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearchenabled=1gpgcheck=1gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub 再用yum安装： 1yum -y install google-chrome-stable --nogpgcheck 在未翻墙的环境下，一定要加上--nogpgcheck选项，否则会因为检查失败而无法安装成功。 https://blog.csdn.net/u010472499/article/details/72327963 安装chromedriver墙内可以在如下地址下载对应系统的chromedriver: http://npm.taobao.org/mirrors/chromedriver/2.45/ 下载好的chromedriver需要放到PATH目录下，建议是自己使用virtualenv新建一个venv虚拟环境，然后将chromedriver放到虚拟环境的bin目录下（venv/bin）即可。 selenium的使用加上headless的配置即可，关键代码如下： 123456from selenium import webdriveroption = webdriver.ChromeOptions()option.add_argument('headless')driver = webdriver.Chrome(executable_path='./chromedriver', options=option)# do somethingdriver.quit()]]></content>
@@ -24,8 +37,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

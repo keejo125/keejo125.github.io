@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[用nodemailer实现邮件发送]]></title>
+    <url>%2F%E7%94%A8nodemailer%E5%AE%9E%E7%8E%B0%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81.html</url>
+    <content type="text"><![CDATA[背景由于随手记账本是基于小程序的，没办法直接通过浏览器下载的方式导出给用户。于是考虑在导出请求时，要求用户提供一个电子邮箱，后台生成导出的excel文件之后直接以附件的形式发送到用户邮箱中。目前是通过SendGrid提供的免费邮箱服务来实现邮箱发送。SendGrid也提供各个版本的webapi支持，不过考虑到后续兼容性，本次就摒弃了SendGrid提供的接口组件，使用nodemail。 思路发送邮件的方式基本大同小异，使用smtp协议的话需要知道： 邮箱服务器地址 端口号 用户名 密码 然后邮件内容上需要明确： 收件人 主题 邮件内容 是否为html格式 附件 发件人（如果通过个人邮箱开通smtp发件，那么可能不支持另外设置发件人。因为发件人就是自己，SendGrid是支持只是发件人的，比如`no-reply@torandom.com`。） 最后按照使用的邮件模块的说明发送即可。 实现nodemailer的文档不是太直观，说明的很详细，但是没有一个完整的简单例子。普通的单次邮件发送主要有这么几个步骤： 设置smtpConfig信息 设置message信息 创建transporter对象 调用transporter对象的sendMail()发送邮件并接受回调 代码如下： 12345678910111213141516171819202122232425262728293031323334353637const nodemailer = require('nodemailer')// 配置邮件服务器信息let smtpConfig = &#123; host: 'smtp.sendgrid.net', port: 587, secure: false, // upgrade later with STARTTLS auth: &#123; user: 'username', pass: 'password' &#125;&#125;// 配置邮件内容信息let message = &#123; from: 'no-reply@torandom.com', to: 'test@torandom.com', subject: '随手记账本 - 导出', text: '随手记账本导出测试', html: '&lt;p&gt;HTML version of the message&lt;/p&gt;', attachments: [ &#123; filename: 'package.json', path: './package.json' &#125; ]&#125;// 创建transporter对象let transporter = nodemailer.createTransport(smtpConfig)// 发送邮件transporter.sendMail(message) .then(info =&gt; &#123; if (info.accepted) &#123; console.log('已发送至' + info.accepted.toString()) &#125; else &#123; console.log('邮件发送失败') console.log(info) &#125; &#125;) 注意 在发送邮件部分。回调的info内容是由你的邮件服务器提供的，不同的邮件服务器提供的内容是不同的需要确认。 如果测试代码的时候，发送到自己的QQ邮箱。发送的数量太多了的话，会有如下的报错： 123456789101112550 Connection frequency limited出错原因：该服务器IP的发信频率超过腾讯邮箱限制。 腾讯邮箱对来自相同IP的外部发信服务器有一定的频率限制： 1、超过每分钟发信量限制，此IP地址被禁止发信若干分钟。 2、超过每小时发信量限制，此IP地址被禁止发信若干小时。 3、超过每日发信量限制，此IP地址本日内禁止再发信。 4、以上频率限制数值属于腾讯邮箱保密数据，恕不公开。 改善建议：如果您是该服务器IP的管理员，请暂停该服务器IP的发信，稍后降低频率重新尝试发信。 如果您是个人邮箱用户，请向您的电子邮件提供商报告此情况。 https://service.mail.qq.com/cgi-bin/help?subtype=1&amp;id=20022&amp;no=1000722 这时候需要把你的发件人加入到接受邮件的白名单中即可。 关于nodemailer的更多高级用法，比如邮件池之列的请参考如下官方文档。 https://nodemailer.com/about/]]></content>
+      <categories>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>邮件</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[用exceljs实现Json对象导出excel]]></title>
     <url>%2F%E7%94%A8exceljs%E5%AE%9E%E7%8E%B0Json%E5%AF%B9%E8%B1%A1%E5%AF%BC%E5%87%BAexcel.html</url>
     <content type="text"><![CDATA[背景在做随手记账本项目的时候，很多网友在意见反馈中建议提供导出功能。由于小程序的后台是基于node的，于是在npm里找了下关于excel的包，也参考了百度建议，推荐比较多的是excelexport，但是我最后选了exceljs。主要是一直在持续更新，文档也很全面。 思路由于后台数据库保存的账本数据是采用json格式的，最简单的方法就是通过遍历账本中的所有条目逐行写入excel。但是发现在exceljs这个包中，是提供列定义的，通过定义每列的key，就可以直接把json数据写入了，这个功能非常赞。 这部分的文档说明如下： 123456789101112// Add column headers and define column keys and widths// Note: these column structures are a workbook-building convenience only,// apart from the column width, they will not be fully persisted.worksheet.columns = [ &#123; header: 'Id', key: 'id', width: 10 &#125;, &#123; header: 'Name', key: 'name', width: 32 &#125;, &#123; header: 'D.O.B.', key: 'DOB', width: 10, outlineLevel: 1 &#125;];// Add a couple of Rows by key-value, after the last current row, using the column keysworksheet.addRow(&#123;id: 1, name: 'John Doe', dob: new Date(1970,1,1)&#125;);worksheet.addRow(&#123;id: 2, name: 'Jane Doe', dob: new Date(1965,1,7)&#125;); 需要说明的说，文档里定义的column里的header，会自动写在表格的第一行当做表头，不需要另起一行。 实现主要有这么几个步骤： 新建workbook对象 新建sheet 定义column 写入row 导出 代码如下： 1234567891011121314151617181920212223242526272829303132333435const Excel = require('exceljs')// 测试数据let data = &#123; "subtitle":"偶遇美食节", "comment":"鲷鱼烧，烤鱼，年糕丸子。600+200+350", "cost":1150, "date":"2018-01-20", "time":"14:24", "member":1, "type":"餐饮", "currency":"日元", "location":"Ueno Park (上野恩賜公園)"&#125;// 新建workbook对象let workbook = new Excel.Workbook()// 设置workbook属性，比如作者workbook.creator = 'ToRandom'// 新建sheetlet tempWorksheet = workbook.addWorksheet('东京之旅')// 定义column, 日期比较长，设置为15 可以展示yyyy-mm-ddtempWorksheet.columns = [ &#123;header: '标题', key: 'subtitle'&#125;, &#123;header: '消费类型', key: 'type'&#125;, &#123;header: '评论', key: 'comment'&#125;, &#123;header: '币种', key: 'currency'&#125;, &#123;header: '费用', key: 'cost'&#125;, &#123;header: '日期', key: 'date', width: 15&#125;, &#123;header: '时间', key: 'time'&#125;, &#123;header: '人数', key: 'member'&#125;, &#123;header: '位置信息', key: 'location'&#125; ]// 写入tempWorksheet.addRow(data)// 保存文件，如有需要，前面加await等待执行workbook.xlsx.writeFile("随手记账本.xlsx) 注意 一般node默认是异步执行的，如有后续操作（比如先生成excel文件之后，以附件的形式发送），那么就需要在最后一步保存文件的代码前面加上await。 1await workbook.xlsx.writeFile("随手记账本.xlsx") 如果生成之后，处理完了要删除的话，可以使用fs.unlink来删除。但注意的是，这个unlink也是一个异步函数，删除效果会有延迟。 其他关于exceljs的操作，可以参考原文档，还是相当丰富的。 https://www.npmjs.com/package/exceljs]]></content>
@@ -160,8 +172,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>
@@ -175,10 +187,10 @@
         <category>node</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>hexo</tag>
         <tag>gulp</tag>
         <tag>seo</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>

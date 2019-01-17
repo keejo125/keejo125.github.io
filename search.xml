@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[小程序部署EACCES: permission denied问题]]></title>
+    <url>%2F%E5%B0%8F%E7%A8%8B%E5%BA%8F%E9%83%A8%E7%BD%B2EACCES-permission-denied%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景开发工具： 微信开发者工具 腾讯云环境： node 问题之前做了一个账本excel导出功能，可见用exceljs实现Json对象导出excel。大体逻辑是在项目根目录生成一个临时的excel文件，然后通过邮件发送给用户之后，删除临时文件。 在本地测试通过之后，部署到腾讯云开发环境，点击导出按钮，就报错了。直接请求failed，看了下报错信息： 思路问题其实比较明确，没有权限。按照功能的实现思路，在生成excel文件时第一次打开，发送邮件时第二次用到这个文件。所以问题应该出在程序无法在根目录写入文件，生成excel文件。 注：后续和腾讯云确认，根目录的确是授权给单独一个用户用于部署程序，所以node运行用户无权限在根目录写入文件。 那么解决方法就只有两个 找一个有权限的目录 给node运行的用户授权 腾讯云的小程序服务器端部署是一套完整的自动化流程，个人无法直接访问服务器确认用户权限，所以在不更换部署服务的情况下，只能选择第一种。 解决由于使用的腾讯官方的wafer2框架，在demo中是有上传文件的案例的。 在wafer-node-sdk的node包中lib\upload\index.js中可以看到源代码： 1234567// 初始化 multiparty const form = new multiparty.Form(&#123; encoding: 'utf8', maxFilesSize: maxSize * 1024 * 1024, autoFiles: true, uploadDir: '/tmp' &#125;) demo中，文件是先上传至/tmp目录下，然后再转保存在cos中。由此可以确定/tmp目录是可以写入文件的。 将代码中临时生成的excel文件路径也放在/tmp目录下，果然问题解决了。 插曲在部署到生产环境时，先上传代码，然后点击“安装依赖”，最后点击“部署代码”。一路都显示成功，但结果却发现node环境挂了，直接用web访问生产环境提示bad getway。 心里一紧，再次点击“部署代码”，这次有报错出来了，提示是某依赖没有找到。 于是又点了一次安装依赖，待提示安装成功之后，再点部署代码，就ok了。 事后咨询了腾讯云的支持，理论上生产环境的部署是不需要手动安装依赖的。系统会自动从package.json中拉取依赖清单并安装。这次就不知道是什么情况，记录一下。]]></content>
+      <categories>
+        <category>微信小程序</category>
+      </categories>
+      <tags>
+        <tag>node</tag>
+        <tag>微信小程序</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[用nodemailer实现邮件发送]]></title>
     <url>%2F%E7%94%A8nodemailer%E5%AE%9E%E7%8E%B0%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81.html</url>
     <content type="text"><![CDATA[背景由于随手记账本是基于小程序的，没办法直接通过浏览器下载的方式导出给用户。于是考虑在导出请求时，要求用户提供一个电子邮箱，后台生成导出的excel文件之后直接以附件的形式发送到用户邮箱中。目前是通过SendGrid提供的免费邮箱服务来实现邮箱发送。SendGrid也提供各个版本的webapi支持，不过考虑到后续兼容性，本次就摒弃了SendGrid提供的接口组件，使用nodemail。 思路发送邮件的方式基本大同小异，使用smtp协议的话需要知道： 邮箱服务器地址 端口号 用户名 密码 然后邮件内容上需要明确： 收件人 主题 邮件内容 是否为html格式 附件 发件人（如果通过个人邮箱开通smtp发件，那么可能不支持另外设置发件人。因为发件人就是自己，SendGrid是支持只是发件人的，比如`no-reply@torandom.com`。） 最后按照使用的邮件模块的说明发送即可。 实现nodemailer的文档不是太直观，说明的很详细，但是没有一个完整的简单例子。普通的单次邮件发送主要有这么几个步骤： 设置smtpConfig信息 设置message信息 创建transporter对象 调用transporter对象的sendMail()发送邮件并接受回调 代码如下： 12345678910111213141516171819202122232425262728293031323334353637const nodemailer = require('nodemailer')// 配置邮件服务器信息let smtpConfig = &#123; host: 'smtp.sendgrid.net', port: 587, secure: false, // upgrade later with STARTTLS auth: &#123; user: 'username', pass: 'password' &#125;&#125;// 配置邮件内容信息let message = &#123; from: 'no-reply@torandom.com', to: 'test@torandom.com', subject: '随手记账本 - 导出', text: '随手记账本导出测试', html: '&lt;p&gt;HTML version of the message&lt;/p&gt;', attachments: [ &#123; filename: 'package.json', path: './package.json' &#125; ]&#125;// 创建transporter对象let transporter = nodemailer.createTransport(smtpConfig)// 发送邮件transporter.sendMail(message) .then(info =&gt; &#123; if (info.accepted) &#123; console.log('已发送至' + info.accepted.toString()) &#125; else &#123; console.log('邮件发送失败') console.log(info) &#125; &#125;) 注意 在发送邮件部分。回调的info内容是由你的邮件服务器提供的，不同的邮件服务器提供的内容是不同的需要确认。 如果测试代码的时候，发送到自己的QQ邮箱。发送的数量太多了的话，会有如下的报错： 123456789101112550 Connection frequency limited出错原因：该服务器IP的发信频率超过腾讯邮箱限制。 腾讯邮箱对来自相同IP的外部发信服务器有一定的频率限制： 1、超过每分钟发信量限制，此IP地址被禁止发信若干分钟。 2、超过每小时发信量限制，此IP地址被禁止发信若干小时。 3、超过每日发信量限制，此IP地址本日内禁止再发信。 4、以上频率限制数值属于腾讯邮箱保密数据，恕不公开。 改善建议：如果您是该服务器IP的管理员，请暂停该服务器IP的发信，稍后降低频率重新尝试发信。 如果您是个人邮箱用户，请向您的电子邮件提供商报告此情况。 https://service.mail.qq.com/cgi-bin/help?subtype=1&amp;id=20022&amp;no=1000722 这时候需要把你的发件人加入到接受邮件的白名单中即可。 关于nodemailer的更多高级用法，比如邮件池之列的请参考如下官方文档。 https://nodemailer.com/about/]]></content>
@@ -49,8 +61,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -172,8 +184,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>
@@ -187,10 +199,10 @@
         <category>node</category>
       </categories>
       <tags>
+        <tag>node</tag>
         <tag>hexo</tag>
         <tag>gulp</tag>
         <tag>seo</tag>
-        <tag>node</tag>
       </tags>
   </entry>
   <entry>

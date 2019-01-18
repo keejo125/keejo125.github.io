@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[JavaScrip实现Strip()功能]]></title>
+    <url>%2FJavaScrip%E5%AE%9E%E7%8E%B0Strip-%E5%8A%9F%E8%83%BD.html</url>
+    <content type="text"><![CDATA[背景之前用JS做了一个输入校验的功能，要求输入的必须是一个合法的email地址，结果在自己测试的时候发现输入不通过。检查发现，现在手机输入法（搜狗）联想输入的时候，默认会在输入的词语后面加上一个空格，所以导致校验的正则不通过。 思路Email校验的正则如下： 12let reg = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.)&#123;1,63&#125;[a-z0-9]+$")reg.test(email) 根据上述正则，是不允许字符串开头结尾有空格之类的多余字符的。那么解决这个问题就有两个方案： 修改正则，允许开头、结尾有空格等符号 对输入做处理，删除开头、结尾的空格等符号 这里我选了第二种，因为一直有在写python，其中有一个strip()函数，可以自动的删除字符串开头结尾的空格等多余符号的，所以理所当然认为javascript也有，结果发现竟然是没有的。 那么需要自己写一个了。 对字符串的处理，最简单粗暴的也就是正则了。 在正则中\s可以匹配任何空白字符，包括空格、制表符、换页符等等。等价于 [ \f\n\r\t\v]。注意 Unicode 正则表达式会匹配全角空格符。 http://www.runoob.com/regexp/regexp-syntax.html 先找从字符串开头起的\s : ^\s+ 再找字符串结尾的\s: \s+$ 将找到的字符串替换为空&#39;&#39; 结论根据上面的思路，表达式也就出来了： 1let email = email.replace(/^\s+|\s$/g, '') 其中/g是用于全局替换的，如果不加/g，那么当开头和结尾都有空格等符号时，仅会替换开头部分。 http://www.runoob.com/jsref/jsref-regexp-g.html]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[小程序部署EACCES: permission denied问题]]></title>
     <url>%2F%E5%B0%8F%E7%A8%8B%E5%BA%8F%E9%83%A8%E7%BD%B2EACCES-permission-denied%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景开发工具： 微信开发者工具 腾讯云环境： node 问题之前做了一个账本excel导出功能，可见用exceljs实现Json对象导出excel。大体逻辑是在项目根目录生成一个临时的excel文件，然后通过邮件发送给用户之后，删除临时文件。 在本地测试通过之后，部署到腾讯云开发环境，点击导出按钮，就报错了。直接请求failed，看了下报错信息： 思路问题其实比较明确，没有权限。按照功能的实现思路，在生成excel文件时第一次打开，发送邮件时第二次用到这个文件。所以问题应该出在程序无法在根目录写入文件，生成excel文件。 注：后续和腾讯云确认，根目录的确是授权给单独一个用户用于部署程序，所以node运行用户无权限在根目录写入文件。 那么解决方法就只有两个 找一个有权限的目录 给node运行的用户授权 腾讯云的小程序服务器端部署是一套完整的自动化流程，个人无法直接访问服务器确认用户权限，所以在不更换部署服务的情况下，只能选择第一种。 解决由于使用的腾讯官方的wafer2框架，在demo中是有上传文件的案例的。 在wafer-node-sdk的node包中lib\upload\index.js中可以看到源代码： 1234567// 初始化 multiparty const form = new multiparty.Form(&#123; encoding: 'utf8', maxFilesSize: maxSize * 1024 * 1024, autoFiles: true, uploadDir: '/tmp' &#125;) demo中，文件是先上传至/tmp目录下，然后再转保存在cos中。由此可以确定/tmp目录是可以写入文件的。 将代码中临时生成的excel文件路径也放在/tmp目录下，果然问题解决了。 插曲在部署到生产环境时，先上传代码，然后点击“安装依赖”，最后点击“部署代码”。一路都显示成功，但结果却发现node环境挂了，直接用web访问生产环境提示bad getway。 心里一紧，再次点击“部署代码”，这次有报错出来了，提示是某依赖没有找到。 于是又点了一次安装依赖，待提示安装成功之后，再点部署代码，就ok了。 事后咨询了腾讯云的支持，理论上生产环境的部署是不需要手动安装依赖的。系统会自动从package.json中拉取依赖清单并安装。这次就不知道是什么情况，记录一下。]]></content>
@@ -209,6 +221,9 @@
     <title><![CDATA[JavaScript中的Json、Map、Set]]></title>
     <url>%2FJavaScript%E4%B8%AD%E7%9A%84Json%E3%80%81Map%E3%80%81Set.html</url>
     <content type="text"><![CDATA[问题之前在一个项目中，需要根据申请的部门来获取对应的邮箱地址，想当然的使用了Map对象，结果在调试中完全没有问题，却在实际使用上失效了，查看了下后台log，提示获取到的邮箱地址是undefined。 排查及原因经过百度之后发现原来JS的Map对象的浏览器支持不好，虽然很多地方写IE11开始支持，但其实IE11是不支持new Map()这种方式新建的。 详见如下链接：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Map#浏览器兼容 于是我把换成了用Json对象，果然就解决了。 所以尽量还是用Json吧。 总结Map对象JS的Map存放的是键值对，key值不允许重复。特别要注意的是在一些旧的浏览器中并不支持Map对象。 基本使用 12345678910111213141516171819202122// 新建Map对象&gt; m = new Map()Map &#123;&#125;// 新增Map键值对&gt; m.set('key1','value1')Map &#123; 'key1' =&gt; 'value1' &#125;// 获取Map中的key值&gt; m.get('key1')'value1'// 判断是否存在某key&gt; m.has('key1')true&gt; m.set('key2','value2')Map &#123; 'key1' =&gt; 'value1', 'key2' =&gt; 'value2' &#125;// 删除某键值对&gt; m.delete('key1')true&gt; mMap &#123; 'key2' =&gt; 'value2' &#125;// 清空Map对象&gt; m.clear()undefined 遍历 12345678910&gt; m.set('key1','value1')Map &#123; 'key1' =&gt; 'value1' &#125;&gt; m.set('key2','value2')Map &#123; 'key1' =&gt; 'value1', 'key2' =&gt; 'value2' &#125;&gt; m.forEach(function (value, key, map) &#123;... console.log(key + ":" + value)... &#125;)key1:value1key2:value2undefined Set对象Set对象可以理解为没有值的Map对象，一般用于存放一个不允许重复的列表 基本使用 123456789101112131415161718// 新建Set对象&gt; s = new Set()Set &#123;&#125;// 新增Set值&gt; s.add('key1')Set &#123; 'key1' &#125;&gt; s.add('key2')Set &#123; 'key1', 'key2' &#125;// 删除某值&gt; s.delete('key1')true&gt; sSet &#123; 'key2' &#125;// 清空Set对象&gt; s.clear()undefined&gt; sSet &#123;&#125; 遍历 Set对象的礼遍历和Map基本一样，但是由于Set对象没有value值，所以遍历的时候key和value是一样的。 12345678910&gt; s.add('key1')Set &#123; 'key1' &#125;&gt; s.add('key2')Set &#123; 'key1', 'key2' &#125;&gt; s.forEach(function (value, key, set) &#123;... console.log(key + ":" + value)... &#125;)key1:key1key2:key2undefined Json对象 基本使用 123456\\ 新建Json对象&gt; let currencyItems = &#123; '人民币': 1, '港币': 0.88, '澳门元': 0.86, '新台币': 0.2241, '美元': 6.905, '日元': 0.06, '英镑': 8.69, '欧元': 7.8, '韩元': 0.006, '泰铢': 0.21, '新西兰元': 4.69, '澳大利亚元': 4.96, '菲律宾比索': 0.13, '加拿大元': 5.16, '瑞士法郎': 6.92, '瑞典克朗': 0.76, '丹麦克朗': 1.05, '挪威克朗': 0.8 &#125;undefined\\ 获取Json对象某值&gt; currencyItems['人民币']1 获取Json对象的所有Key值 12345678910111213141516171819&gt; Object.keys(currencyItems)[ '人民币', '港币', '澳门元', '新台币', '美元', '日元', '英镑', '欧元', '韩元', '泰铢', '新西兰元', '澳大利亚元', '菲律宾比索', '加拿大元', '瑞士法郎', '瑞典克朗', '丹麦克朗', '挪威克朗' ] 获取Json对象的长度 12&gt; Object.keys(currencyItems).length18 遍历 12345678910111213141516171819202122&gt; for ( var i in currencyItems) &#123;... console.log(i + ":" + currencyItems[i])... &#125;人民币:1港币:0.88澳门元:0.86新台币:0.2241美元:6.905日元:0.06英镑:8.69欧元:7.8韩元:0.006泰铢:0.21新西兰元:4.69澳大利亚元:4.96菲律宾比索:0.13加拿大元:5.16瑞士法郎:6.92瑞典克朗:0.76丹麦克朗:1.05挪威克朗:0.8undefined]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
       <tags>
         <tag>JavaScript</tag>
         <tag>Json</tag>

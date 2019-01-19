@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[JavaScript实现网页倒计时并跳转页面]]></title>
+    <url>%2FJavaScript%E5%AE%9E%E7%8E%B0%E7%BD%91%E9%A1%B5%E5%80%92%E8%AE%A1%E6%97%B6%E5%B9%B6%E8%B7%B3%E8%BD%AC%E9%A1%B5%E9%9D%A2.html</url>
+    <content type="text"><![CDATA[背景之前想自己从头搭建一个个人博客，后来各种原因直接用了hexo并托管在coding上，效果也不错。于是打算在个人服务器上直接建一个倒计时跳转页面，转到hexo， 也不浪费自己买的域名，哈哈哈。本来想直接跳转，感觉还是有一个倒计时提醒比较好一点。 思路 首先先写一个html5的简单的文字页面就好，留出一个div放倒计时的数字就好了。 然后JavaScript中可以用setInterval来实现按周期调用函数功能，也就是倒计时，每过一秒，数字减1。 setInterval()方法是按照指定的周期（毫秒）来调用函数或计算表达式。 12// 每三秒（3000 毫秒）弹出 "Hello" :setInterval(function()&#123; alert("Hello"); &#125;, 3000); http://www.runoob.com/jsref/met-win-setinterval.html 页面跳转就比较简单了location.href=就可以实现跳转了。 最后整个函数需要在页面加载完成之后进行，也就是放在window.onload里。 window.onload事件会在页面或者图像加载完成后立刻发生，通常用于&lt;body&gt;元素。 1234// html中&lt;body onload="SomeJavaScriptCode"&gt;// js中window.onload=function()&#123;SomeJavaScriptCode&#125;; http://www.runoob.com/jsref/event-onload.html 实现根据上面的思路，实现就比较简单了，在页面部分显示倒计时数字的div设置了id=&quot;time&quot;，在onload事件中，每隔1000毫秒调用一次函数使倒计时数字减1，当倒计时结束时跳转页面。 123456789101112131415161718192021222324252627282930313233343536&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt; &lt;meta charset="utf-8"&gt; &lt;title&gt;图兰登&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;div&gt; &lt;div style="text-align: center;"&gt; &lt;h1&gt;你好，这里是图兰登。&lt;/h1&gt; &lt;h3&gt;欢迎进入我的个人博客！&lt;/h3&gt; &lt;div style="text-align: center"&gt; &lt;div style="display: inline-block"&gt;倒计时：&lt;/div&gt; &lt;div id="time" style="display: inline-block"&gt;&lt;/div&gt; &lt;/div&gt; &lt;/div&gt;&lt;/div&gt;&lt;/body&gt;&lt;script&gt; window.onload = function () &#123; let oDiv = document.getElementById("time"); let count = 5; oDiv.innerHTML = count; let timer = null; timer = setInterval(function () &#123; if (count &gt; 0) &#123; count = count - 1; oDiv.innerHTML = count; &#125; else &#123; location.href='http://keejo.coding.me' &#125; &#125;, 1000); &#125;&lt;/script&gt;&lt;/html&gt; 最终效果可以见链接：https://www.torandom.com]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>html5</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[JavaScrip实现Strip()功能]]></title>
     <url>%2FJavaScrip%E5%AE%9E%E7%8E%B0Strip-%E5%8A%9F%E8%83%BD.html</url>
     <content type="text"><![CDATA[背景之前用JS做了一个输入校验的功能，要求输入的必须是一个合法的email地址，结果在自己测试的时候发现输入不通过。检查发现，现在手机输入法（搜狗）联想输入的时候，默认会在输入的词语后面加上一个空格，所以导致校验的正则不通过。 思路Email校验的正则如下： 12let reg = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.)&#123;1,63&#125;[a-z0-9]+$")reg.test(email) 根据上述正则，是不允许字符串开头结尾有空格之类的多余字符的。那么解决这个问题就有两个方案： 修改正则，允许开头、结尾有空格等符号 对输入做处理，删除开头、结尾的空格等符号 这里我选了第二种，因为一直有在写python，其中有一个strip()函数，可以自动的删除字符串开头结尾的空格等多余符号的，所以理所当然认为javascript也有，结果发现竟然是没有的。 那么需要自己写一个了。 对字符串的处理，最简单粗暴的也就是正则了。 在正则中\s可以匹配任何空白字符，包括空格、制表符、换页符等等。等价于 [ \f\n\r\t\v]。注意 Unicode 正则表达式会匹配全角空格符。 http://www.runoob.com/regexp/regexp-syntax.html 先找从字符串开头起的\s : ^\s+ 再找字符串结尾的\s: \s+$ 将找到的字符串替换为空&#39;&#39; 结论根据上面的思路，表达式也就出来了： 1let email = email.replace(/^\s+|\s$/g, '') 其中/g是用于全局替换的，如果不加/g，那么当开头和结尾都有空格等符号时，仅会替换开头部分。 http://www.runoob.com/jsref/jsref-regexp-g.html]]></content>

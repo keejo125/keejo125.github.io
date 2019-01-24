@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[正则表达式中(pattern)和(?:pattern)的使用]]></title>
     <url>%2F%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%AD-pattern-%E5%92%8C-pattern-%E7%9A%84%E4%BD%BF%E7%94%A8.html</url>
-    <content type="text"><![CDATA[背景在项目中有这样一个需求，在页面提交时，需要验证用户输入的网络端口地址是否符合要求。合法的规则如下： 数字端口：123 udp端口：123udp 范围端口：123-234 udp范围端口：123-234udp 多端口使用;分割：123;123udp;123-234;123-234udp 思路 1、单个端口匹配： 数字端口：\d+ udp端口：\d+udp 范围端口：\d+\-\d+ udp范围端口：\d+\-\d+udp 2、多端口匹配 先使用(pattern)来匹配单个端口，然后(pattern)+就可以来匹配多端口的情况了。由于多端口使用;分割，那么每个pattern的开头有两种情况：字符串起始或者;。写成正则就是(^|;)。 将第一步中4中单端口情况使用|并列起来，就有了如下的正则： 1(^|;)(\d+|\d+udp|\d+\-\d+|\d+\-\d+udp) 多端口： 1((^|;)(\d+|\d+udp|\d+\-\d+|\d+\-\d+udp))+ 匹配到结尾： 1((^|;)(\d+|\d+udp|\d+\-\d+|\d+\-\d+udp))+$ 3、(?:)的使用 在正则中，通过增加?:，使(pattern)变成(?:pattern)，可以实现匹配效果不变，但是不捕获匹配到的内容，从而提升代码的效率。那么上述的正则就变成了： 1(?:(?:^|;)(?:\d+|\d+udp|\d+\-\d+|\d+\-\d+udp))+$ 结论在页面中，使用javascript就是： 123var pattern = /^(?:(?:^|;)(?:\d+|\d+udp|\d+\-\d+|\d+\-\d+udp))+$/str = '123;123udp;123-234;123-234udp'console.log(pattern.test(str)) 拓展在正则中(pattern)和(?:pattern)的描述如下表，在仅进行规则匹配而不需要获取匹配到的内容的时候，建议使用(?:pattern)。 字符 描述 (pattern) 匹配 pattern 并获取这一匹配。所获取的匹配可以从产生的 Matches 集合得到，在VBScript 中使用 SubMatches 集合，在JScript 中则使用 0…0…9 属性。要匹配圆括号字符，请使用 ‘′或′′或′’。 (?:pattern) 匹配 pattern 但不获取匹配结果，也就是说这是一个非获取匹配，不进行存储供以后使用。这在使用 “或” 字符 (\ ) 来组合一个模式的各个部分是很有用。例如， ‘industr(?:y\ ies) 就是一个比 ‘industry\ industries’ 更简略的表达式。 还有其他更多的符号含义可参考： https://www.cnblogs.com/richiewlq/p/7308005.html]]></content>
+    <content type="text"><![CDATA[背景在项目中有这样一个需求，在页面提交时，需要验证用户输入的网络端口地址是否符合要求。合法的规则如下： 数字端口：123 udp端口：123udp 范围端口：123-234 udp范围端口：123-234udp 多端口使用;分割：123;123udp;123-234;123-234udp 思路 1、单个端口匹配： 数字端口：\d+ udp端口：\d+udp 范围端口：\d+\-\d+ udp范围端口：\d+\-\d+udp 2、多端口匹配 先使用(pattern)来匹配单个端口，然后(pattern)+就可以来匹配多端口的情况了。由于多端口使用;分割，那么每个pattern的开头有两种情况：字符串起始或者;。写成正则就是(^|;)。 将第一步中4中单端口情况使用|并列起来，就有了如下的正则： 1(^|;)(\d+|\d+udp|\d+\-\d+|\d+\-\d+udp) 多端口： 1((^|;)(\d+|\d+udp|\d+\-\d+|\d+\-\d+udp))+ 匹配到结尾： 1((^|;)(\d+|\d+udp|\d+\-\d+|\d+\-\d+udp))+$ 3、(?:)的使用 在正则中，通过增加?:，使(pattern)变成(?:pattern)，可以实现匹配效果不变，但是不捕获匹配到的内容，从而提升代码的效率。那么上述的正则就变成了： 1(?:(?:^|;)(?:\d+|\d+udp|\d+\-\d+|\d+\-\d+udp))+$ 结论在页面中，使用javascript就是： 123var pattern = /^(?:(?:^|;)(?:\d+|\d+udp|\d+\-\d+|\d+\-\d+udp))+$/str = '123;123udp;123-234;123-234udp'console.log(pattern.test(str)) 拓展在正则中(pattern)和(?:pattern)的描述如下表，在仅进行规则匹配而不需要获取匹配到的内容的时候，建议使用(?:pattern)。 字符 描述 (pattern) 匹配 pattern 并获取这一匹配。所获取的匹配可以从产生的 Matches 集合得到，在VBScript 中使用 SubMatches 集合，在JScript 中则使用 0…0…9 属性。要匹配圆括号字符，请使用 ‘′或′′或′’。 (?:pattern) 匹配 pattern 但不获取匹配结果，也就是说这是一个非获取匹配，不进行存储供以后使用。这在使用 “或” 字符 (&#124;) 来组合一个模式的各个部分是很有用。例如， industr(?:y&#124;ies) 就是一个比 ‘industry&#124;industries’ 更简略的表达式。 还有其他更多的符号含义可参考： https://www.cnblogs.com/richiewlq/p/7308005.html]]></content>
       <categories>
         <category>JavaScript</category>
       </categories>
@@ -34,8 +34,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>

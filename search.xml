@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[获取知乎种某问题的所有答案]]></title>
+    <url>%2F%E8%8E%B7%E5%8F%96%E7%9F%A5%E4%B9%8E%E7%A7%8D%E6%9F%90%E9%97%AE%E9%A2%98%E7%9A%84%E6%89%80%E6%9C%89%E7%AD%94%E6%A1%88.html</url>
+    <content type="text"><![CDATA[背景知乎是一个比较出名也很有趣的网站，里面很多问题和回答也很有意思。之前看了一些爬虫相关文章经常会以抓取知乎来做一些分析。本次也尝试使用python抓取知乎某问题的全部答案。 思路使用爬虫抓取数据其实主要还是要先弄清楚网页展示的方式，现在大部分网页是基于模板动态生成，具体数据通过json等方式传递，这样的话，其实我们只需要直接通过请求抓取json部分即可，而不需要通过获取整个html然后在分析抓取需要部分。 先随便打开一个知乎首页的问题，比如： 通过在chrome里F12查看网络加载可以发现，有一个answer?相关的请求，在右边的Preview里看下返回的数据，果然答案就在里面。 再看仔细分析下返回的这个json结构： 每个json数据中data字段都含有多个答案体 每个答案体里，具体内容存在于content字段，而该字段是一段html，需要使用BeautifulSoup来解析。 每个json数据中paging字段包含了返回的数据是否是这个问题的起止答案，并且给除了上一批答案的请求地址以及下一批答案的请求地址，和总答案数。 于是可以通过随便获取一个请求地址，然后在data字段中获取答案，并根据paging字段来迭代获取其他的答案。 具体实现根据上述的思路，那么实现起来就比较简单了 先获取手动获取感兴趣的问题的网址 在chrome的F12中找到对应的答案请求地址（开头为https://www.zhihu.com/api/v4/questions/） 通过发起请求获取返回的json数据 在返回的json数据中，遍历data字段，并使用·BeautifulSoup来解析出答案 在返回的json数据中，读取paging字段，获取上一个请求地址或者下一个请求地址 迭代请求，直到结束 具体的实现，可以参考我的github，https://github.com/keejo125/。]]></content>
+      <categories>
+        <category>python</category>
+        <category>网络爬虫与数据分析</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[正则表达式中(pattern)和(?:pattern)的使用]]></title>
     <url>%2F%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%AD-pattern-%E5%92%8C-pattern-%E7%9A%84%E4%BD%BF%E7%94%A8.html</url>
     <content type="text"><![CDATA[背景在项目中有这样一个需求，在页面提交时，需要验证用户输入的网络端口地址是否符合要求。合法的规则如下： 数字端口：123 udp端口：123udp 范围端口：123-234 udp范围端口：123-234udp 多端口使用;分割：123;123udp;123-234;123-234udp 思路 1、单个端口匹配： 数字端口：\d+ udp端口：\d+udp 范围端口：\d+\-\d+ udp范围端口：\d+\-\d+udp 2、多端口匹配 先使用(pattern)来匹配单个端口，然后(pattern)+就可以来匹配多端口的情况了。由于多端口使用;分割，那么每个pattern的开头有两种情况：字符串起始或者;。写成正则就是(^|;)。 将第一步中4中单端口情况使用|并列起来，就有了如下的正则： 1(^|;)(\d+|\d+udp|\d+\-\d+|\d+\-\d+udp) 多端口： 1((^|;)(\d+|\d+udp|\d+\-\d+|\d+\-\d+udp))+ 匹配到结尾： 1((^|;)(\d+|\d+udp|\d+\-\d+|\d+\-\d+udp))+$ 3、(?:)的使用 在正则中，通过增加?:，使(pattern)变成(?:pattern)，可以实现匹配效果不变，但是不捕获匹配到的内容，从而提升代码的效率。那么上述的正则就变成了： 1(?:(?:^|;)(?:\d+|\d+udp|\d+\-\d+|\d+\-\d+udp))+$ 结论在页面中，使用javascript就是： 123var pattern = /^(?:(?:^|;)(?:\d+|\d+udp|\d+\-\d+|\d+\-\d+udp))+$/str = '123;123udp;123-234;123-234udp'console.log(pattern.test(str)) 拓展在正则中(pattern)和(?:pattern)的描述如下表，在仅进行规则匹配而不需要获取匹配到的内容的时候，建议使用(?:pattern)。 字符 描述 (pattern) 匹配 pattern 并获取这一匹配。所获取的匹配可以从产生的 Matches 集合得到，在VBScript 中使用 SubMatches 集合，在JScript 中则使用 0…0…9 属性。 (?:pattern) 匹配 pattern 但不获取匹配结果，也就是说这是一个非获取匹配，不进行存储供以后使用。这在使用 “或” 字符 (&#124;) 来组合一个模式的各个部分是很有用。例如， industr(?:y&#124;ies) 就是一个比 ‘industry&#124;industries’ 更简略的表达式。 还有其他更多的符号含义可参考： https://www.cnblogs.com/richiewlq/p/7308005.html]]></content>
@@ -137,8 +150,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

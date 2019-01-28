@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[requests发请求时timeout配置及异常捕获]]></title>
+    <url>%2Frequests%E5%8F%91%E8%AF%B7%E6%B1%82%E6%97%B6timeout%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7.html</url>
+    <content type="text"><![CDATA[背景今天有用户在访问web系统时，出现了Nginx返回的超时报错。经排查是由于某台服务器异常，导致web系统requests请求时，一直等待响应，等待时间超过了Nginx配置的超时时间，所以Nginx就直接返回了。 思路 配置timeout 一般在使用requests库时，是不设置超时时间的，那么请求就会一直等待，直到某一方关闭。所以在发请求的时候手工指定下timeout参数。 requests的timeout配置如下： 12345678def request(method, url, **kwargs): """Constructs and sends a :class:`Request &lt;Request&gt;`.... :param timeout: (optional) How many seconds to wait for the server to send data before giving up, as a float, or a :ref:`(connect timeout, read timeout) &lt;timeouts&gt;` tuple. :type timeout: float or tuple... 官网介绍如下： 如果你制订了一个单一的值作为 timeout，如下所示： 1r = requests.get(&apos;https://github.com&apos;, timeout=5) 这一 timeout 值将会用作 connect 和 read 二者的 timeout。如果要分别制定，就传入一个元组： 1r = requests.get(&apos;https://github.com&apos;, timeout=(3.05, 27)) 如果远端服务器很慢，你可以让 Request 永远等待，传入一个 None 作为 timeout 值，然后就冲咖啡去吧。 1r = requests.get(&apos;https://github.com&apos;, timeout=None) http://docs.python-requests.org/zh_CN/latest/user/advanced.html#timeout 捕获异常 通过try... except...可以捕获异常。获取的异常信息如下： 在老版本的python中，有e.message可以获取str格式的报错信息，但要注意的是，虽然在定义是e.message是str类型的，但是实际上未必。类型错误的话，在后续的处理中就可能会造成其他异常了。 1234567891011121314151617181920# e.message 定义class BaseException(object):... args = property(lambda self: tuple()) """:type: tuple""" message = property(lambda self: '', lambda self, v: None, lambda self: None) """:type: string"""...# 输入try: requests.get('http://122.248.19.3', timeout=0.001)except requests.exceptions.ReadTimeout as e: print(e.message) print(type(e.message))# 输出HTTPConnectionPool(host='122.248.19.3', port=80): Read timed out. (read timeout=0.001)&lt;class 'requests.packages.urllib3.exceptions.ReadTimeoutError'&gt; 而在新版本的python中，e.message已经被淘汰了。 1234567891011121314151617181920212223242526272829303132333435363738394041class BaseException(object): """Superclass representing the base of the exception hierarchy. The __getitem__ method is provided for backwards-compatibility and will be deprecated at some point. The 'message' attribute is also deprecated. """ def __init__(self, *args): self.args = args def __str__(self): return str(self.args[0] if len(self.args) &lt;= 1 else self.args) def __repr__(self): func_args = repr(self.args) if self.args else "()" return self.__class__.__name__ + func_args def __getitem__(self, index): """Index into arguments passed in during instantiation. Provided for backwards-compatibility and will be deprecated. """ return self.args[index] def _get_message(self): """Method for 'message' property.""" warnings.warn("the 'message' attribute has been deprecated " "since Python 2.6") return self.args[0] if len(args) == 1 else '' message = property(_get_message, doc="access the 'message' attribute; " "deprecated and provided only for " "backwards-compatibility") https://www.python.org/dev/peps/pep-0352/#transition-plan 所以可以用e.args来获取异常说明，e.args返回的是一个tuple，直接通过str(e.args)转换成str类型做后续处理。 结论代码如下，对不通原因造成的异常，可以加不同的except。 12345678910import requeststry: r = requests.get('https://github.com', timeout=5)except requests.exceptions.ConnectTimeout as e: msg = str(e.args) # do sth with msgexcept requests.exceptions.ReadTimeout as e: msg = str(e.args) # do sth with msg]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>requests</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[获取知乎种某问题的所有答案]]></title>
     <url>%2F%E8%8E%B7%E5%8F%96%E7%9F%A5%E4%B9%8E%E7%A7%8D%E6%9F%90%E9%97%AE%E9%A2%98%E7%9A%84%E6%89%80%E6%9C%89%E7%AD%94%E6%A1%88.html</url>
     <content type="text"><![CDATA[背景知乎是一个比较出名也很有趣的网站，里面很多问题和回答也很有意思。之前看了一些爬虫相关文章经常会以抓取知乎来做一些分析。本次也尝试使用python抓取知乎某问题的全部答案。 思路使用爬虫抓取数据其实主要还是要先弄清楚网页展示的方式，现在大部分网页是基于模板动态生成，具体数据通过json等方式传递，这样的话，其实我们只需要直接通过请求抓取json部分即可，而不需要通过获取整个html然后在分析抓取需要部分。 先随便打开一个知乎首页的问题，比如： 通过在chrome里F12查看网络加载可以发现，有一个answer?相关的请求，在右边的Preview里看下返回的数据，果然答案就在里面。 再看仔细分析下返回的这个json结构： 每个json数据中data字段都含有多个答案体 每个答案体里，具体内容存在于content字段，而该字段是一段html，需要使用BeautifulSoup来解析。 每个json数据中paging字段包含了返回的数据是否是这个问题的起止答案，并且给除了上一批答案的请求地址以及下一批答案的请求地址，和总答案数。 于是可以通过随便获取一个请求地址，然后在data字段中获取答案，并根据paging字段来迭代获取其他的答案。 具体实现根据上述的思路，那么实现起来就比较简单了 先获取手动获取感兴趣的问题的网址 在chrome的F12中找到对应的答案请求地址（开头为https://www.zhihu.com/api/v4/questions/） 通过发起请求获取返回的json数据 在返回的json数据中，遍历data字段，并使用·BeautifulSoup来解析出答案 在返回的json数据中，读取paging字段，获取上一个请求地址或者下一个请求地址 迭代请求，直到结束 具体的实现，可以参考我的github，https://github.com/keejo125/。]]></content>
@@ -168,8 +180,8 @@
       </categories>
       <tags>
         <tag>python</tag>
-        <tag>MySQL</tag>
         <tag>SuSE</tag>
+        <tag>MySQL</tag>
         <tag>zypper</tag>
       </tags>
   </entry>

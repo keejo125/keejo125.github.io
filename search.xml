@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Python中的KeyError异常处理]]></title>
+    <url>%2FPython%E4%B8%AD%E7%9A%84KeyError%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86.html</url>
+    <content type="text"><![CDATA[背景在检查web服务器日志的时候，发现有KeyError的异常报错。检查了下出错的代码： 1applyId = session['applyId'] 应该是用户首次访问时，session为空，所以就获取异常了。 思路根据上面的情况，KeyError就是在获取dict中不存在的key值时触发的。那么有解决方案就有两种： 在读取key值的时候，先校验一下是否存在改key： 1234567d = &#123;'a': 1, 'b': 2, 'c': 3&#125;if 'd' in d: print(d['d'])else: print('not exists!') 输出： 1not exists! 在读取dict时，设置default值。这时候需要使用dict内置的get(key[,default])方法： 1234d = &#123;'a': 1, 'b': 2, 'c': 3&#125;print(d.get('d', 'not exits!')) 输出： 1not exists! 结论最后采用了方法二，如果没有该key，就设置默认为空&#39;&#39;。 1applyId = session.get(&apos;applyId&apos;, &apos;&apos;) 后续再涉及到dict的时候都要注意下默认值的处理，避免出现KeyError的方法还有其他几种方法，可以参考如下的链接，会比较麻烦一点： https://blog.csdn.net/u011089523/article/details/72887163/]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[requests发请求时timeout配置及异常捕获]]></title>
     <url>%2Frequests%E5%8F%91%E8%AF%B7%E6%B1%82%E6%97%B6timeout%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7.html</url>
     <content type="text"><![CDATA[背景今天有用户在访问web系统时，出现了Nginx返回的超时报错。经排查是由于某台服务器异常，导致web系统requests请求时，一直等待响应，等待时间超过了Nginx配置的超时时间，所以Nginx就直接返回了。 思路 配置timeout 一般在使用requests库时，是不设置超时时间的，那么请求就会一直等待，直到某一方关闭。所以在发请求的时候手工指定下timeout参数。 requests的timeout配置如下： 12345678def request(method, url, **kwargs): """Constructs and sends a :class:`Request &lt;Request&gt;`.... :param timeout: (optional) How many seconds to wait for the server to send data before giving up, as a float, or a :ref:`(connect timeout, read timeout) &lt;timeouts&gt;` tuple. :type timeout: float or tuple... 官网介绍如下： 如果你制订了一个单一的值作为timeout，如下所示： 1r = requests.get('https://github.com', timeout=5) 这一timeout值将会用作 connect和 read二者的 timeout。如果要分别制定，就传入一个元组： 1r = requests.get('https://github.com', timeout=(3.05, 27)) 如果远端服务器很慢，你可以让 Request 永远等待，传入一个None作为timeout值，然后就冲咖啡去吧。 1r = requests.get('https://github.com', timeout=None) http://docs.python-requests.org/zh_CN/latest/user/advanced.html#timeout 捕获异常 通过try... except...可以捕获异常。获取的异常信息如下： 在老版本的python中，有e.message可以获取str格式的报错信息，但要注意的是，虽然在定义中e.message是str类型的，但是实际上未必。类型错误的话，在后续的处理中就可能会造成其他异常了。 1234567891011121314151617181920# e.message 定义class BaseException(object):... args = property(lambda self: tuple()) """:type: tuple""" message = property(lambda self: '', lambda self, v: None, lambda self: None) """:type: string"""...# 输入try: requests.get('http://122.248.19.3', timeout=0.001)except requests.exceptions.ReadTimeout as e: print(e.message) print(type(e.message))# 输出HTTPConnectionPool(host='122.248.19.3', port=80): Read timed out. (read timeout=0.001)&lt;class 'requests.packages.urllib3.exceptions.ReadTimeoutError'&gt; 而在新版本的python中，e.message已经被淘汰了。 1234567891011121314151617181920212223242526272829303132333435363738394041class BaseException(object): """Superclass representing the base of the exception hierarchy. The __getitem__ method is provided for backwards-compatibility and will be deprecated at some point. The 'message' attribute is also deprecated. """ def __init__(self, *args): self.args = args def __str__(self): return str(self.args[0] if len(self.args) &lt;= 1 else self.args) def __repr__(self): func_args = repr(self.args) if self.args else "()" return self.__class__.__name__ + func_args def __getitem__(self, index): """Index into arguments passed in during instantiation. Provided for backwards-compatibility and will be deprecated. """ return self.args[index] def _get_message(self): """Method for 'message' property.""" warnings.warn("the 'message' attribute has been deprecated " "since Python 2.6") return self.args[0] if len(args) == 1 else '' message = property(_get_message, doc="access the 'message' attribute; " "deprecated and provided only for " "backwards-compatibility") https://www.python.org/dev/peps/pep-0352/#transition-plan 所以可以用e.args来获取异常说明，e.args返回的是一个tuple，直接通过str(e.args)转换成str类型做后续处理。 结论代码如下，对不通原因造成的异常，可以加不同的except。 12345678910import requeststry: r = requests.get('https://github.com', timeout=5)except requests.exceptions.ConnectTimeout as e: msg = str(e.args) # do sth with msgexcept requests.exceptions.ReadTimeout as e: msg = str(e.args) # do sth with msg]]></content>
@@ -59,8 +70,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -109,8 +120,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -162,8 +173,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -285,8 +296,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

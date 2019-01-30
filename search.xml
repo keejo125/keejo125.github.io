@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[MySQL按时间统计数据]]></title>
+    <url>%2FMySQL%E6%8C%89%E6%97%B6%E9%97%B4%E7%BB%9F%E8%AE%A1%E6%95%B0%E6%8D%AE.html</url>
+    <content type="text"><![CDATA[背景在做数据库的统计时，经常会需要根据年、月、日来统计数据，然后配合echarts来制作可视化效果。 数据库：MySQL 思路 按照时间维度进行统计的前提是需要数据库中有保留时间信息，建议是使用MySQL自带的datetime类型来记录时间。 1`timestamp` datetime DEFAULT NULL, 在MySQL中对于时间日期的处理的函数主要是DATE_FORMAT(date,format)。可用的参数如下 格式 描述 %a 缩写星期名 %b 缩写月名 %c 月，数值 %D 带有英文前缀的月中的天 %d 月的天，数值(00-31) %e 月的天，数值(0-31) %f 微秒 %H 小时 (00-23) %h 小时 (01-12) %I 小时 (01-12) %i 分钟，数值(00-59) %j 年的天 (001-366) %k 小时 (0-23) %l 小时 (1-12) %M 月名 %m 月，数值(00-12) %p AM 或 PM %r 时间，12-小时（hh:mm:ss AM 或 PM） %S 秒(00-59) %s 秒(00-59) %T 时间, 24-小时 (hh:mm:ss) %U 周 (00-53) 星期日是一周的第一天 %u 周 (00-53) 星期一是一周的第一天 %V 周 (01-53) 星期日是一周的第一天，与 %X 使用 %v 周 (01-53) 星期一是一周的第一天，与 %x 使用 %W 星期名 %w 周的天 （0=星期日, 6=星期六） %X 年，其中的星期日是周的第一天，4 位，与 %V 使用 %x 年，其中的星期一是周的第一天，4 位，与 %v 使用 %Y 年，4 位 %y 年，2 位 注：当涉及到按日统计是，需要使用%j，而如果使用%d, %e, %w的话，那么不同月份/周里的相同值会统计在一起。 涉及到获取当前时间，则可以通过now()或者sysdate()来获取。 12SELECT SYSDATE() FROM DUAL;SELECT NOW() FROM DUAL; 按照实际需求使用group by查询即可。 结论需统计的表结构如下： 123456789CREATE TABLE `apilog` ( `id` int(11) NOT NULL AUTO_INCREMENT, `username` varchar(64) DEFAULT NULL, `action` varchar(64) DEFAULT NULL, `params` text, `result` text, `timestamp` datetime DEFAULT NULL, PRIMARY KEY (`id`)) 统计时间范围内不同分类action的数量 12345678# 当日SELECT action, COUNT(id) count FROM apilog WHERE DATE_FORMAT(`timestamp`,&apos;%j&apos;) = DATE_FORMAT(now(),&apos;%j&apos;) ORDER BY count desc;# 当周SELECT action, COUNT(id) count FROM apilog WHERE DATE_FORMAT(`timestamp`,&apos;%u&apos;) = DATE_FORMAT(now(),&apos;%u&apos;) ORDER BY count desc;# 当月SELECT action, COUNT(id) count FROM apilog WHERE DATE_FORMAT(`timestamp`,&apos;%m&apos;) = DATE_FORMAT(now(),&apos;%m&apos;) ORDER BY count desc;# 当年SELECT action, COUNT(id) count FROM apilog WHERE DATE_FORMAT(`timestamp`,&apos;%Y&apos;) = DATE_FORMAT(now(),&apos;%Y&apos;) ORDER BY count desc; 统计某分类action的时间维度数量 12345678# 按日SELECT action, DATE_FORMAT(`timestamp`,&apos;%j&apos;), COUNT(id) count FROM apilog WHERE action = &apos;xxx&apos; GROUP BY DATE_FORMAT(`timestamp`,&apos;%j&apos;)# 按周SELECT action, DATE_FORMAT(`timestamp`,&apos;%u&apos;), COUNT(id) count FROM apilog WHERE action = &apos;xxx&apos; GROUP BY DATE_FORMAT(`timestamp`,&apos;%u&apos;)# 按月SELECT action, DATE_FORMAT(`timestamp`,&apos;%m&apos;), COUNT(id) count FROM apilog WHERE action = &apos;xxx&apos; GROUP BY DATE_FORMAT(`timestamp`,&apos;%m&apos;)# 按年SELECT action, DATE_FORMAT(`timestamp`,&apos;%Y&apos;), COUNT(id) count FROM apilog WHERE action = &apos;xxx&apos; GROUP BY DATE_FORMAT(`timestamp`,&apos;%Y&apos;) 同时按action和时间维度统计 12345678# 按日SELECT action, DATE_FORMAT(`timestamp`,&apos;%j&apos;), COUNT(id) count FROM apilog GROUP BY action, DATE_FORMAT(`timestamp`,&apos;%j&apos;)# 按周SELECT action, DATE_FORMAT(`timestamp`,&apos;%u&apos;), COUNT(id) count FROM apilog GROUP BY action, DATE_FORMAT(`timestamp`,&apos;%u&apos;)# 按月SELECT action, DATE_FORMAT(`timestamp`,&apos;%m&apos;), COUNT(id) count FROM apilog GROUP BY action, DATE_FORMAT(`timestamp`,&apos;%m&apos;)# 按年SELECT action, DATE_FORMAT(`timestamp`,&apos;%Y&apos;), COUNT(id) count FROM apilog GROUP BY action, DATE_FORMAT(`timestamp`,&apos;%Y&apos;) 以上就是比较常用的时间统计了，更多的时间维度，可以参考上面的参数表类似处理即可。]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Python中的KeyError异常处理]]></title>
     <url>%2FPython%E4%B8%AD%E7%9A%84KeyError%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86.html</url>
     <content type="text"><![CDATA[背景在检查web服务器日志的时候，发现有KeyError的异常报错。检查了下出错的代码： 1applyId = session['applyId'] 应该是用户首次访问时，session为空，所以就获取异常了。 思路根据上面的情况，KeyError就是在获取dict中不存在的key值时触发的。那么有解决方案就有两种： 在读取key值的时候，先校验一下是否存在改key： 1234567d = &#123;'a': 1, 'b': 2, 'c': 3&#125;if 'd' in d: print(d['d'])else: print('not exists!') 输出： 1not exists! 在读取dict时，设置default值。这时候需要使用dict内置的get(key[,default])方法： 1234d = &#123;'a': 1, 'b': 2, 'c': 3&#125;print(d.get('d', 'not exits!')) 输出： 1not exists! 结论最后采用了方法二，如果没有该key，就设置默认为空&#39;&#39;。 1applyId = session.get(&apos;applyId&apos;, &apos;&apos;) 后续再涉及到dict的时候都要注意下默认值的处理，避免出现KeyError的方法还有其他几种方法，可以参考如下的链接，会比较麻烦一点： https://blog.csdn.net/u011089523/article/details/72887163/]]></content>
@@ -120,8 +133,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -173,8 +186,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -296,8 +309,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

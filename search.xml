@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Flask在Windows环境下的部署]]></title>
+    <url>%2FFlask%E5%9C%A8Windows%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E9%83%A8%E7%BD%B2.html</url>
+    <content type="text"><![CDATA[背景由于目前在用的Flask项目涉及到一部分依赖Windows的处理，还无法迁移到linux平台，那么在windows环境下，要怎么部署呢？ 思路根据Flask官网介绍，由于Flask内置的服务器性能不佳，推荐的主要的部署方式有如下几种： mod_wsgi (Apache) 独立 WSGI 容器 Gunicorn Tornado Gevent uWSGI FastCGI CGI 上述这些部署方式，仅Tornado是支持在windows情况下部署的，配合上Nginx可以达到比较好的效果。可已参考Nginx与tornado框架的并发评测。 但是在实际使用中发现，tornado 的稳定性虽然很高，但是在tornado上部署Flask，并不会有异步的效果。实际上还是单进程阻塞运行的，即使在Flask中配置了threaded = True也无法实现多线程使用。 Flask多线程情况配置启用多线程： 1234# manage.pyfrom flask_script import Serverserver = Server(host="0.0.0.0", threaded=True) 在Flask中配置两条测试路由 123456789import time@main.route('/test')def maintest(): return 'hello world' @main.route('/sleep')def mainsleep(): time.sleep(60) return 'wake up' 先用浏览器访问\sleep： 随即立刻访问\test: 可见两次访问是不同的线程处理的，不会出现堵塞的情况。 tornado + Flask多线程情况使用tornado托管： 12345678from tornado.wsgi import WSGIContainerfrom tornado.httpserver import HTTPServerfrom tornado.ioloop import IOLoopfrom yourapplication import apphttp_server = HTTPServer(WSGIContainer(app))http_server.listen(5000)IOLoop.instance().start() 先用浏览器访问\sleep： 随即立刻访问\test: 可以发现，虽然tornado框架是支持异步的，但是由于实际上后台的处理是同步的，从而无法实现异步的处理的效果。如果想后台的处理也异步，则需要直接使用tornado来开发。 那么为什么使用tornado来托管flask呢？ Tornado 是一个开源的可伸缩的、非阻塞式的 web 服务器和工具集，它驱动了FriendFeed 。因为它使用了 epoll 模型且是非阻塞的，它可以处理数以千计的并发固定连接，这意味着它对实时 web 服务是理想的。把 Flask 集成这个服务是直截了当的 根据官网描述，其实也是为了弥足flask自带服务器不稳定的问题。 Flask高并发下的表现使用tsung进行压测，压力500： Name highest 10sec mean lowest 10sec mean Highest Rate Mean Rate Mean Count connect 34.30 msec 31.91 msec 506 / sec 356.60 / sec 33.19 msec 103908 page 0.42 sec 0.29 sec 505 / sec 356.32 / sec 0.39 sec 103782 request 0.42 sec 0.29 sec 505 / sec 356.32 / sec 0.39 sec 103782 session 1mn 24sec 10.64 sec 11.4 / sec 1.21 / sec 14.24 sec 362 Code Highest Rate Mean Rate Total number 200 505 / sec 356.32 / sec 104792 Name Highest Rate Total number error_abort 0.5 / sec 1 error_abort_max_conn_retries 11.7 / sec 362 error_connect_econnrefused 58.6 / sec 1667 可见，在500的并发下，效果不佳，有很多的链接拒绝。 Flask + Nginx在高并发下的表现 使用tsung进行压测，压力500： Name highest 10sec mean lowest 10sec mean Highest Rate Mean Rate Mean Count connect 0.20 sec 30.95 msec 1810.5 / sec 626.43 / sec 0.11 sec 189853 page 0.68 sec 0.17 sec 1810.1 / sec 625.72 / sec 0.40 sec 189581 request 0.68 sec 0.17 sec 1810.1 / sec 625.72 / sec 0.40 sec 189581 Code Highest Rate Mean Rate Total number 200 906.4 / sec 196.08 / sec 60689 502 1443.9 / sec 430.02 / sec 129006 Name Highest Rate Total number error_abort 0.5 / sec 1 情况差不多，Flask服务器表现还算稳定，那么尝试增加后台Flask服务器数量（通过多端口实现）： 1234python manage.py runserver --port=8001python manage.py runserver --port=8002python manage.py runserver --port=8003python manage.py runserver --port=8004 使用tsung进行压测，压力500，4个Flask服务器： Name highest 10sec mean lowest 10sec mean Highest Rate Mean Rate Mean Count connect 0.18 sec 32.57 msec 3510.1 / sec 639.92 / sec 0.11 sec 195154 page 0.49 sec 85.30 msec 3512.1 / sec 639.07 / sec 0.35 sec 194856 request 0.49 sec 85.30 msec 3512.1 / sec 639.07 / sec 0.35 sec 194856 Code Highest Rate Mean Rate Total number 200 3510.1 / sec 639.50 / sec 194986 Name Highest Rate Total number error_abort 0.333333333333333 / sec 1 这个效果妥妥的。 使用tsung进行压测，压力1000，4个Flask服务器： Name highest 10sec mean lowest 10sec mean Highest Rate Mean Rate Mean Count connect 0.20 sec 32.63 msec 2983.8 / sec 492.94 / sec 98.56 msec 150793 page 0.57 sec 90.00 msec 2976.4 / sec 491.31 / sec 0.40 sec 150275 request 0.57 sec 90.00 msec 2976.4 / sec 491.31 / sec 0.40 sec 150275 Code Highest Rate Mean Rate Total number 200 2981.4 / sec 488.92 / sec 149556 502 92.5 / sec 4.02 / sec 925 Name Highest Rate Total number error_abort 0.333333333333333 / sec 1 开始有一些502的超时错误了。 使用tsung进行压测，压力1000，4个tornado服务器： Name highest 10sec mean lowest 10sec mean Highest Rate Mean Rate Mean Count connect 0.18 sec 86.24 msec 2052.1 / sec 693.82 / sec 0.14 sec 208786 page 0.52 sec 0.24 sec 2060.7 / sec 693.34 / sec 0.45 sec 208606 request 0.52 sec 0.24 sec 2060.7 / sec 693.34 / sec 0.45 sec 208606 Code Highest Rate Mean Rate Total number 200 2056.6 / sec 693.67 / sec 208703 在并发1000的情况下，是否使用tornado托管Flask效果差不多。 结论根据上述测试，直接使用Flask服务器的话，由于并发处理较弱，会有各种超时或者连接拒绝的错误。通过搭配Nginx来进行缓冲，通过增加后端服务器数来提供并发处理量。 所以最终选择了Nginx+后台4个Flask服务器的方式。由于目前Flask项目全体用户只有几千，目前并发情况很低，该方式完全满足使用。 如果在更大型项目中，并发上万，建议还是考虑想办法迁移至Liunx环境，通过官方建议的方式部署。]]></content>
+      <categories>
+        <category>python</category>
+        <category>flask</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>flask</tag>
+        <tag>nginx</tag>
+        <tag>tornado</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Mac下安装富士施乐打印机]]></title>
     <url>%2FMac%E4%B8%8B%E5%AE%89%E8%A3%85%E5%AF%8C%E5%A3%AB%E6%96%BD%E4%B9%90%E6%89%93%E5%8D%B0%E6%9C%BA.html</url>
     <content type="text"><![CDATA[背景打印机在windows环境下安装还是很方便的，在mac下，一路默认安装会有点问题，记录一下。 安装 下载打印机驱动：http://onlinesupport.fujixerox.com/setupSupport.do?cid=3&amp;ctry_code=CN&amp;lang_code=zh_CN 安装打印机驱动，一路默认就好了 打开Mac的 系统偏好设置，点击打印机与扫描仪 输入打印机的IP地址，然后点击添加，注意“协议” 要修改为“HP Jetdirect-Socket”。 点击添加即可 注意Mac在安装打印机时，默认的协议”互联网打印协议-IPP”，如下图所示。 按照默认的协议，也会自动识别到打印机型号，但是点击添加之后，会有报错： 如果继续添加，虽然可以添加成功，但实际打印时就会打印机无响应。]]></content>
@@ -117,8 +132,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -220,8 +235,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

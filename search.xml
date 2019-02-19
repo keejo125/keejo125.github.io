@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Mac上如何快速获得文件路径]]></title>
+    <url>%2FMac%E4%B8%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E8%8E%B7%E5%BE%97%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84.html</url>
+    <content type="text"><![CDATA[背景在使用开发中，免不了要涉及文件的读写。在Mac环境下如何快速的获得某文件的路径呢？ 思路方法一：pwd如果是习惯于使用命令行的用户，那么直接在命令行通过cd来找到对应的文件，再使用pwd即可： 12$ pwd/Users/zhengk/PycharmProjects/Mine/maoyan 该方法简单，直观，但需要对文件所在位置有较明确的认识。 方法二：Finder使用Mac的Finder（达坊）功能： 先打开Finder，在“显示”中勾选“显示路径栏”； 这时候在Finder窗口最下端会有显示文件的路径，选中需要的文件，鼠标右键“路径栏”中的文件名，就可以看到“拷贝为路径名称”的选项； 拷贝即可，结果如下： 1/Users/zhengk/PycharmProjects/Mine/maoyan/jupiter.png 方法三：结合Finder与终端 先在Finder中找到需要确认路径的文件 打开一个空白的终端窗口 将文件拖到终端窗口中，终端中就会出现该文件的路径地址。 1$ /Users/zhengk/PycharmProjects/Mine/maoyan/jupiter.png 结论以上三种方法都可以在Mac中获取对应文件的路径。 方法一针对深度终端用户会比较好，如果明确知道文件的位置也会很快。 方法二和方法三通过可视化界面获取，比较直观。]]></content>
+      <categories>
+        <category>操作系统</category>
+        <category>mac</category>
+      </categories>
+      <tags>
+        <tag>mac</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[使用wordcloud绘制词云]]></title>
     <url>%2F%E4%BD%BF%E7%94%A8wordcloud%E7%BB%98%E5%88%B6%E8%AF%8D%E4%BA%91.html</url>
     <content type="text"><![CDATA[背景前面通过爬虫获取了猫眼上”流浪地球“的评论：获取猫眼电影的评论 那么就做一个酷炫的词云吧，直观的看看大家都在想什么，先上效果图： 思路数据清洗首先由于评论是用户发表的，可能什么字符都会有，要先把一些特殊符号去掉，这里就用到了正则替换： 1msg = re.sub("[\s+\.\!\/_,$%^*()+\"\'\?]+|[+——！，。？、~@#￥%……&amp;*（）【】；：]+|\[.+\]|\［.+\］", "", line) 分词与标签清洗后的数据，可以使用jieba分词包来进行分词，并把所有的分词保存在一个list中，然后计算出每个分词出现的次数。 12345678910# 分词tags = jieba.analyse.extract_tags(msg)for t in tags: word_list.append(t)# 计算词频for word in word_list: if word not in word_dict: word_dict[word] = 1 else: word_dict[word] += 1 生成词云使用wordcloud包，就可以很方便的生成词云图片了。 先新建一个WordCloud对象，进行配置，然后利用前面的分词词频就可以生成对应的图片了。 12345678# 计算图片颜色alice_coloring = np.array(img)my_wordcloud = WordCloud(background_color="white", max_words=500, mask=alice_coloring, max_font_size=200, random_state=42, font_path=(os.path.join(d, "font/msyh.ttf"))) my_wordcloud = my_wordcloud.generate_from_frequencies(wordList) 这里需要注意的是： mask=alice_coloring：这里通过numpy将图片矩阵化，来获取图片的颜色作为WordCloud的mask，是为了最后生成的图云不仅外形与我们输入的图片保持一致，而且整体颜色也保持一致。 输入的原图，背景色需要设置为白色而不是透明色，否则会全屏幕都是字。。。 对于中文的词云，需要制定中文的字体，这里用的是微软雅黑 保存图片最后使用matplotlib.pyplot来保存图片，保存前要进行图片属性的一些设置。 12345678910width = img.width/80height = img.height/80plt.figure(figsize=(width, height))plt.imshow(my_wordcloud.recolor(color_func=image_colors))plt.imshow(my_wordcloud)plt.axis("off")# 通过设置subplots_adjust来控制画面外边框plt.subplots_adjust(bottom=.01, top=.99, left=.01, right=.99)plt.savefig("jupiter_wordcloud_1.png")plt.show() 这里需要注意的是： 建议根据原图片的长宽比例进行一定的缩小，以免生成的图片像素过大而产生报错。 1ValueError: Image size of 98400x46500 pixels is too large. It must be less than 2^16 in each direction. 结论以上就是使用抓取的评论生成词云的大致思路，完成的实现代码请见：https://github.com/keejo125/web_scraping_and_data_analysis/tree/master/maoyan 最后放一张原图，你能看的出来嘛，抠图技术有限O(∩_∩)O哈哈~]]></content>
@@ -284,8 +296,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[使用Pandas分析流浪地球评论数据]]></title>
+    <url>%2F%E4%BD%BF%E7%94%A8Pandas%E5%88%86%E6%9E%90%E6%B5%81%E6%B5%AA%E5%9C%B0%E7%90%83%E8%AF%84%E8%AE%BA%E6%95%B0%E6%8D%AE.html</url>
+    <content type="text"><![CDATA[背景前面通过爬虫获取了猫眼上”流浪地球“的评论：获取猫眼电影的评论，除了做词云之外，还可以对数据进行分析，看看大家对电影的反响如何。 思路前面我们再抓取时，将评论的时间和内容通过csv的格式保存下来，并使用;分割。读取csv文件并统计处理就要用到大名鼎鼎的pandas了。 读取数据pandas提供read_csv方法来直接独处数据保存为DateFrame格式。 1df = pd.read_csv('comment.csv', sep=';', header=None) 数据处理 设置数据列名 由于我们知道数据有两列，先通过这只列名可以方便后续引用。 1df.columns = ['date', 'comment'] 时间日期处理 在date列，我们保存的数据格式是string，需要把转换为日期格式才能进一步处理。 1df['date'] = pd.to_datetime(df['date']) 我们需要按时间来统计，所以把date列设置为index: 1df = df.set_index('date') 统计处理 日期筛选 由于我们知道《流浪地球》是2月5日上映的，我们可以对日期进行限定，以免出现有些在上映前的评论，会占用大段的空白情况。 设置index之后，可以参考list类型操作，由于时间是倒序的，所以可以直接使用[:&#39;2019-02-04&#39;]来选取2月4日之后到今天的所有数据。pandas在数据筛选方面相当智能，按照datetime的格式直接筛选即可。 1cacu_df = df[:'2019-02-04'] 按日期进行数量统计 pandas中，通过resample方法进行重新采样，通过传入rule参数就可以按需要的频率获取数据，获得一个resampler对象。 1DataFrame.resample(rule, how=None, axis=0, fill_method=None, closed=None, label=None, convention='start', kind=None, loffset=None, limit=None, base=0, on=None, level=None) resampler对象提供了很多的统计方法，比如汇总求和可使用Resampler.count()。 12# 按日统计数量cacu = cacu_df.resample('D').count() 这样就完成了按日期求和统计操作。 绘图画图需要使用matplotlib库，通过导入该库，可直接对DateFrame对象进行画图处理。画图及图表格式化如下： 123456789101112131415161718# 设置中文字体font = FontProperties(fname='/System/Library/Fonts/PingFang.ttc')plt.plot(cacu)plt.title("流浪地球评论分析", fontproperties=font)plt.xlabel("日期", fontproperties=font)plt.ylabel("评论数", fontproperties=font)plt.axis("tight")# 显示网格plt.grid(True)# 自动旋转横轴日期plt.gcf().autofmt_xdate()# 显示数值for a, b in zip(cacu.index, cacu.values):plt.text(a, b, str(b[0]))# 保存图片plt.savefig('comment_analysis.png')# 查看图片plt.show() 结论以上就是使用抓取的评论生成日期统计图片的大致思路，完成的实现代码请见：https://github.com/keejo125/web_scraping_and_data_analysis/tree/master/maoyan 结果如下： 可见从上映之后，关注度直线飙升，到2月10日之后（上映5天），大家关注度逐渐下降。其中2月14日为情人节，大家的关注又有了小幅的上升。也许很多人在这天通过看《流浪地球》过节吧。 拓展 matplotlib画图说明 该库是默认不支持中文的，所以如果不经过配置直接画图，设置中文图标会显示为空白方框。详细配置参考上文。 pandas使用 更多的resampler的方法，可见：http://pandas.pydata.org/pandas-docs/stable/reference/resampling.html 更多resample的rule参考下表： Date Offset Frequency String Description DateOffset None Generic offset class, defaults to 1 calendar day BDay or BusinessDay &#39;B&#39; business day (weekday) CDay or CustomBusinessDay &#39;C&#39; custom business day Week &#39;W&#39; one week, optionally anchored on a day of the week WeekOfMonth &#39;WOM&#39; the x-th day of the y-th week of each month LastWeekOfMonth &#39;LWOM&#39; the x-th day of the last week of each month MonthEnd &#39;M&#39; calendar month end MonthBegin &#39;MS&#39; calendar month begin BMonthEnd or BusinessMonthEnd &#39;BM&#39; business month end BMonthBegin or BusinessMonthBegin &#39;BMS&#39; business month begin CBMonthEnd or CustomBusinessMonthEnd &#39;CBM&#39; custom business month end CBMonthBegin or CustomBusinessMonthBegin &#39;CBMS&#39; custom business month begin SemiMonthEnd &#39;SM&#39; 15th (or other day_of_month) and calendar month end SemiMonthBegin &#39;SMS&#39; 15th (or other day_of_month) and calendar month begin QuarterEnd &#39;Q&#39; calendar quarter end QuarterBegin &#39;QS&#39; calendar quarter begin BQuarterEnd &#39;BQ business quarter end BQuarterBegin &#39;BQS&#39; business quarter begin FY5253Quarter &#39;REQ&#39; retail (aka 52-53 week) quarter YearEnd &#39;A&#39; calendar year end YearBegin &#39;AS&#39; or &#39;BYS&#39; calendar year begin BYearEnd &#39;BA&#39; business year end BYearBegin &#39;BAS&#39; business year begin FY5253 &#39;RE&#39; retail (aka 52-53 week) year Easter None Easter holiday BusinessHour &#39;BH&#39; business hour CustomBusinessHour &#39;CBH&#39; custom business hour Day &#39;D&#39; one absolute day Hour &#39;H&#39; one hour Minute &#39;T&#39; or &#39;min&#39; one minute Second &#39;S&#39; one second Milli &#39;L&#39; or &#39;ms&#39; one millisecond Micro &#39;U&#39; or &#39;us&#39; one microsecond Nano &#39;N&#39; one nanosecond]]></content>
+      <categories>
+        <category>python</category>
+        <category>网络爬虫与数据分析</category>
+      </categories>
+      <tags>
+        <tag>pandas</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Mac上如何快速获得文件路径]]></title>
     <url>%2FMac%E4%B8%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E8%8E%B7%E5%BE%97%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84.html</url>
     <content type="text"><![CDATA[背景在使用开发中，免不了要涉及文件的读写。在Mac环境下如何快速的获得某文件的路径呢？ 思路方法一：pwd如果是习惯于使用命令行的用户，那么直接在命令行通过cd来找到对应的文件，再使用pwd即可： 12$ pwd/Users/zhengk/PycharmProjects/Mine/maoyan 该方法简单，直观，但需要对文件所在位置有较明确的认识。 方法二：Finder使用Mac的Finder（达坊）功能： 先打开Finder，在“显示”中勾选“显示路径栏”； 这时候在Finder窗口最下端会有显示文件的路径，选中需要的文件，鼠标右键“路径栏”中的文件名，就可以看到“拷贝为路径名称”的选项； 拷贝即可，结果如下： 1/Users/zhengk/PycharmProjects/Mine/maoyan/jupiter.png 方法三：结合Finder与终端 先在Finder中找到需要确认路径的文件 打开一个空白的终端窗口 将文件拖到终端窗口中，终端中就会出现该文件的路径地址。 1$ /Users/zhengk/PycharmProjects/Mine/maoyan/jupiter.png 结论以上三种方法都可以在Mac中获取对应文件的路径。 方法一针对深度终端用户会比较好，如果明确知道文件的位置也会很快。 方法二和方法三通过可视化界面获取，比较直观。]]></content>
@@ -193,8 +205,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>

@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[matplotlib中文展示乱码问题]]></title>
+    <url>%2Fmatplotlib%E4%B8%AD%E6%96%87%E5%B1%95%E7%A4%BA%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景使用Python做数据分析时，不可避免的需要使用matplotlib画图。但它对中文并不友好，使用中文作为标签或者抬头会有乱码方框的问题： 解决方案方案一：设置中文字体matplotlib提供了FontProperties对象，可以通过手工设置字体来格式化生成的展示图片。具体实现如下： 找到中文字体文件 在Mac下，可通过打开“字体册”应用找到对应的字体和字体所在的路径（默认为：/System/Library/Fonts/PingFang.ttc） 在windows下，一般在C:\Windows\Fonts目录下。 也可直接网上下载需要的字体 配置字体属性 12from matplotlib.font_manager import FontPropertiesfont = FontProperties(fname='/System/Library/Fonts/PingFang.ttc') 引用字体属性 1plt.title("中文测试", fontproperties=font) 画图即可： 方案二： 使用第三方库为解决中文画图的问题，强大的网友自己做了第三方支持中文库可以方便的展示中文，且支持 matplotlib 混合编程, 完全相同的API设计。 安装pyployz 1pip install pyplotz 使用pyplotz和matplotlib混合配置 12345678910import matplotlib.pyplot as pltplt.plot()# 新建pltz对象，用于显示中文from pyplotz.pyplotz import PyplotZpltz = PyplotZ()pltz.enable_chinese()pltz.title('中文测试')plt.savefig('Chinese_1')plt.show() 效果如下： 更多介绍可以参考官方说明：https://github.com/songlinhou/pyplotz 总结两种方式都可以实现中文画图，方法一灵活性更好，但每行涉及到中文的地方都需要配置，方法二需要另外引入第三方包，并进行初始化，在首次使用时会自动下载中文字符集。 建议大家还是按需选用，如果有更好的方法，欢迎交流。]]></content>
+      <categories>
+        <category>python</category>
+        <category>网络爬虫与数据分析</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用snownlp分析流浪地球评论]]></title>
+    <url>%2F%E4%BD%BF%E7%94%A8snownlp%E5%88%86%E6%9E%90%E6%B5%81%E6%B5%AA%E5%9C%B0%E7%90%83%E8%AF%84%E8%AE%BA.html</url>
+    <content type="text"><![CDATA[背景前面通过爬虫获取了猫眼上”流浪地球“的评论：获取猫眼电影的评论，并制作了词云，使用pandas初步分析了电影热度情况，还可以分析什么呢？ SnowNLP是个开源的NPL分析库，可以方便的进行中文分词，特点是可以进行情感评测，来分析评论的积极程度，主要用于电商网站中的商品评论的分析。那么分析下电影评论情况如何呢？ 思路前面我们再抓取时，将评论的时间和内容通过csv的格式保存下来，并使用;分割。 读取数据pandas提供read_csv方法来直接独处数据保存为DateFrame格式。 1df = pd.read_csv('comment.csv', sep=';', header=None) 获取情感评分通过pandas读取csv后，评论会保存在df[1]中，我们需要对每一条评论进行情感评分，pandas提供了apply功能配合lambda就可以方便的实现了： 12sentiment = lambda x:SnowNLP(x).sentimentsdf[2] = df[1].apply(sentiment) 数据处理 设置数据列名 1df.columns = ['date', 'comment', 'sentiment'] 时间日期处理 在date列，我们保存的数据格式是string，需要把转换为日期格式才能进一步处理。 1df['date'] = pd.to_datetime(df['date']) 我们需要按时间来统计，所以把date列设置为index: 1df = df.set_index('date') 统计处理 日期筛选 由于我们知道《流浪地球》是2月5日上映的，我们可以对日期进行限定，以免出现有些在上映前的评论，会占用大段的空白情况。 设置index之后，可以参考list类型操作，由于时间是倒序的，所以可以直接使用[:&#39;2019-02-04&#39;]来选取2月4日之后到今天的所有数据，并选取sentiment列。 1cacu_df = df[:'2019-02-04']['sentiment'] 按日期进行数量统计 pandas中，通过resample方法进行重新按日采样，并求汇总的平均值。 1cacu = cacu_df.resample('D').mean() 这样就完成了按日期求和统计操作。 绘图画图需要使用matplotlib库，通过导入该库，可直接对DateFrame对象进行画图处理。画图及图表格式化如下： 12345678910111213141516171819# 通过设置中文字体方式解决中文展示问题font = FontProperties(fname='../font/PingFang.ttc')plt.title("流浪地球评论分析", fontproperties=font)plt.xlabel("日期", fontproperties=font)plt.ylabel("好感度", fontproperties=font)plt.plot(cacu)plt.axis("tight")# 显示网格plt.grid(True)# 自动旋转横轴日期plt.gcf().autofmt_xdate()# 显示数值for a, b in zip(cacu.index, cacu.values): plt.text(a, b, str(round(b, 4)))# 保存图片plt.savefig('comment_sentiment_analysis.png')# 查看图片plt.show() 结论以上就是使用抓取的评论生成情感分析统计图片的大致思路，完成的实现代码请见：https://github.com/keejo125/web_scraping_and_data_analysis/tree/master/maoyan 结果如下： 根据SnowNLP，sentiment值是指：positive的概率，可以简单理解为分值大于0.5为积极，小于为消极。那么这个结论就很奇怪了，那么我们看下每个评论的评分情况： 123456789100 中国科幻电影，继续加油↖(^ω^)↗ 0.51 特效什么的真的不错，不过俩小主演感觉演绎经验不是很足，达叔演技是真的很好，，每个他的镜头还是... 0.52 的确是国产中最好的科幻片了 0.53 非常棒，特效完全是大师水准 0.54 完美。。。。。。。。。。 0.55 挺不错，大型科幻片，很有意义 0.56 简直是侮辱我的智商啊，一点常识都没有，。这种片子怎么能九点多分，刷出来的吧。 0.57 太好看了赞...大卖.. 0.58 虽然和最理想的大片上有一定差距，但是已经明显能够感受到慢慢的诚意，值得肯定 0.59 酷炫吊炸天，第一次看我们国家出来这么厉害的科幻，希望以后哆哆出。一定会支持！！ 0.5 这个评分。。。相当不准。。。 再看下官网的说明： 情感分析（现在训练数据主要是买卖东西时的评价，所以对其他的一些可能效果不是很好，待解决） 好吧，希望以后可以尽快解决啦]]></content>
+      <categories>
+        <category>python</category>
+        <category>网络爬虫与数据分析</category>
+      </categories>
+      <tags>
+        <tag>pandas</tag>
+        <tag>nlp</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[使用Pandas分析流浪地球评论数据]]></title>
     <url>%2F%E4%BD%BF%E7%94%A8Pandas%E5%88%86%E6%9E%90%E6%B5%81%E6%B5%AA%E5%9C%B0%E7%90%83%E8%AF%84%E8%AE%BA%E6%95%B0%E6%8D%AE.html</url>
     <content type="text"><![CDATA[背景前面通过爬虫获取了猫眼上”流浪地球“的评论：获取猫眼电影的评论，除了做词云之外，还可以对数据进行分析，看看大家对电影的反响如何。 思路前面我们再抓取时，将评论的时间和内容通过csv的格式保存下来，并使用;分割。读取csv文件并统计处理就要用到大名鼎鼎的pandas了。 读取数据pandas提供read_csv方法来直接独处数据保存为DateFrame格式。 1df = pd.read_csv('comment.csv', sep=';', header=None) 数据处理 设置数据列名 由于我们知道数据有两列，先通过这只列名可以方便后续引用。 1df.columns = ['date', 'comment'] 时间日期处理 在date列，我们保存的数据格式是string，需要把转换为日期格式才能进一步处理。 1df['date'] = pd.to_datetime(df['date']) 我们需要按时间来统计，所以把date列设置为index: 1df = df.set_index('date') 统计处理 日期筛选 由于我们知道《流浪地球》是2月5日上映的，我们可以对日期进行限定，以免出现有些在上映前的评论，会占用大段的空白情况。 设置index之后，可以参考list类型操作，由于时间是倒序的，所以可以直接使用[:&#39;2019-02-04&#39;]来选取2月4日之后到今天的所有数据。pandas在数据筛选方面相当智能，按照datetime的格式直接筛选即可。 1cacu_df = df[:'2019-02-04'] 按日期进行数量统计 pandas中，通过resample方法进行重新采样，通过传入rule参数就可以按需要的频率获取数据，获得一个resampler对象。 1DataFrame.resample(rule, how=None, axis=0, fill_method=None, closed=None, label=None, convention='start', kind=None, loffset=None, limit=None, base=0, on=None, level=None) resampler对象提供了很多的统计方法，比如汇总求和可使用Resampler.count()。 12# 按日统计数量cacu = cacu_df.resample('D').count() 这样就完成了按日期求和统计操作。 绘图画图需要使用matplotlib库，通过导入该库，可直接对DateFrame对象进行画图处理。画图及图表格式化如下： 123456789101112131415161718# 设置中文字体font = FontProperties(fname='/System/Library/Fonts/PingFang.ttc')plt.plot(cacu)plt.title("流浪地球评论分析", fontproperties=font)plt.xlabel("日期", fontproperties=font)plt.ylabel("评论数", fontproperties=font)plt.axis("tight")# 显示网格plt.grid(True)# 自动旋转横轴日期plt.gcf().autofmt_xdate()# 显示数值for a, b in zip(cacu.index, cacu.values):plt.text(a, b, str(b[0]))# 保存图片plt.savefig('comment_analysis.png')# 查看图片plt.show() 结论以上就是使用抓取的评论生成日期统计图片的大致思路，完成的实现代码请见：https://github.com/keejo125/web_scraping_and_data_analysis/tree/master/maoyan 结果如下： 可见从上映之后，关注度直线飙升，到2月10日之后（上映5天），大家关注度逐渐下降。其中2月14日为情人节，大家的关注又有了小幅的上升。也许很多人在这天通过看《流浪地球》过节吧。 拓展 matplotlib画图说明 该库是默认不支持中文的，所以如果不经过配置直接画图，设置中文图标会显示为空白方框。详细配置参考上文。 pandas使用 更多的resampler的方法，可见：http://pandas.pydata.org/pandas-docs/stable/reference/resampling.html 更多resample的rule参考下表： Date Offset Frequency String Description DateOffset None Generic offset class, defaults to 1 calendar day BDay or BusinessDay &#39;B&#39; business day (weekday) CDay or CustomBusinessDay &#39;C&#39; custom business day Week &#39;W&#39; one week, optionally anchored on a day of the week WeekOfMonth &#39;WOM&#39; the x-th day of the y-th week of each month LastWeekOfMonth &#39;LWOM&#39; the x-th day of the last week of each month MonthEnd &#39;M&#39; calendar month end MonthBegin &#39;MS&#39; calendar month begin BMonthEnd or BusinessMonthEnd &#39;BM&#39; business month end BMonthBegin or BusinessMonthBegin &#39;BMS&#39; business month begin CBMonthEnd or CustomBusinessMonthEnd &#39;CBM&#39; custom business month end CBMonthBegin or CustomBusinessMonthBegin &#39;CBMS&#39; custom business month begin SemiMonthEnd &#39;SM&#39; 15th (or other day_of_month) and calendar month end SemiMonthBegin &#39;SMS&#39; 15th (or other day_of_month) and calendar month begin QuarterEnd &#39;Q&#39; calendar quarter end QuarterBegin &#39;QS&#39; calendar quarter begin BQuarterEnd &#39;BQ business quarter end BQuarterBegin &#39;BQS&#39; business quarter begin FY5253Quarter &#39;REQ&#39; retail (aka 52-53 week) quarter YearEnd &#39;A&#39; calendar year end YearBegin &#39;AS&#39; or &#39;BYS&#39; calendar year begin BYearEnd &#39;BA&#39; business year end BYearBegin &#39;BAS&#39; business year begin FY5253 &#39;RE&#39; retail (aka 52-53 week) year Easter None Easter holiday BusinessHour &#39;BH&#39; business hour CustomBusinessHour &#39;CBH&#39; custom business hour Day &#39;D&#39; one absolute day Hour &#39;H&#39; one hour Minute &#39;T&#39; or &#39;min&#39; one minute Second &#39;S&#39; one second Milli &#39;L&#39; or &#39;ms&#39; one millisecond Micro &#39;U&#39; or &#39;us&#39; one microsecond Nano &#39;N&#39; one nanosecond]]></content>
@@ -308,8 +333,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

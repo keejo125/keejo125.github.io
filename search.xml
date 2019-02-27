@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[LeetCode-2 两数相加]]></title>
+    <url>%2FLeetCode-2-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0.html</url>
+    <content type="text"><![CDATA[题目： 两数相加给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。 如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。 您可以假设除了数字 0 之外，这两个数都不会以 0 开头。 示例： 123输入：(2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)输出：7 -&gt; 0 -&gt; 8原因：342 + 465 = 807 思路这题涉及数据结构和链表，这在Python中比较少，参考了官方解题思路才大概明白。 首先需要理解ListNode这个class。 12345# Definition for singly-linked list.class ListNode: def __init__(self, x): self.val = x self.next = None 每个ListNode()都有两个属性，一个是本身的值(val)，另一个则是指向另一个ListNode()对象。比如示例中的输出：7 -&gt; 0 -&gt; 8。其实是三个ListNode()对象，产生的过程如下： 12345678tmp = ListNode(0)res = tmptmp = ListNode(7)tmp = tmp.nexttmp.next = ListNode(0)tmp = tmp.nexttmp.next = ListNode(8)return res.next 对ListNode这样的链表有了理解之后，解题就比较方便了： 先初始化一个tmp = ListNode(0) 的临时变量，并将res.next指向tmp，并初始化一个进位临时变量carry=0 遍历l1,l2直到都为None: 如果l1为None，则x值为0，否则x值为l1.val 如果l2为None，则y值为0，否则y值为l2.val x,y相加并加上上一轮相加的进位carry得到tmpSum，该轮tmp的值为和的tmpSum的个位(tmpSum%10)，carry更新为tmpSum的十位(tmpSum//10) 将tmp在指向自己的下一个tmp.next 遍历结束后检查是否还有进位carry，有的话则tmp的下一位为ListNode(1) 返回结果：res.next 完整代码如下： 12345678910111213141516171819202122232425262728293031# Definition for singly-linked list.# class ListNode:# def __init__(self, x):# self.val = x# self.next = Noneclass Solution: def addTwoNumbers(self, l1, l2): tmp = ListNode(0) res = tmp carry=0 while l1 or l2: if l1: x = l1.val else: x = 0 if l2: y = l2.val else: y = 0 tmpSum = carry + x + y carry = tmpSum // 10 tmp.next = ListNode(tmpSum % 10) tmp = tmp.next if l1: l1 = l1.next if l2: l2 = l2.next if carry &gt; 0: tmp.next=ListNode(1) return res.next 该方法最后提交结果如下： 12执行用时: 148 ms, 在Add Two Numbers的Python3提交中击败了61.13% 的用户内存消耗: 13.3 MB, 在Add Two Numbers的Python3提交中击败了0.95% 的用户 这道题对Python好像不是很友好，经常会出现超时的情况，如果大家有更好的方法，欢迎一起探讨。]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[LeetCode-1 两数之和]]></title>
     <url>%2FLeetCode-1-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C.html</url>
     <content type="text"><![CDATA[题目：两数之和给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。 你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。 示例: 1234给定 nums = [2, 7, 11, 15], target = 9因为 nums[0] + nums[1] = 2 + 7 = 9所以返回 [0, 1] 思路由于题目说明了只有一个对应答案，那么简单粗暴的想法就是进行两次遍历： 先从头取第一个数 将该数依次与后面的每个数相加判断是否等于target 实现： 1234567891011class Solution: def twoSum(self, nums, target): """ :type nums: List[int] :type target: int :rtype: List[int] """ for i in range(len(nums)): for j in range(i+1, len(nums)): if nums[i] + nums[j] == target: return [i, j] 优化方法上面的方法做了两次遍历，那么有没有办法做一次呢 参考了其他网友的答案，果真还是有办法的，先上代码： 12345678910111213class Solution: def twoSum(self, nums, target): """ :type nums: List[int] :type target: int :rtype: List[int] """ nums_dict = &#123;&#125; for index, num in enumerate(nums): another_num = target - num if another_num in nums_dict: return [nums_dict[another_num], index] nums_dict[num] = index 这里主要用到了dict()，思路是： 先新建一个空dict()用于存放列表中的数和对应的索引 先将使用enumerate()函数将列表转组合为一个索引序列，同时列出数据和下标： 12345list(enumerate(nums))[(0, 4), (1, 3), (2, 2), (3, 1)]nums = [2, 7, 11, 15]list(enumerate(nums))[(0, 2), (1, 7), (2, 11), (3, 15)] 然后用目标减去当前的值就获取我们需要找的另一个值 判断另一个值是否存在于dict中，在的话，直接返回两个数值的索引即可，否则将这个数也加入到dict中。 该方法最后提交结果如下： 12执行用时: 76 ms, 在Two Sum的Python3提交中击败了57.66% 的用户内存消耗: 14.2 MB, 在Two Sum的Python3提交中击败了0.84% 的用户 如果大家有更好的方法，欢迎一起探讨。]]></content>

@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[LeetCode-3 无重复字符串的最长子串]]></title>
+    <url>%2FLeetCode-3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2.html</url>
+    <content type="text"><![CDATA[题目：无重复字符串的最长子串给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。 示例 1: 123输入: &quot;abcabcbb&quot;输出: 3 解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。 示例 2: 123输入: &quot;bbbbb&quot;输出: 1解释: 因为无重复字符的最长子串是 &quot;b&quot;，所以其长度为 1。 示例 3: 1234输入: &quot;pwwkew&quot;输出: 3解释: 因为无重复字符的最长子串是 &quot;wke&quot;，所以其长度为 3。 请注意，你的答案必须是 子串 的长度，&quot;pwke&quot; 是一个子序列，不是子串。 思路由于是在字符串中找无重复的子串，那么就可以用到set()类型。还是得遍历字符串，基本思路如下： 初始化最长无重复子串长度record=0 从头开始遍历字符串中的每一个字符 初始化一个临时的li1=set()来存放子串 判断当前字符是否存在于li1 如果不存在就存入li1，并判断当前子串长度是否大于record，是则更新record 如果存在，那么说明当前子串中有了重复字符，开始下一轮的查找 实现代码如下： 12345678910111213class Solution: def lengthOfLongestSubstring(self, s: str) -&gt; int: record = 0 for i in range(len(s)): li1 = set() for st in s[i:]: if st not in li1: li1.add(st) if len(li1) &gt; record: record = len(li1) else: break return record 优化方法在上述方法中，每当扎到一个重复字符时，就从下一个i开始重新遍历。我们可以在每个j的遍历过程中，记录下每个子字符串的index和值，并设置一个偏移量carry。如果j和j‘是重复字符，那么偏移量carry就等于i到j的长度，下一次遍历从i=i+carry+1即可。 123456789101112131415161718class Solution: def lengthOfLongestSubstring(self, s: str) -&gt; int: record = 0 i = 0 while i &lt; len(s): li1 = &#123;&#125; for j, char in enumerate(s[i:]): carry = 0 if char not in li1: li1[char] = j carry += j if len(li1) &gt; record: record = len(li1) else: carry = li1[char] break i = i + carry + 1 return record 优化方法二以上方法均需要做两层的循环，那么有没有只做一层循环的呢： 还是要用dict，我们需要寻找到两个下标i,j，使他们之间的长度最长，思路如下： 初始化i = 0，最长无重复子串长度record=0，一个存放无重复字符串和对应index的dict：li1 通过enumerate(s)的方式在遍历中获取每个字符char和其对应的index：j 如果字符char不存在于li1，那么把char和j存入li1，更新record=max(record, j-i+1) 如果字符char存在于li1，那么说明最长无重复子串需要从li1[char]后开始计算，即i=max(i,li1[char] + 1) 代码如下： 1234567891011class Solution: def lengthOfLongestSubstring(self, s: str) -&gt; int: record = 0 i = 0 li1 = &#123;&#125; for j, char in enumerate(s): if char in li1: i = max(i, li1[char] + 1) record = max(record, j - i + 1) li1[char] = j return record 如果大家有更好的方法，欢迎一起探讨。]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[LeetCode-2 两数相加]]></title>
     <url>%2FLeetCode-2-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0.html</url>
-    <content type="text"><![CDATA[题目： 两数相加给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。 如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。 您可以假设除了数字 0 之外，这两个数都不会以 0 开头。 示例： 123输入：(2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)输出：7 -&gt; 0 -&gt; 8原因：342 + 465 = 807 思路这题涉及数据结构和链表，这在Python中比较少，参考了官方解题思路才大概明白。 首先需要理解ListNode这个class。 12345# Definition for singly-linked list.class ListNode: def __init__(self, x): self.val = x self.next = None 每个ListNode()都有两个属性，一个是本身的值(val)，另一个则是指向另一个ListNode()对象。比如示例中的输出：7 -&gt; 0 -&gt; 8。其实是三个ListNode()对象，产生的过程如下： 12345678tmp = ListNode(0)res = tmptmp = ListNode(7)tmp = tmp.nexttmp.next = ListNode(0)tmp = tmp.nexttmp.next = ListNode(8)return res.next 对ListNode这样的链表有了理解之后，解题就比较方便了： 先初始化一个tmp = ListNode(0) 的临时变量，并将res.next指向tmp，并初始化一个进位临时变量carry=0 遍历l1,l2直到都为None: 如果l1为None，则x值为0，否则x值为l1.val 如果l2为None，则y值为0，否则y值为l2.val x,y相加并加上上一轮相加的进位carry得到tmpSum，该轮tmp的值为和的tmpSum的个位(tmpSum%10)，carry更新为tmpSum的十位(tmpSum//10) 将tmp在指向自己的下一个tmp.next 遍历结束后检查是否还有进位carry，有的话则tmp的下一位为ListNode(1) 返回结果：res.next 完整代码如下： 12345678910111213141516171819202122232425262728293031# Definition for singly-linked list.# class ListNode:# def __init__(self, x):# self.val = x# self.next = Noneclass Solution: def addTwoNumbers(self, l1, l2): tmp = ListNode(0) res = tmp carry=0 while l1 or l2: if l1: x = l1.val else: x = 0 if l2: y = l2.val else: y = 0 tmpSum = carry + x + y carry = tmpSum // 10 tmp.next = ListNode(tmpSum % 10) tmp = tmp.next if l1: l1 = l1.next if l2: l2 = l2.next if carry &gt; 0: tmp.next=ListNode(1) return res.next 该方法最后提交结果如下： 12执行用时: 148 ms, 在Add Two Numbers的Python3提交中击败了61.13% 的用户内存消耗: 13.3 MB, 在Add Two Numbers的Python3提交中击败了0.95% 的用户 优化方法上面方法中需要新建一个临时变量来存放l1,l2相加的结果，由于是相加，我们考虑开始就将结果指向l1，在l1的基础上进行计算，思路如下： 设置结果res=l1,初始化一个进位临时变量carry=0 第一阶段l1,l2都有值的时候 l1.val,l2.val相加并加上上一轮相加的进位carry得到tmpSum，该轮l1.val的值为更新为tmpSum的个位(tmpSum%10)，carry更新为tmpSum的十位(tmpSum//10) 设定一个临时变量prev指向l1 l1,l2均指向自己的下一个l1.next,l2.next 第一阶段结束时，说明l1,l2有一个已经结束了。这时候把l1设定为还未结束的序列（l1 = l1 or l2），并将临时变量prev.next指向新的l1(为了保证序列的连续性，如果前面没有设置的prev临时变量，那么返回结果就中断了) 第二阶段遍历新的l1： l1.val加上上一轮的进位carry得到tmpSum，该轮l1.val的值为更新为tmpSum的个位(tmpSum%10)，carry更新为tmpSum的十位(tmpSum//10) 设定一个临时变量prev指向l1 l1指向自己的下一个l1.next 第二阶段结束后，检查是否还有进位carry，有的话则tmp的下一位为ListNode(1) 返回结果：res 完整代码如下： 12345678910111213141516171819202122232425262728# Definition for singly-linked list.# class ListNode:# def __init__(self, x):# self.val = x# self.next = Noneclass Solution: def addTwoNumbers(self, l1, l2): res = l1 carry = 0 while l1 and l2: tmpSum = l1.val + l2.val + carry carry = tmpSum // 10 l1.val = tmpSum % 10 prev = l1 l1 = l1.next l2 = l2.next l1 = l1 or l2 prev.next = l1 while l1: tmpSum = l1.val + carry carry = tmpSum // 10 l1.val = tmpSum % 10 prev = l1 l1 = l1.next if carry &gt; 0: prev.next = ListNode(1) return res 该方法最后提交结果如下： 12执行用时: 132 ms, 在Add Two Numbers的Python3提交中击败了81.70% 的用户内存消耗: 13.1 MB, 在Add Two Numbers的Python3提交中击败了0.95% 的用户 这道题对Python好像不是很友好，经常会出现超时的情况，如果大家有更好的方法，欢迎一起探讨。]]></content>
+    <content type="text"><![CDATA[题目： 两数相加给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。 如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。 您可以假设除了数字 0 之外，这两个数都不会以 0 开头。 示例： 123输入：(2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)输出：7 -&gt; 0 -&gt; 8原因：342 + 465 = 807 思路这题涉及数据结构和链表，这在Python中比较少，参考了官方解题思路才大概明白。 首先需要理解ListNode这个class。 12345# Definition for singly-linked list.class ListNode: def __init__(self, x): self.val = x self.next = None 每个ListNode()都有两个属性，一个是本身的值(val)，另一个则是指向另一个ListNode()对象。比如示例中的输出：7 -&gt; 0 -&gt; 8。其实是三个ListNode()对象，产生的过程如下： 12345678tmp = ListNode(0)res = tmptmp = ListNode(7)tmp = tmp.nexttmp.next = ListNode(0)tmp = tmp.nexttmp.next = ListNode(8)return res.next 对ListNode这样的链表有了理解之后，解题就比较方便了： 先初始化一个tmp = ListNode(0) 的临时变量，并将res.next指向tmp，并初始化一个进位临时变量carry=0 遍历l1,l2直到都为None: 如果l1为None，则x值为0，否则x值为l1.val 如果l2为None，则y值为0，否则y值为l2.val x,y相加并加上上一轮相加的进位carry得到tmpSum，该轮tmp的值为和的tmpSum的个位(tmpSum%10)，carry更新为tmpSum的十位(tmpSum//10) 将tmp在指向自己的下一个tmp.next 遍历结束后检查是否还有进位carry，有的话则tmp的下一位为ListNode(1) 返回结果：res.next 完整代码如下： 12345678910111213141516171819202122232425262728293031# Definition for singly-linked list.# class ListNode:# def __init__(self, x):# self.val = x# self.next = Noneclass Solution: def addTwoNumbers(self, l1, l2): tmp = ListNode(0) res = tmp carry=0 while l1 or l2: if l1: x = l1.val else: x = 0 if l2: y = l2.val else: y = 0 tmpSum = carry + x + y carry = tmpSum // 10 tmp.next = ListNode(tmpSum % 10) tmp = tmp.next if l1: l1 = l1.next if l2: l2 = l2.next if carry &gt; 0: tmp.next=ListNode(1) return res.next 优化方法上面方法中需要新建一个临时变量来存放l1,l2相加的结果，由于是相加，我们考虑开始就将结果指向l1，在l1的基础上进行计算，思路如下： 设置结果res=l1,初始化一个进位临时变量carry=0 第一阶段l1,l2都有值的时候 l1.val,l2.val相加并加上上一轮相加的进位carry得到tmpSum，该轮l1.val的值为更新为tmpSum的个位(tmpSum%10)，carry更新为tmpSum的十位(tmpSum//10) 设定一个临时变量prev指向l1 l1,l2均指向自己的下一个l1.next,l2.next 第一阶段结束时，说明l1,l2有一个已经结束了。这时候把l1设定为还未结束的序列（l1 = l1 or l2），并将临时变量prev.next指向新的l1(为了保证序列的连续性，如果前面没有设置的prev临时变量，那么返回结果就中断了) 第二阶段遍历新的l1： l1.val加上上一轮的进位carry得到tmpSum，该轮l1.val的值为更新为tmpSum的个位(tmpSum%10)，carry更新为tmpSum的十位(tmpSum//10) 设定一个临时变量prev指向l1 l1指向自己的下一个l1.next 第二阶段结束后，检查是否还有进位carry，有的话则tmp的下一位为ListNode(1) 返回结果：res 完整代码如下： 12345678910111213141516171819202122232425262728# Definition for singly-linked list.# class ListNode:# def __init__(self, x):# self.val = x# self.next = Noneclass Solution: def addTwoNumbers(self, l1, l2): res = l1 carry = 0 while l1 and l2: tmpSum = l1.val + l2.val + carry carry = tmpSum // 10 l1.val = tmpSum % 10 prev = l1 l1 = l1.next l2 = l2.next l1 = l1 or l2 prev.next = l1 while l1: tmpSum = l1.val + carry carry = tmpSum // 10 l1.val = tmpSum % 10 prev = l1 l1 = l1.next if carry &gt; 0: prev.next = ListNode(1) return res 这道题对Python好像不是很友好，经常会出现超时的情况，如果大家有更好的方法，欢迎一起探讨。]]></content>
       <categories>
         <category>算法</category>
       </categories>
@@ -15,7 +27,7 @@
   <entry>
     <title><![CDATA[LeetCode-1 两数之和]]></title>
     <url>%2FLeetCode-1-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C.html</url>
-    <content type="text"><![CDATA[题目：两数之和给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。 你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。 示例: 1234给定 nums = [2, 7, 11, 15], target = 9因为 nums[0] + nums[1] = 2 + 7 = 9所以返回 [0, 1] 思路由于题目说明了只有一个对应答案，那么简单粗暴的想法就是进行两次遍历： 先从头取第一个数 将该数依次与后面的每个数相加判断是否等于target 实现： 1234567891011class Solution: def twoSum(self, nums, target): """ :type nums: List[int] :type target: int :rtype: List[int] """ for i in range(len(nums)): for j in range(i+1, len(nums)): if nums[i] + nums[j] == target: return [i, j] 优化方法上面的方法做了两次遍历，那么有没有办法做一次呢 参考了其他网友的答案，果真还是有办法的，先上代码： 12345678910111213class Solution: def twoSum(self, nums, target): """ :type nums: List[int] :type target: int :rtype: List[int] """ nums_dict = &#123;&#125; for index, num in enumerate(nums): another_num = target - num if another_num in nums_dict: return [nums_dict[another_num], index] nums_dict[num] = index 这里主要用到了dict()，思路是： 先新建一个空dict()用于存放列表中的数和对应的索引 先将使用enumerate()函数将列表转组合为一个索引序列，同时列出数据和下标： 12345list(enumerate(nums))[(0, 4), (1, 3), (2, 2), (3, 1)]nums = [2, 7, 11, 15]list(enumerate(nums))[(0, 2), (1, 7), (2, 11), (3, 15)] 然后用目标减去当前的值就获取我们需要找的另一个值 判断另一个值是否存在于dict中，在的话，直接返回两个数值的索引即可，否则将这个数也加入到dict中。 该方法最后提交结果如下： 12执行用时: 76 ms, 在Two Sum的Python3提交中击败了57.66% 的用户内存消耗: 14.2 MB, 在Two Sum的Python3提交中击败了0.84% 的用户 如果大家有更好的方法，欢迎一起探讨。]]></content>
+    <content type="text"><![CDATA[题目：两数之和给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。 你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。 示例: 1234给定 nums = [2, 7, 11, 15], target = 9因为 nums[0] + nums[1] = 2 + 7 = 9所以返回 [0, 1] 思路由于题目说明了只有一个对应答案，那么简单粗暴的想法就是进行两次遍历： 先从头取第一个数 将该数依次与后面的每个数相加判断是否等于target 实现： 1234567891011class Solution: def twoSum(self, nums, target): """ :type nums: List[int] :type target: int :rtype: List[int] """ for i in range(len(nums)): for j in range(i+1, len(nums)): if nums[i] + nums[j] == target: return [i, j] 优化方法上面的方法做了两次遍历，那么有没有办法做一次呢 参考了其他网友的答案，果真还是有办法的，先上代码： 12345678910111213class Solution: def twoSum(self, nums, target): """ :type nums: List[int] :type target: int :rtype: List[int] """ nums_dict = &#123;&#125; for index, num in enumerate(nums): another_num = target - num if another_num in nums_dict: return [nums_dict[another_num], index] nums_dict[num] = index 这里主要用到了dict()，思路是： 先新建一个空dict()用于存放列表中的数和对应的索引 先将使用enumerate()函数将列表转组合为一个索引序列，同时列出数据和下标： 12345list(enumerate(nums))[(0, 4), (1, 3), (2, 2), (3, 1)]nums = [2, 7, 11, 15]list(enumerate(nums))[(0, 2), (1, 7), (2, 11), (3, 15)] 然后用目标减去当前的值就获取我们需要找的另一个值 判断另一个值是否存在于dict中，在的话，直接返回两个数值的索引即可，否则将这个数也加入到dict中。 如果大家有更好的方法，欢迎一起探讨。]]></content>
       <categories>
         <category>算法</category>
       </categories>
@@ -317,8 +329,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -370,8 +382,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -493,8 +505,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

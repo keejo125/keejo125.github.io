@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[LeetCode-4 寻找两个有序数组的中位数]]></title>
+    <url>%2FLeetCode-4-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0.html</url>
+    <content type="text"><![CDATA[题目：寻找两个有序数组的中位数给定两个大小为 m 和 n 的有序数组 nums1 和 nums2。 请你找出这两个有序数组的中位数，并且要求算法的时间复杂度为 O(log(m + n))。 你可以假设 nums1 和 nums2 不会同时为空。 示例 1: 1234nums1 = [1, 3]nums2 = [2]则中位数是 2.0 示例 2: 1234nums1 = [1, 2]nums2 = [3, 4]则中位数是 (2 + 3)/2 = 2.5 思路这题目乍一看有点绕，其实简单一点考虑就是找这两个数组集合的中位数。 先把两个数组合并成一个数组temp = nums1 + nums2 然后再对这个新数组进行排序 找中位数： 当这个数组长度是奇数时：中位数就是排在最中间的那个数 当这个数组长度是偶数时：中位数就是排在最中间的两个数的平均数 实现如下： 12345678class Solution: def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -&gt; float: temp = nums1 + nums2 temp.sort() if len(temp) % 2 ==1: return temp[int(len(temp) / 2)] else: return (temp[int(len(temp) / 2) - 1] + temp[int(len(temp) / 2)]) / 2.0 官方解答这题的官方解答看起来比较复杂，但考虑到上面的解法用到了sort()方法，可能本身就存在算法复杂度高的问题。所以官方解答使用了递归排序的方法。 先不考虑特殊情况，分别将两个数组划分成两部分 123 left_part | right_partA[0], A[1], ..., A[i-1] | A[i], A[i+1], ..., A[m-1]B[0], B[1], ..., B[j-1] | B[j], B[j+1], ..., B[n-1] 那么如果left_part的长度等于right_part的长度，且right_part的值都大于left_part的值（即min(right_part)&gt;=max(left_part)）。我们就找到了中位数： $median=\frac{max(left_part)+min(right_part)}{2}​$ 那么i和j有什么关系呢？ 当总长度$m+n​$为偶数时： 两边长度相等：$i+j=m-i+n-j$ ，所以可以得到$j=\frac{m+n}{2}-i$。 当总长度$m+n​$为奇数时： 左边比右边多1个数：$i+j=m-i+n-j+1$，所以得到：$j=\frac{m+n+1}{2}-i$。 由于$i, j$会不断移动，我们取较大值：$j=\frac{m+n+1}{2}-i$。 先不考虑临界情况，并假设$m&lt;n$，我们需要在$[0,m]$中找到$i$可以使$B[j-1]&lt;=A[i]$且$A[i-1]&lt;=B[j]$。 现在我们可以开始按二叉树进行查找： 初始化i的查找范围$imin = 0​$,$ imax = m​$,$i=\frac{imin+imax}{2}​$。并动态调整$imin,imax​$的值,为了方便可以不需要考虑奇数偶数，通过int()取整即可，如果是奇数那么i与原值一样，会继续调整$imin,imax​$的值，直到下一个 当$i&lt;m, B[j-1]&gt;A[i]$时，我们需要增加$imin = imin + 1$ 当$i&gt;0, A[i-1]&gt;B[j]$时，我们需要减小$imax = imax -1$。 最终结果，要考虑下特殊情况： 左边最大值max_of_left： 当$i=0$时：$B[j-1]$ 当$j=0$时：$A[i-1]$ max(a[i-1], B[j-1]) 当总长度m+n为奇数时，直接返回左边最大值 右边最小值min_of_right: 当$i=m$时：$B[j]$ 当$j=0$时：$A[i]$ Min(A[i], B[j]) 当总长度为偶数时，返回（max_of_left + min_of_right）/ 2 实现如下： 1234567891011121314151617181920212223242526272829303132333435363738class Solution: def median(self, nums1, nums2): # Solution 2 m, n = len(nums1), len(nums2) if m &gt; n: nums1, nums2, m, n = nums2, nums1, n, m if n == 0: raise ValueError imin, imax, half_len = 0, m, int((m + n + 1) / 2) while imin &lt;= imax: i = int((imin + imax) / 2) j = half_len - i if i &lt; m and nums2[j - 1] &gt; nums1[i]: # i is too small, must increase it imin = i + 1 elif i &gt; 0 and nums1[i - 1] &gt; nums2[j]: # i is too big, must decrease it imax = i - 1 else: # i is perfect if i == 0: max_of_left = nums2[j - 1] elif j == 0: max_of_left = nums1[i - 1] else: max_of_left = max(nums1[i - 1], nums2[j - 1]) if (m + n) % 2 == 1: return max_of_left if i == m: min_of_right = nums2[j] elif j == n: min_of_right = nums1[i] else: min_of_right = min(nums1[i], nums2[j]) return (max_of_left + min_of_right) / 2.0 还是有点绕，如果大家有更好的方法或者思路，欢迎一起探讨。]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[LeetCode-3 无重复字符串的最长子串]]></title>
     <url>%2FLeetCode-3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2.html</url>
     <content type="text"><![CDATA[题目：无重复字符串的最长子串给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。 示例 1: 123输入: &quot;abcabcbb&quot;输出: 3 解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。 示例 2: 123输入: &quot;bbbbb&quot;输出: 1解释: 因为无重复字符的最长子串是 &quot;b&quot;，所以其长度为 1。 示例 3: 1234输入: &quot;pwwkew&quot;输出: 3解释: 因为无重复字符的最长子串是 &quot;wke&quot;，所以其长度为 3。 请注意，你的答案必须是 子串 的长度，&quot;pwke&quot; 是一个子序列，不是子串。 思路由于是在字符串中找无重复的子串，那么就可以用到set()类型。还是得遍历字符串，基本思路如下： 初始化最长无重复子串长度record=0 从头开始遍历字符串中的每一个字符 初始化一个临时的li1=set()来存放子串 判断当前字符是否存在于li1 如果不存在就存入li1，并判断当前子串长度是否大于record，是则更新record 如果存在，那么说明当前子串中有了重复字符，开始下一轮的查找 实现代码如下： 12345678910111213class Solution: def lengthOfLongestSubstring(self, s: str) -&gt; int: record = 0 for i in range(len(s)): li1 = set() for st in s[i:]: if st not in li1: li1.add(st) if len(li1) &gt; record: record = len(li1) else: break return record 优化方法在上述方法中，每当扎到一个重复字符时，就从下一个i开始重新遍历。我们可以在每个j的遍历过程中，记录下每个子字符串的index和值，并设置一个偏移量carry。如果j和j‘是重复字符，那么偏移量carry就等于i到j的长度，下一次遍历从i=i+carry+1即可。 123456789101112131415161718class Solution: def lengthOfLongestSubstring(self, s: str) -&gt; int: record = 0 i = 0 while i &lt; len(s): li1 = &#123;&#125; for j, char in enumerate(s[i:]): carry = 0 if char not in li1: li1[char] = j carry += j if len(li1) &gt; record: record = len(li1) else: carry = li1[char] break i = i + carry + 1 return record 优化方法二以上方法均需要做两层的循环，那么有没有只做一层循环的呢： 还是要用dict，我们需要寻找到两个下标i,j，使他们之间的长度最长，思路如下： 初始化i = 0，最长无重复子串长度record=0，一个存放无重复字符串和对应index的dict：li1 通过enumerate(s)的方式在遍历中获取每个字符char和其对应的index：j 如果字符char不存在于li1，那么把char和j存入li1，更新record=max(record, j-i+1) 如果字符char存在于li1，那么说明最长无重复子串需要从li1[char]后开始计算，即i=max(i,li1[char] + 1) 代码如下： 1234567891011class Solution: def lengthOfLongestSubstring(self, s: str) -&gt; int: record = 0 i = 0 li1 = &#123;&#125; for j, char in enumerate(s): if char in li1: i = max(i, li1[char] + 1) record = max(record, j - i + 1) li1[char] = j return record 如果大家有更好的方法，欢迎一起探讨。]]></content>
@@ -329,8 +341,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -505,8 +517,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

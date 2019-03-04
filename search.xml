@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[使用Selenium获取微信公众号的所有文章]]></title>
+    <url>%2F%E4%BD%BF%E7%94%A8Selenium%E8%8E%B7%E5%8F%96%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E7%9A%84%E6%89%80%E6%9C%89%E6%96%87%E7%AB%A0.html</url>
+    <content type="text"><![CDATA[背景前段时间有人在群里分享了爬虫咪蒙公众号的所有文章，可以通过深度学习进行各种分析，但由于咪蒙账号已封，所以链接点进去也看不到了。个人还是比较喜欢看新世相的公众号的，看看怎么把它的文章也都爬下来。 思路 从哪里爬？ 爬虫一般得用浏览器访问，然后找到相关的请求接口，通过修改参数来伪造请求获取数据。微信公众号文章浏览器上哪里看呢？搜了下，有三种方式： 搜狗的微信搜索：http://weixin.sogou.com 该方式只能搜到公众号最新10篇文章，放弃 使用fiddler抓包，并用手机模拟器模拟手机访问 难度比较大，放弃 在微信公众平台：https://mp.weixin.qq.com/ 通过插入文章的方式可以查找公众号的所有文章，相对简单，pick 爬取过程 由于微信公众平台登陆需要手机扫描二维码，不可避免的要“人机耦合”了，所以打算全程采取使用selenium来做： 新建ChromeDriver并登陆网页，sleep10秒钟用于手工扫码登陆 12345678910111213url = "https://mp.weixin.qq.com/"option = webdriver.ChromeOptions()# option.add_argument('headless')driver = webdriver.Chrome(executable_path='./chromedriver', options=option)driver.implicitly_wait(60)driver.get(url)driver.find_element_by_name('account').clear()driver.find_element_by_name('password').clear()driver.find_element_by_name('account').send_keys(config.account)driver.find_element_by_name('password').send_keys(config.password)driver.find_element_by_class_name('btn_login').click()# 手动扫码time.sleep(10) 登陆后打开素材管理，并新建图文素材： 1234# 打开素材管理driver.find_element_by_link_text('素材管理').click()# 点击新建图文素材driver.find_element_by_class_name('weui-desktop-btn_primary').click() 需要注意的是，这里会新建一个窗口，在selenium中页面切换操作，需要获取windows_handler然后切换： 1234# 新建图文素材 会有新建页面all_handles = driver.window_handles# 切换到新窗口driver.switch_to.window(all_handles[1]) 在新建素材页面，点击插入链接的按钮，并选择查找文章，输入“新世相”搜索找到对应的微信号 12# 点击插入链接driver.find_element_by_id('edui24_body').click() 12345678910# 选择查找文章driver.find_element_by_xpath('//*[@id="myform"]/div[3]/div[1]/div/label[2]/span').click()# 输入公众号名称driver.find_element_by_class_name('js_acc_search_input').send_keys('新世相')# 搜索driver.find_element_by_class_name('js_acc_search_btn').click()# 选择新世相# driver.find_element_by_class_name('search_biz_item').text# Out[53]: '订阅号\n新世相 微信号：thefair2'driver.find_element_by_class_name('search_biz_item').click() 新建一个csv文件用于保存文章标题与固定链接 123# 新建Csvf = open('articles.csv', 'w')writer = csv.writer(f, delimiter=';') 找到搜索结果部分，获取文章标题与链接，并通过不停的点击“下一页”，来爬取全部文章 12345678910111213141516171819202122# 选择结果输出部分search_article_result = driver.find_element_by_class_name('search_article_result')count = 1while True: # 获取列表 temp_list = search_article_result.find_elements_by_class_name('my_link_item') logging.info("抓取第" + str(count) + "页") for item in temp_list: title = item.text.replace('\n', ';') logging.info(title) # 文章链接 href = item.find_element_by_tag_name('a').get_attribute('href') writer.writerow([title, href]) try: search_article_result.find_element_by_class_name('page_next').click() count += 1 time.sleep(random.randint(20,40)) except Exception as e: logging.exception("获取列表失败") driver.quit() return 这里需要注意，爬取过程要多通过sleep来暂停下，不然很快就会提示“操作过于频繁”而被暂停了 爬取结果 如果中途被反爬了，就在上次爬到的页数那儿开始继续吧，多耦合几次还是可以爬完的 总结由于公众号管理这块登陆涉及到了扫描二维码，安全性高了很多，大大增加了爬虫的难度。相对来说，腾讯的反爬还是做的非常好的，直接使用selenium来模拟人操作，中间sleep也相当长的时间了，还是会被提示“操作太频繁”而被中断，且中断时间长达好几个小时，那么如果采用请求的方式，那估计会被封的更快吧。。。 如果大家有更好的方法，也欢迎分享。]]></content>
+      <categories>
+        <category>python</category>
+        <category>网络爬虫与数据分析</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[LeetCode-5 最长回文子串]]></title>
     <url>%2FLeetCode-5-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2.html</url>
     <content type="text"><![CDATA[题目：最长回文子串给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。 示例 1： 123输入: &quot;babad&quot;输出: &quot;bab&quot;注意: &quot;aba&quot; 也是一个有效答案。 示例 2： 12输入: &quot;cbbd&quot;输出: &quot;bb&quot; 思路 如何判断字符串是否为回文： 所谓回文，就是正反都一样，在python中反转字符串非常简单，如果源字符串等于反转后的字符串，那么就可以判断为回文： 12345def isPalindorme(str: str): if str == str[::-1]: return True else: return False 找出所有字符串 需要遍历两次，设i为初始index，j为index+1到结尾，就可以获取所有的子串 对所有子串来判断是否为回文，并记录长度，即可找到最大的回文子串 对于s长度为0，或者1的，需特殊处理一下 实现如下： 12345678910111213141516class Solution: def longestPalindrome(self, s: str) -&gt; str: res_len = 0 res = '' if len(s) == 0: return '' if len(s) == 1: return s for i in range(len(s)): for j in range(i+1, len(s) + 1): tempstr = s[i:j] if isPalindorme(tempstr): if len(tempstr) &gt; res_len: res_len = len(tempstr) res = tempstr return res 优化方法该方法参考了官方解答中java版，思路如下： 如何判断回文： 随便找字符串中的一个字符 如果是回文的话有两种情况： 当回文字符串长度为奇数：那么该字符串左边的字符和右边的相等（从第0个开始，即自己等于自己开始，然后依次往左右扩展，得到该字符为中间的最长回文子串。）如aba。 当回文字符串长度为偶数：那么左边第i个字符和右边第i+1个字符相等（从第0个开始，即自己等于下一个，然后依次往左右扩展，得到该字符为中间的最长回文子串。）如abba。 从字符串s开头起遍历整个字符串，并对每个字符分别做两种回文判断，得出最大回文字符串。 实现如下： 12345678910111213141516171819202122class Solution: def longestPalindrome(self, s: str) -&gt; str: if len(s) == 0: return '' if len(s) == 1: return s start = 0 end = 0 for i in range(len(s)): len1 = self.expandAroundCenter(s, i, i) len2 = self.expandAroundCenter(s, i, i + 1) max_len = max(len1, len2) if max_len &gt; (end - start): start = i - (max_len - 1) // 2 end = i + max_len // 2 return s[start:end + 1] def expandAroundCenter(self, s, left, right): while left &gt;= 0 and right &lt; len(s) and s[left] == s[right]: left -= 1 right += 1 return right - left - 1 如果大家有更好的方法或者思路，欢迎一起探讨。]]></content>
@@ -303,8 +316,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -353,8 +366,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -529,8 +542,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

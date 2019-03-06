@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[使用matplotlib绘制时间序列图表]]></title>
+    <url>%2F%E4%BD%BF%E7%94%A8matplotlib%E7%BB%98%E5%88%B6%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E5%9B%BE%E8%A1%A8.html</url>
+    <content type="text"><![CDATA[背景前面通过selenium爬取了微信公众号“新世相”的所有文章链接，详见使用Selenium获取微信公众号的所有文章。获取到的信息有：文章发表的时间、标题以及对应的url。那么根据时间可以绘制出文章发表情况的图表，先上结果图： 思路 读取csv 1df_ori = pd.read_csv('articles.csv', sep=';', header=None) 筛选数据 我们获取到的源数据如下： 123&quot;2019-03-02;看到44岁潘粤明的脸，我发现面对痛苦的最好方式是温柔&quot;;http://mp.weixin.qq.com/s?__biz=MzI2OTA3MTA5Mg==&amp;mid=2651791151&amp;idx=1&amp;sn=d24b36c7af7f3a13e8ab9b8d4d11143f&amp;chksm=f11e58b4c669d1a2fe70afe9fd2f2fdfe3cc1a17d0c48d8efa51ae8e10d17239c7ff0f8649b4&amp;scene=21#wechat_redirect&quot;2019-03-01;“同时被3个男人追求，我选了最丑的”：看完这些70岁老人的遗憾，我啥都想开了&quot;;http://mp.weixin.qq.com/s?__biz=MzI2OTA3MTA5Mg==&amp;mid=2651791096&amp;idx=1&amp;sn=eb68116d46fddf0e827475d9b26941b0&amp;chksm=f11e5963c669d075ec8716073bec685f819df8c2dbc03b87f23347ba5b01ea4219864877b4a0&amp;scene=21#wechat_redirect&quot;2019-02-28;在同学会上遇见初恋：他盯了我 5 秒，说出我等了 10 年的那句话&quot;;http://mp.weixin.qq.com/s?__biz=MzI2OTA3MTA5Mg==&amp;mid=2651790909&amp;idx=1&amp;sn=f642cd31fbc8d41d0b4fbe949b51425a&amp;chksm=f11e59a6c669d0b0e5e7ee12cece0a4afaa995aa123b8e993f8ec10d8ba38cccdcf5290de25a&amp;scene=21#wechat_redirect | 第一列 | 第二列 || ——— | —— || 日期;标题 | url | 那么我们只要获取第一列，并根据分隔符;进行拆分就可以得到日期与标题的对应关系： 123# 取第一列并分割日期与标题df = df_ori.iloc[:, 0]df = df.str.split(';', expand=True) 格式化数据 现在给数据设置列别名并进行格式化操作 1234# 格式化日期，设置column，并将日期设置为indexdf.columns = ['date', 'title']df.date = pd.to_datetime(df.date)df = df.set_index('date') 数据统计 我们需要计算每个月新世相公众号发表的文章数，那么需要按月重新取样，并汇总统计文章数 12# 按月统计文章数"MS"为月初cacu = df.resample("MS").count() 画图 配置画布大小 由于时间跨度从2015年至今比较长，我们需要先配置一下画布大小。 12# 画图fig, ax = plt.subplots(figsize=[20, 5]) 配置线条展示：值处用圆点加粗 12# 线条ax.plot(cacu, 'o-') 配置中文展示 12345# 通过设置中文字体方式解决中文展示问题font = FontProperties(fname='../font/PingFang.ttc')ax.set_title("新世相文章统计", fontproperties=font)ax.set_xlabel("日期", fontproperties=font)ax.set_ylabel("文章数", fontproperties=font) 配置横轴展示 由于按月画图，我们横轴显示为年-月，我们这里对横轴设置两层坐标，第一层仅展示月份，第二层展示年份，这样可以防止因为横轴字符挤在一起。第二层坐标格式中增加\n\n用于换行，给第一层月份留出空间。 1234567# 设置时间轴formater = mdate.DateFormatter('%Y-%m')ax.xaxis.set_major_formatter(formater)ax.xaxis.set_minor_locator(mdate.MonthLocator())ax.xaxis.set_minor_formatter(mdate.DateFormatter('%m'))ax.xaxis.set_major_locator(mdate.YearLocator())ax.xaxis.set_major_formatter(mdate.DateFormatter('\n\n%Y')) 显示数值 123# 显示数值for a,b in zip(cacu.index, cacu.values): ax.text(a, b, b[0]) 显示图片 1plt.show() 结论最后画图如下： 可见，新世相也是从16年开始逐步兴起，基本上保持每天一篇的频率一致稳定发展至今。 完整代码参考：https://github.com/keejo125/web_scraping_and_data_analysis/tree/master/weixin]]></content>
+      <categories>
+        <category>python</category>
+        <category>网络爬虫与数据分析</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[使用selenium把网页保存为PDF]]></title>
     <url>%2F%E4%BD%BF%E7%94%A8selenium%E6%8A%8A%E7%BD%91%E9%A1%B5%E4%BF%9D%E5%AD%98%E4%B8%BAPDF.html</url>
     <content type="text"><![CDATA[背景前面通过selenium爬取了微信公众号“新世相”的所有文章链接，详见使用Selenium获取微信公众号的所有文章。那么接下来就该获取具体文章了。由于网页是含有图片的，想想还是通过浏览器把网页打印成PDF保存好了，同时保存一份不含图片的文本文件，可以用于后续分析。 那么怎么使用selenium打印PDF呢？ 思路在网上找了找解决方案，主要有如下几种： 利用第三方包：pdfkit，可参考：https://www.cnblogs.com/silence-cc/p/9463227.html 使用chrome的—print-to-pdf模式，将请求到html导出为pdf，可参考：http://osask.cn/front/ask/view/1029784 使用js命令&#39;window.print();来调用浏览器打印，可参考：https://gitee.com/shinemic/codes/09y87ph6vf2c5zamwls3q48 这里我们选用第三种，相对来说适应性比较好，也方便查看进展，如果想隐藏页面，只需要加入—headlss选项即可。 实现如下： 配置chromedriver的options 1234567891011121314151617appState = &#123; "recentDestinations": [ &#123; "id": "Save as PDF", "origin": "local" &#125; ], "selectedDestinationId": "Save as PDF", "version": 2 &#125;profile = &#123; 'printing.print_preview_sticky_settings.appState': json.dumps(appState), 'savefile.default_directory': './articles'&#125;chrome_options = webdriver.ChromeOptions()chrome_options.add_experimental_option('prefs', profile)chrome_options.add_argument('--kiosk-printing') 这里savefile.default_directory用来指定保存文章的路径，需自行配置。 保存pdf 12345driver.get(url)time.sleep(5)# 保存PDFtemp_title = driver.titledriver.execute_script('window.print();') 这里chrome打印网页时默认文件名为网页的title，所以这里先保存一下temp_title=driver.title。 改名 1os.rename('./articles/' + temp_title + '.pdf', './articles/' + title + '.pdf') 由于如果打开同一个网站的多个页面并保存pdf，那么很可能就会出现由于网站title相同而覆盖的情况，所以每次保存完毕后，改一下pdf的文件名。 注意：当网页异常等情况可能出现title为空的情况，那么这里改名的时候就会报异常错误，需要进行异常处理。 实现根据上述思路，在打开网页、导出pdf、改名之后加上sleep，防止异常。实现如下： 1234567891011121314151617181920212223242526272829303132333435363738394041424344def get_articles(): appState = &#123; "recentDestinations": [ &#123; "id": "Save as PDF", "origin": "local" &#125; ], "selectedDestinationId": "Save as PDF", "version": 2 &#125; profile = &#123; 'printing.print_preview_sticky_settings.appState': json.dumps(appState), 'savefile.default_directory': './articles' &#125; chrome_options = webdriver.ChromeOptions() chrome_options.add_experimental_option('prefs', profile) chrome_options.add_argument('--kiosk-printing') driver = webdriver.Chrome(executable_path='./chromedriver', options=chrome_options) driver.implicitly_wait(60) count = 1 with open('articles.csv', newline='') as csvfile: spamreader = csv.reader(csvfile, delimiter=';') for line in spamreader: try: title = line[0].split(';')[1] url = line[1] print("下载第" + str(count) + "篇，标题：" + title) driver.get(url) time.sleep(5) # 保存PDF temp_title = driver.title driver.execute_script('window.print();') time.sleep(10) os.rename('./articles/' + temp_title + '.pdf', './articles/' + title + '.pdf') # 保存txt content = driver.find_element_by_id('js_article').text with open('./text/' + title + '.txt', 'w') as f: f.write(content) count += 1 except Exception as e: logging.exception(e) driver.quit() return 完整代码参考：https://github.com/keejo125/web_scraping_and_data_analysis/tree/master/weixin 如果大家有更好的方法，也欢迎分享。]]></content>
@@ -379,8 +392,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -555,8 +568,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

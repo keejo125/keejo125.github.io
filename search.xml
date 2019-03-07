@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[matplotlib画图时标注最大值]]></title>
+    <url>%2Fmatplotlib%E7%94%BB%E5%9B%BE%E6%97%B6%E6%A0%87%E6%B3%A8%E6%9C%80%E5%A4%A7%E5%80%BC.html</url>
+    <content type="text"><![CDATA[背景在上一篇使用matplotlib绘制时间序列图表中，本来想只展示最大值，一直没找到方法，就先标注了所有的点的数值，看起来有点不够直接。今天终于搞定了，记录一下。 思路源数据：index 为 ‘data’，数据为’title’ 123456789cacu.head(5)Out[5]: titledate 2015-01-01 22015-02-01 02015-03-01 02015-04-01 02015-05-01 2 matpoltlib标注数值 在绘图的时候，可以使用ax.text()方法在坐标系中标注文字，使用方法如下： 123# 显示全部数值for a,b in zip(cacu.index, cacu.values): ax.text(a, b, b[0]) 寻找最大值： 在pandas中有现成的方法可以找到最大值和最大值的索引： 最大值的索引： 1234cacu.idxmax()Out[6]: title 2018-07-01dtype: datetime64[ns] 最大值： 1234cacu.max()Out[8]: title 50dtype: int64 也可根据索引取值： 12345cacu.loc[cacu.idxmax()]Out[7]: titledate 2018-07-01 50 画图标注 根据最上面的标注，应该直接输入最大值的坐标（x为索引，y为值）就可以了，结果有了如下的报错： 1234567891011121314151617ax.text(cacu.idxmax(), cacu.max(), cacu.max())/Users/zhengk/PycharmProjects/web_scraping_and_data_analysis/venv/lib/python3.7/site-packages/pandas/core/ops.py:1649: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison result = method(y)Traceback (most recent call last): File "/Users/zhengk/PycharmProjects/web_scraping_and_data_analysis/venv/lib/python3.7/site-packages/IPython/core/interactiveshell.py", line 3291, in run_code exec(code_obj, self.user_global_ns, self.user_ns) File "&lt;ipython-input-9-cebfed8d464d&gt;", line 1, in &lt;module&gt; ax.text(cacu.idxmax(), cacu.max(), cacu.max()) File "/Users/zhengk/PycharmProjects/web_scraping_and_data_analysis/venv/lib/python3.7/site-packages/matplotlib/axes/_axes.py", line 722, in text x=x, y=y, text=s) File "/Users/zhengk/PycharmProjects/web_scraping_and_data_analysis/venv/lib/python3.7/site-packages/matplotlib/text.py", line 163, in __init__ self.set_text(text) File "/Users/zhengk/PycharmProjects/web_scraping_and_data_analysis/venv/lib/python3.7/site-packages/matplotlib/text.py", line 1191, in set_text if s != self._text: File "/Users/zhengk/PycharmProjects/web_scraping_and_data_analysis/venv/lib/python3.7/site-packages/pandas/core/generic.py", line 1479, in __nonzero__ .format(self.__class__.__name__))ValueError: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all(). 我们仔细看上面最大值的返回结果类型，而并非一个坐标。 12type(cacu.idxmax())Out[11]: pandas.core.series.Series 而我们真正需要的应该是title列的最大索引： 1234type(cacu['title'].idxmax())Out[12]: pandas._libs.tslibs.timestamps.Timestampcacu['title'].idxmax()Out[13]: Timestamp('2018-07-01 00:00:00', freq='MS') 对应的最大值也一样： 1234cacu['title'].max()Out[15]: 50type(cacu['title'].max())Out[16]: numpy.int64 再次画图： 123x = cacu['title'].idxmax()y = cacu['title'].max()ax.text(x, y, y, verticalalignment='bottom', horizontalalignment='center', fontsize='large') 结果 结论这里出现问题其实还是对matplotlib和pandas的基本概念没有弄明白，什么时候获取的是值，什么时候获取的是序列，还需要多加练习。 另外，给图添加标注还有可以使用plt.annotate()方法： 123x = cacu['title'].idxmax()y = cacu['title'].max()plt.annotate(y, xy=(x,y)) 完整代码参考：https://github.com/keejo125/web_scraping_and_data_analysis/tree/master/weixin]]></content>
+      <categories>
+        <category>python</category>
+        <category>网络爬虫与数据分析</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[使用matplotlib绘制时间序列图表]]></title>
     <url>%2F%E4%BD%BF%E7%94%A8matplotlib%E7%BB%98%E5%88%B6%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E5%9B%BE%E8%A1%A8.html</url>
     <content type="text"><![CDATA[背景前面通过selenium爬取了微信公众号“新世相”的所有文章链接，详见使用Selenium获取微信公众号的所有文章。获取到的信息有：文章发表的时间、标题以及对应的url。那么根据时间可以绘制出文章发表情况的图表，先上结果图： 思路 读取csv 1df_ori = pd.read_csv('articles.csv', sep=';', header=None) 筛选数据 我们获取到的源数据如下： 123&quot;2019-03-02;看到44岁潘粤明的脸，我发现面对痛苦的最好方式是温柔&quot;;http://mp.weixin.qq.com/s?__biz=MzI2OTA3MTA5Mg==&amp;mid=2651791151&amp;idx=1&amp;sn=d24b36c7af7f3a13e8ab9b8d4d11143f&amp;chksm=f11e58b4c669d1a2fe70afe9fd2f2fdfe3cc1a17d0c48d8efa51ae8e10d17239c7ff0f8649b4&amp;scene=21#wechat_redirect&quot;2019-03-01;“同时被3个男人追求，我选了最丑的”：看完这些70岁老人的遗憾，我啥都想开了&quot;;http://mp.weixin.qq.com/s?__biz=MzI2OTA3MTA5Mg==&amp;mid=2651791096&amp;idx=1&amp;sn=eb68116d46fddf0e827475d9b26941b0&amp;chksm=f11e5963c669d075ec8716073bec685f819df8c2dbc03b87f23347ba5b01ea4219864877b4a0&amp;scene=21#wechat_redirect&quot;2019-02-28;在同学会上遇见初恋：他盯了我 5 秒，说出我等了 10 年的那句话&quot;;http://mp.weixin.qq.com/s?__biz=MzI2OTA3MTA5Mg==&amp;mid=2651790909&amp;idx=1&amp;sn=f642cd31fbc8d41d0b4fbe949b51425a&amp;chksm=f11e59a6c669d0b0e5e7ee12cece0a4afaa995aa123b8e993f8ec10d8ba38cccdcf5290de25a&amp;scene=21#wechat_redirect | 第一列 | 第二列 || ——— | —— || 日期;标题 | url | 那么我们只要获取第一列，并根据分隔符;进行拆分就可以得到日期与标题的对应关系： 123# 取第一列并分割日期与标题df = df_ori.iloc[:, 0]df = df.str.split(';', expand=True) 格式化数据 现在给数据设置列别名并进行格式化操作 1234# 格式化日期，设置column，并将日期设置为indexdf.columns = ['date', 'title']df.date = pd.to_datetime(df.date)df = df.set_index('date') 数据统计 我们需要计算每个月新世相公众号发表的文章数，那么需要按月重新取样，并汇总统计文章数 12# 按月统计文章数"MS"为月初cacu = df.resample("MS").count() 画图 配置画布大小 由于时间跨度从2015年至今比较长，我们需要先配置一下画布大小。 12# 画图fig, ax = plt.subplots(figsize=[20, 5]) 配置线条展示：值处用圆点加粗 12# 线条ax.plot(cacu, 'o-') 配置中文展示 12345# 通过设置中文字体方式解决中文展示问题font = FontProperties(fname='../font/PingFang.ttc')ax.set_title("新世相文章统计", fontproperties=font)ax.set_xlabel("日期", fontproperties=font)ax.set_ylabel("文章数", fontproperties=font) 配置横轴展示 由于按月画图，我们横轴显示为年-月，我们这里对横轴设置两层坐标，第一层仅展示月份，第二层展示年份，这样可以防止因为横轴字符挤在一起。第二层坐标格式中增加\n\n用于换行，给第一层月份留出空间。 1234567# 设置时间轴formater = mdate.DateFormatter('%Y-%m')ax.xaxis.set_major_formatter(formater)ax.xaxis.set_minor_locator(mdate.MonthLocator())ax.xaxis.set_minor_formatter(mdate.DateFormatter('%m'))ax.xaxis.set_major_locator(mdate.YearLocator())ax.xaxis.set_major_formatter(mdate.DateFormatter('\n\n%Y')) 显示数值 123# 显示数值for a,b in zip(cacu.index, cacu.values): ax.text(a, b, b[0]) 显示图片 1plt.show() 结论最后画图如下： 可见，新世相也是从16年开始逐步兴起，基本上保持每天一篇的频率一致稳定发展至今。 完整代码参考：https://github.com/keejo125/web_scraping_and_data_analysis/tree/master/weixin]]></content>
@@ -342,8 +355,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -392,8 +405,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -445,8 +458,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -568,8 +581,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

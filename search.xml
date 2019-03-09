@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[使用selenium实现批量文件下载]]></title>
+    <url>%2F%E4%BD%BF%E7%94%A8selenium%E5%AE%9E%E7%8E%B0%E6%89%B9%E9%87%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD.html</url>
+    <content type="text"><![CDATA[背景实现需求：批量下载联想某型号的全部驱动程序。 一般在做网络爬虫的时候，都是保存网页信息为主，或者下载单个文件。当涉及到多文件批量下载的时候，由于下载所需时间不定，下载的文件名不定，所以有一定的困难。 思路 参数配置 在涉及下载的时候，需要先对chromedriver进行参数配置，设定默认下载目录： 12345678global base_pathprofile = &#123; 'download.default_directory': base_path&#125;chrome_options = webdriver.ChromeOptions()chrome_options.add_experimental_option('prefs', profile)driver = webdriver.Chrome(executable_path='../common/chromedriver', options=chrome_options)driver.implicitly_wait(10) 页面分析 联想官网上每个型号的驱动下载页面如上图所示，虽然前面有一个登陆的遮罩，但是实际上并不影响点击。需要注意的是： 驱动列表，需要点击才可以显示具体的下载项目表格 每个下载列表的表头建议做跳过处理 下载处理 在页面中，找到“普通下载”的元素，点击即可下载。最终实现结果是我们希望根据网页的列表进行重命名和重新归档到文件夹，但是我们会发现如下几个问题： 下载过来的文件名无法控制。 依次下载的话，我们无法确认需要下载多久。并行下载的话，无法有效的区分重命名。 在网上找了很久，也没找到在下载时直接重命名的方法，所以最终选择依次下载，当每次下载完成后进行重命名和归档，思路如下： 对每个驱动目录，先新建一个文件夹，如：主板 点击下载后开始下载文件 通过os模块，找到下载目录中所有文件，并按创建时间排序，找到最新创建的文件 由于未完成的文件后缀为.crdownload（chrome），那么根据后缀来判断是否已完成下载，未完成的话继续等待 待下载完成，将文件重命名并剪切到开始建立的归档目录 在后期测试的时候，发现还有几个坑需要注意： 在查找最新创建的文件时，需要注意.DS_Store文件的处理。（Mac系统，Windows则需要考虑thumbs.db） 需要判断一下最新创建的文件是否为文件夹，可以通过filter函数来处理 最新文件的排序查找实现如下： 12345678910111213141516def sort_file(): """排序文件""" dir_link = base_path dir_lists = list(filter(check_file, os.listdir(dir_link))) if len(dir_lists) == 0: return '' else: dir_lists.sort(key=lambda fn: os.path.getmtime(dir_link + os.sep + fn)) return os.path.join(base_path, dir_lists[-1])def check_file(filename): if filename == '.DS_Store' or filename == 'thumbs.db': return False global base_path return os.path.isfile(os.path.join(base_path, filename)) 总结最终实现效果如下： 完整代码参考：https://github.com/keejo125/web_scraping_and_data_analysis/tree/master/Lenovo 如果大家有更好的方法，也欢迎分享。]]></content>
+      <categories>
+        <category>python</category>
+        <category>网络爬虫与数据分析</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[matplotlib画图时标注最大值]]></title>
     <url>%2Fmatplotlib%E7%94%BB%E5%9B%BE%E6%97%B6%E6%A0%87%E6%B3%A8%E6%9C%80%E5%A4%A7%E5%80%BC.html</url>
     <content type="text"><![CDATA[背景在上一篇使用matplotlib绘制时间序列图表中，本来想只展示最大值，一直没找到方法，就先标注了所有的点的数值，看起来有点不够直接。今天终于搞定了，记录一下。 思路源数据：index 为 ‘data’，数据为’title’ 123456789cacu.head(5)Out[5]: titledate 2015-01-01 22015-02-01 02015-03-01 02015-04-01 02015-05-01 2 matpoltlib标注数值 在绘图的时候，可以使用ax.text()方法在坐标系中标注文字，使用方法如下： 123# 显示全部数值for a,b in zip(cacu.index, cacu.values): ax.text(a, b, b[0]) 寻找最大值： 在pandas中有现成的方法可以找到最大值和最大值的索引： 最大值的索引： 1234cacu.idxmax()Out[6]: title 2018-07-01dtype: datetime64[ns] 最大值： 1234cacu.max()Out[8]: title 50dtype: int64 也可根据索引取值： 12345cacu.loc[cacu.idxmax()]Out[7]: titledate 2018-07-01 50 画图标注 根据最上面的标注，应该直接输入最大值的坐标（x为索引，y为值）就可以了，结果有了如下的报错： 1234567891011121314151617ax.text(cacu.idxmax(), cacu.max(), cacu.max())/Users/zhengk/PycharmProjects/web_scraping_and_data_analysis/venv/lib/python3.7/site-packages/pandas/core/ops.py:1649: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison result = method(y)Traceback (most recent call last): File "/Users/zhengk/PycharmProjects/web_scraping_and_data_analysis/venv/lib/python3.7/site-packages/IPython/core/interactiveshell.py", line 3291, in run_code exec(code_obj, self.user_global_ns, self.user_ns) File "&lt;ipython-input-9-cebfed8d464d&gt;", line 1, in &lt;module&gt; ax.text(cacu.idxmax(), cacu.max(), cacu.max()) File "/Users/zhengk/PycharmProjects/web_scraping_and_data_analysis/venv/lib/python3.7/site-packages/matplotlib/axes/_axes.py", line 722, in text x=x, y=y, text=s) File "/Users/zhengk/PycharmProjects/web_scraping_and_data_analysis/venv/lib/python3.7/site-packages/matplotlib/text.py", line 163, in __init__ self.set_text(text) File "/Users/zhengk/PycharmProjects/web_scraping_and_data_analysis/venv/lib/python3.7/site-packages/matplotlib/text.py", line 1191, in set_text if s != self._text: File "/Users/zhengk/PycharmProjects/web_scraping_and_data_analysis/venv/lib/python3.7/site-packages/pandas/core/generic.py", line 1479, in __nonzero__ .format(self.__class__.__name__))ValueError: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all(). 我们仔细看上面最大值的返回结果类型，而并非一个坐标。 12type(cacu.idxmax())Out[11]: pandas.core.series.Series 而我们真正需要的应该是title列的最大索引： 1234type(cacu['title'].idxmax())Out[12]: pandas._libs.tslibs.timestamps.Timestampcacu['title'].idxmax()Out[13]: Timestamp('2018-07-01 00:00:00', freq='MS') 对应的最大值也一样： 1234cacu['title'].max()Out[15]: 50type(cacu['title'].max())Out[16]: numpy.int64 再次画图： 123x = cacu['title'].idxmax()y = cacu['title'].max()ax.text(x, y, y, verticalalignment='bottom', horizontalalignment='center', fontsize='large') 结果 结论这里出现问题其实还是对matplotlib和pandas的基本概念没有弄明白，什么时候获取的是值，什么时候获取的是序列，还需要多加练习。 另外，给图添加标注还有可以使用plt.annotate()方法： 123x = cacu['title'].idxmax()y = cacu['title'].max()plt.annotate(y, xy=(x,y)) 完整代码参考：https://github.com/keejo125/web_scraping_and_data_analysis/tree/master/weixin]]></content>
@@ -355,8 +368,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>

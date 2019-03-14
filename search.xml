@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Python基础之Python面面观2]]></title>
+    <url>%2FPython%E5%9F%BA%E7%A1%80%E4%B9%8BPython%E9%9D%A2%E9%9D%A2%E8%A7%822.html</url>
+    <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 2.6 递归 2.7 变量作用域 拓展1 Python常用标准库函数 拓展2 异常 异常编程小练习编写一个程序，让用户输入苹果个数和单价，然后计算出价格总额。 Enter count: 10 Enter price for each one: 3.5 Pay: 35 运用try-except语句让程序可以处理非数字输入的情况，如果是非数字输入，打印消息并允许用户再次输入，直到输入正确类型值计算出结果后退出。以下是程序的执行结果： Enter count: 20 Enter price for each one: four Error, please enter numeric one. Enter count: twenty Error, please enter numeric one. Enter count: 20 Enter price for each one: 4 The price is 80. 123456789if __name__ == '__main__': while True: try: count = eval(input('Please input a count:')) price = eval(input('Please input the price for each one:')) pay = count * price print('The price is &#123;&#125;'.format(pay)) except: print('Error, please enter numeric one.')]]></content>
+      <categories>
+        <category>python</category>
+        <category>用python玩转数据</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Python基础之Python面面观1]]></title>
-    <url>%2FPython%E5%9F%BA%E7%A1%80%E4%B9%8BPython%E9%9D%A2%E9%9D%A2%E8%A7%82.html</url>
+    <url>%2FPython%E5%9F%BA%E7%A1%80%E4%B9%8BPython%E9%9D%A2%E9%9D%A2%E8%A7%821.html</url>
     <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 2.1 条件 编程练习题 编写一个输入分数，输出分数等级的程序，具体为： Score Grade 90~100 A 70~89 B 60~69 C 0~59 D others Invalid score 请添加必要的输入输出语句，尽量让程序友好。 123456789101112if __name__ == '__main__': score = int(input('please input your score:')) if score &gt;= 90: print('Your grade is A!') elif score &gt;= 70: print('Your grade is B!') elif score &gt;= 60: print('Your grade is C!') elif score &gt;=0: print('Your grade is D!') else: print('Invalid score!') 编写程序，从键盘输入一个二元一次方程ax^2+bx+c=0的三个参数a、b、c（均为整数），求此方程的实根。如果方程有实根，则输出实根（保留一位小数），如果没有实根则输出没有实根的信息。 [输入样例1] 1,0,-1 [输出样例1] x1 = 1.0, x2 = -1.0 [输入样例2] 1,2,1 [输出样例2] x = -1.0 [输入样例3] 2,2,3 [输出样例3] no real solution 123456789101112if __name__ == '__main__': a, b, c = eval(input("please input a,b,c values of a*x^2+b*x+c:")) t = b ** 2 - 4 * a * c if t &gt; 0: x1 = (-b + sqrt(t)) / (2 * a) x2 = (-b - sqrt(t)) / (2 * a) print('x1 = &#123;&#125;, x2 = &#123;&#125;'.format(x1, x2)) elif t == 0: x = -b / (2 * a) print('x = &#123;&#125;'.format(x)) else: print('no real solution') 2.2 Range函数 2.3 循环 编程练习 输入一个整数，求其逆序数。注：虽然可通过字符串切片等方法轻松获得一个数的逆序数，但用整数通过循环来获得逆序数是锻炼逻辑思维的一个好例子。 1234567891011121314151617181920212223def reversed1(number): length = len(number) out = '' for i in range(len(number)): out += number[length - 1 - i] return outdef reversed2(number): number = int(number) out = 0 while number != 0: out = out * 10 + number % 10 number = number // 10 return outif __name__ == '__main__': number = input('input a number:') out1 = reversed1(number) out2 = reversed2(number) print(out1) print(out2) 将一个正整数分解质因数。例如：输入90,打印出90=233*5。 1234567891011121314151617181920212223242526272829def sp1(number): start = str(number) out = [] i = 2 while number != 1: while number % i == 0: number //= i out.append(str(i)) i += 1 print(start + '=' + '*'.join(out))def sp2(number): print(str(number) + '=', end='') i = 2 while number != 1: while number % i ==0: number //= i if number == 1: print('&#123;:d&#125;'.format(i), end='') else: print('&#123;:d&#125;*'.format(i), end='') i += 1if __name__ == '__main__': number = eval(input('input a number:')) sp1(number) sp2(number) 2.4 循环中的break、continue和else 2.5 自定义函数]]></content>
       <categories>
         <category>python</category>
@@ -10,7 +22,6 @@
       </categories>
       <tags>
         <tag>python</tag>
-        <tag>爬虫</tag>
       </tags>
   </entry>
   <entry>
@@ -407,8 +418,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>

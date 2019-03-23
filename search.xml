@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[LeetCode-9 回文数]]></title>
+    <url>%2FLeetCode-9-%E5%9B%9E%E6%96%87%E6%95%B0.html</url>
+    <content type="text"><![CDATA[题目：回文数判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。 示例 1: 12输入: 121输出: true 示例 2: 123输入: -121输出: false解释: 从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。 示例 3: 123输入: 10输出: false解释: 从右向左读, 为 01 。因此它不是一个回文数。 进阶: 你能不将整数转为字符串来解决这个问题吗？ 思路该提如果使用字符串解决，那是相当方便的，可直接通过字符串的切片[::-1]获得反转的字符串进行比较即可，也无需判断正负号的问题： 1234567class Solution: def isPalindrome(self, x: int) -&gt; bool: s = str(x)[::-1] if s == str(x): return True else: return False 既然进阶中要求不用字符串，那么如何获取反转数字呢？其实也很简单，对原数字进行%10取余，对反转数字不停的*10加上余数，即可。大体思路如下： 先判断特殊情况，负数，最后一位为0的非0数肯定不是回文数，直接返回 获取反转数字： 初始化反转数字reversedNum=0 x%10获取个位数字 revservedNum进位再加上x的个位数字 x=x/10 比较反转数字与原数字即可 实现： 12345678910111213class Solution: def isPalindrome(self, x: int) -&gt; bool: if x &lt; 0 or (x % 10 ==0 and x != 0): return False reversedNum = 0 num = x while num: reversedNum = reversedNum * 10 + num % 10 num //= 10 if reversedNum == x: return True else: return False 优化方法在上述计算反转数字中，其实没有必要获取全部反转数字reversedNum，只需要计算到一半，然后比较反转数字与剩余的x即可。 如果x个位数为偶数，那么reversedNum==x 如果为奇数，那么reversedNum//10 == x 比如x = 12321，根据上述逻辑，计算到reversedNum=123时，x=12，满足奇数条件 比如x = 1221，根据上述逻辑，计算到reversedNum=12是，x=12，满足偶数条件 那么怎么判断已经计算到一半了呢： 由于反转过程中是对reversedNum的进位，和x的退位，当计算到一半时，reversedNum必然大于x。 实现如下： 123456789101112class Solution: def isPalindrome(self, x: int) -&gt; bool: if x &lt; 0 or (x % 10 ==0 and x != 0): return False reversedNum = 0 while x &gt; reversedNum: reversedNum = reversedNum * 10 + x % 10 x //= 10 if x == reversedNum or x == reversedNum // 10: return True else: return False 如果大家有更好的方法，欢迎一起探讨。]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[LeetCode-8 字符串转换整数]]></title>
     <url>%2FLeetCode-8-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2%E6%95%B4%E6%95%B0.html</url>
     <content type="text"><![CDATA[题目: 字符串转换整数(atoi)请你来实现一个 atoi 函数，使其能将字符串转换成整数。 首先，该函数会根据需要丢弃无用的开头空格字符，直到寻找到第一个非空格的字符为止。 当我们寻找到的第一个非空字符为正或者负号时，则将该符号与之后面尽可能多的连续数字组合起来，作为该整数的正负号；假如第一个非空字符是数字，则直接将其与之后连续的数字字符组合起来，形成整数。 该字符串除了有效的整数部分之后也可能会存在多余的字符，这些字符可以被忽略，它们对于函数不应该造成影响。 注意：假如该字符串中的第一个非空格字符不是一个有效整数字符、字符串为空或字符串仅包含空白字符时，则你的函数不需要进行转换。 在任何情况下，若函数不能进行有效的转换时，请返回 0。 说明： 假设我们的环境只能存储 32 位大小的有符号整数，那么其数值范围为 [$2^{31}-1, 2^{31}$]。如果数值超过这个范围，qing返回 INT_MAX ($2^{31}-1$) 或 INT_MIN ($-2^{31}​$) 。 示例 1: 12输入: &quot;42&quot;输出: 42 示例 2: 1234输入: &quot; -42&quot;输出: -42解释: 第一个非空白字符为 &apos;-&apos;, 它是一个负号。 我们尽可能将负号与后面所有连续出现的数字组合起来，最后得到 -42 。 示例 3: 123输入: &quot;4193 with words&quot;输出: 4193解释: 转换截止于数字 &apos;3&apos; ，因为它的下一个字符不为数字。 示例 4: 1234输入: &quot;words and 987&quot;输出: 0解释: 第一个非空字符是 &apos;w&apos;, 但它不是数字或正、负号。 因此无法执行有效的转换。 示例 5: 1234输入: &quot;-91283472332&quot;输出: -2147483648解释: 数字 &quot;-91283472332&quot; 超过 32 位有符号整数范围。 因此返回 INT_MIN (−2^31) 。 思路这题题目中其实已经把代码思路表述的比较明显了，直接对字符串中的字符逐个处理即可： 通过except…try…方式定义一个函数判断字符是否为数字 初始化两个标志符，flag：是否为正数，start_flag：是否开始记录数字，初始化输出out=0 开始逐个处理字符： 开头是空格直接continue，下一个 字符为+或者-或者数字则记录并初始化两个标志符 将连续的数字通过out = out * 10 + int(char)来计算需转换的数字 遇到非数字字符退出 根据flag标识符判断是否需要加上负号，并返回 实现： 123456789101112131415161718192021222324252627282930313233343536373839class Solution: def myAtoi(self, str: str) -&gt; int: flag = True start_flag = False out = 0 max_num = 2 ** 31 - 1 min_num = -2 ** 31 for char in str: if not start_flag: # 忽略开头的空格 if char == ' ': continue # 处理符号 if char == '-': flag = False start_flag = True continue elif char == '+': start_flag = True continue if isNumber(char): out = out*10 + int(char) start_flag = True else: break out = out if flag else out * -1 if out &gt; max_num: return max_num if out &lt; min_num: return min_num return outdef isNumber(s): try: int(s) return True except Exception as e: return False 优化方法在python中，string的内建函数有strip()功能，可以直接删除字符串收尾的空格，所以可以先对字符串进行strip()操作，然后遍历时无需判断空格。 12345678910111213141516171819202122232425262728293031323334353637class Solution: def myAtoi(self, str: str) -&gt; int: flag = True start_flag = False out = 0 max_num = 2 ** 31 - 1 min_num = -2 ** 31 str = str.strip() for char in str: if not start_flag: # 处理符号 if char == '-': flag = False start_flag = True continue elif char == '+': start_flag = True continue if isNumber(char): out = out*10 + int(char) start_flag = True else: break out = out if flag else out * -1 if out &gt; max_num: return max_num if out &lt; min_num: return min_num return outdef isNumber(s): try: int(s) return True except Exception as e: return False 当然也可以用正则表达式直接提取，或者判断字符，如果大家有更好的方法，欢迎一起探讨。]]></content>
@@ -542,8 +554,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -595,8 +607,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -718,8 +730,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

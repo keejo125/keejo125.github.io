@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[LeetCode-14 最长公共前缀]]></title>
+    <url>%2FLeetCode-14-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%89%8D%E7%BC%80.html</url>
+    <content type="text"><![CDATA[题目：最长公共前缀编写一个函数来查找字符串数组中的最长公共前缀。 如果不存在公共前缀，返回空字符串 &quot;&quot;。 示例 1: 12输入: [&quot;flower&quot;,&quot;flow&quot;,&quot;flight&quot;]输出: &quot;fl&quot; 示例 2: 123输入: [&quot;dog&quot;,&quot;racecar&quot;,&quot;car&quot;]输出: &quot;&quot;解释: 输入不存在公共前缀。 说明: 所有输入只包含小写字母 a-z 。 思路这个题免不了得一个个的对比，由于是公共字符串，那么最长公共前缀的可能性就是list中长度最短的那个字符串的长度，然后依次递减即可 遍历一次找到长度最短的字符串str[i]，长度为length 初始化公共前缀为str[i] 开始进入循环直到length&lt;=0 如果前length个字符都相同则返回 否则length减1 判断前length个字符是否相同可单独定义一个函数遍历来判断。 实现： 1234567891011121314151617181920212223class Solution: def longestCommonPrefix(self, strs: List[str]) -&gt; str: if len(strs) == 0: return '' length = len(strs[0]) for str in strs: length = min(length, len(str)) while length &gt; 0: if isCommonPrefix(strs, length): return strs[0][:length] else: length -= 1 return ''def isCommonPrefix(strs, length): commonPrefix = strs[0][:length] for i in range(1, len(strs)): if strs[i][:length] == commonPrefix: continue else: return False return True 其他方法既然要依次遍历，也可以直接把字符串中的第一个字符串作为初始的最长公共字符串，然后从首字符开始依次判断 将第一个字符串strs[0]作为初始字符 从头开始依次遍历strs[0]每个字符 和剩下的字符串中对应位置的字符进行对比 直到跟某个字符串长度相等或者跟某个字符串对应位置字符不一致退出 否则返回strs[0] 实现： 12345678910class Solution: def longestCommonPrefix(self, strs: List[str]) -&gt; str: if len(strs) == 0: return '' for i in range(0, len(strs[0])): char = strs[0][i] for j in range(1, len(strs)): if len(strs[j]) == i or strs[j][i] != char: return strs[0][:i] return strs[0] 注意：if len(strs[j]) == i or strs[j][i] != char:这条判断的前后顺序不可以颠倒，否则会有index溢出的报错。 如果大家有更好的方法，欢迎一起探讨。]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[LeetCode-11 盛最多水的容器]]></title>
     <url>%2FLeetCode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8.html</url>
     <content type="text"><![CDATA[题目：盛最多水的容器给定 n 个非负整数 a1，a2，…，an，每个数代表坐标中的一个点 (i, ai) 。在坐标内画 n 条垂直线，垂直线 i 的两个端点分别为 (i, ai) 和 (i, 0)。找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。 说明：你不能倾斜容器，且 n 的值至少为 2。 图中垂直线代表输入数组 [1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（表示为蓝色部分）的最大值为 49。 示例: 12输入: [1,8,6,2,5,4,8,3,7]输出: 49 思路这个其实就是在数组height中找到两值，height[i]和height[j]使min(height[i], height[j]) * (j-i)最大。 直接最简单方法，经过两次遍历即可： 第一个点i，从第1个数到倒数第二个数 第二个点j，从第i+1个数到最后一个数 计算每次的面积，保留最大面积即可 实现： 123456789class Solution: def maxArea(self, height: List[int]) -&gt; int: length = len(height) area = 0 for i in range(0, length - 1): for j in range(i + 1, length): temp_area = min(height[i], height[j]) * (j - i) area = max(temp_area, area) return area 优化方法上面的方法会有两层循环，那么怎么做到一层循环呢？ 需要通过比较的方式来遍历。 取第一个数i，和最后一个数j最后初始的两个数。此时围成面积的长(j-i)最大。 后续只可能缩短长(j-i)，但这时必须时高更大才可能比之前的面积大，所以是移动i，j两个位置中数值较小的那个 height[i]&lt;height[j]，把i往后移动：i++ height[i]&gt;height[j]，把j往前移动：j– 直到i=j这时循环结束，返回最大值 实现： 123456789101112class Solution: def maxArea(self, height: List[int]) -&gt; int: area = 0 l = 0 r = len(height) - 1 while r &gt; l: area = max(area, min(height[l], height[r]) * (r - l)) if height[l] &gt; height[r]: r -= 1 else: l += 1 return area 如果大家有更好的方法，欢迎一起探讨。]]></content>
@@ -527,8 +539,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -577,8 +589,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -630,8 +642,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -753,8 +765,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

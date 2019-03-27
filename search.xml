@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[LeetCode-15 三数之和]]></title>
+    <url>%2FLeetCode-15-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C.html</url>
+    <content type="text"><![CDATA[题目： 三数之和给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。 注意：答案中不可以包含重复的三元组。 1234567例如, 给定数组 nums = [-1, 0, 1, 2, -1, -4]，满足要求的三元组集合为：[ [-1, 0, 1], [-1, -1, 2]] 思路之前曾有两数之和的题目，这次其实可以先把给定数组进行排序之和，依次取0到len(nums)-2的数当做第一个数，然后计算剩下的数组的两数之和是否加上第一个数为0即可。 使用sort()方法进行排序，如果长度小于3直接返回空 依次取i为第0到len(nums)-2个数作为第一个数num1 为了防止重复，如果i不是0的情况下，当前num1与上一轮的num1相同则跳过 依次取j从i+1开始到len(nums)-1个数做为第二个数num2 如果当前j不等于i+1的情况下，当前num2与上一轮的num2相同则跳过 判断num3=-(num1+num2)是否在剩余数组中，存在则加入到输出 实现： 12345678910111213141516171819class Solution: def threeSum(self, nums: List[int]) -&gt; List[List[int]]: out = [] nums.sort() if len(nums) &lt; 3: return [] for i in range(0, len(nums) -2): if i &gt; 0 and nums[i] == nums[i - 1]: continue num1 = nums[i] for j in range(i + 1, len(nums) - 1): num2 = nums[j] if j &gt; i + 1 and num2 == nums[j - 1]: continue num3 = -(num1 + num2) if num3 in nums[j + 1:]: temp_out = [num1, num2, num3] out.append(temp_out) return out 优化方法上述方法嵌套了两次层循环，且第二层循环需完全遍历剩余数组。可以使用双指针的方式前后同时移动来提升效率。 使用sort()方法进行排序，如果长度小于3直接返回空 依次取i为第0到len(nums)-2个数作为第一个数num1 为了防止重复，如果i不是0的情况下，当前num1与上一轮的num1相同则跳过 初始化第2个数的index为l，第三个数的index为r=len(nums)-1 在确保l&lt;r的情况下开始移动 如果当前三个数相加为0：记录当前组合后，l向后移动，r向前移动 如果移动后的l,r值与上一值相等则继续移动 如果当前三个数相加大于0：r向左移动 如果当前三个数相加小于0：l向右移动 实现： 12345678910111213141516171819202122232425262728class Solution: def threeSum(self, nums: List[int]) -&gt; List[List[int]]: out = [] nums.sort() if len(nums) &lt; 3: return [] for i in range(0, len(nums) -2): if i &gt; 0 and nums[i] == nums[i - 1]: continue num1 = nums[i] l = i + 1 r = len(nums) - 1 while l &lt; r: temp_sum = nums[l] + nums[r] + num1 if temp_sum == 0: temp_out = [num1, nums[l], nums[r]] out.append(temp_out) l += 1 r -= 1 while l &lt; r and nums[l] == nums[l - 1]: l += 1 while l &lt; r and nums[r] == nums[r + 1]: r -= 1 elif temp_sum &gt; 0: r -= 1 else: l += 1 return out 如果大家有更好的方法，欢迎一起探讨。]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[LeetCode-14 最长公共前缀]]></title>
     <url>%2FLeetCode-14-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%89%8D%E7%BC%80.html</url>
     <content type="text"><![CDATA[题目：最长公共前缀编写一个函数来查找字符串数组中的最长公共前缀。 如果不存在公共前缀，返回空字符串 &quot;&quot;。 示例 1: 12输入: [&quot;flower&quot;,&quot;flow&quot;,&quot;flight&quot;]输出: &quot;fl&quot; 示例 2: 123输入: [&quot;dog&quot;,&quot;racecar&quot;,&quot;car&quot;]输出: &quot;&quot;解释: 输入不存在公共前缀。 说明: 所有输入只包含小写字母 a-z 。 思路这个题免不了得一个个的对比，由于是公共字符串，那么最长公共前缀的可能性就是list中长度最短的那个字符串的长度，然后依次递减即可 遍历一次找到长度最短的字符串str[i]，长度为length 初始化公共前缀为str[i] 开始进入循环直到length&lt;=0 如果前length个字符都相同则返回 否则length减1 判断前length个字符是否相同可单独定义一个函数遍历来判断。 实现： 1234567891011121314151617181920212223class Solution: def longestCommonPrefix(self, strs: List[str]) -&gt; str: if len(strs) == 0: return '' length = len(strs[0]) for str in strs: length = min(length, len(str)) while length &gt; 0: if isCommonPrefix(strs, length): return strs[0][:length] else: length -= 1 return ''def isCommonPrefix(strs, length): commonPrefix = strs[0][:length] for i in range(1, len(strs)): if strs[i][:length] == commonPrefix: continue else: return False return True 其他方法既然要依次遍历，也可以直接把字符串中的第一个字符串作为初始的最长公共字符串，然后从首字符开始依次判断 将第一个字符串strs[0]作为初始字符 从头开始依次遍历strs[0]每个字符 和剩下的字符串中对应位置的字符进行对比 直到跟某个字符串长度相等或者跟某个字符串对应位置字符不一致退出 否则返回strs[0] 实现： 12345678910class Solution: def longestCommonPrefix(self, strs: List[str]) -&gt; str: if len(strs) == 0: return '' for i in range(0, len(strs[0])): char = strs[0][i] for j in range(1, len(strs)): if len(strs[j]) == i or strs[j][i] != char: return strs[0][:i] return strs[0] 注意：if len(strs[j]) == i or strs[j][i] != char:这条判断的前后顺序不可以颠倒，否则会有index溢出的报错。 如果大家有更好的方法，欢迎一起探讨。]]></content>
@@ -539,8 +551,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -642,8 +654,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

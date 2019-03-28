@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[LeetCode-16 最接近的三数之和]]></title>
+    <url>%2FLeetCode-16-%E6%9C%80%E6%8E%A5%E8%BF%91%E7%9A%84%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C.html</url>
+    <content type="text"><![CDATA[题目：最接近的三数之和给定一个包括 n 个整数的数组 nums 和 一个目标值 target。找出 nums 中的三个整数，使得它们的和与 target 最接近。返回这三个数的和。假定每组输入只存在唯一答案。 123例如，给定数组 nums = [-1，2，1，-4], 和 target = 1.与 target 最接近的三个数的和为 2. (-1 + 2 + 1 = 2). 思路这题和之前的三数之和类似，在遍历是比较保留与target最近接的值即可。 使用sort()方法进行排序，如果长度小于3直接返回sum(nums) 初始化三数之和为out_sum=None 依次取i为第0到len(nums)-2个数作为第一个数num1 为了防止重复，如果i不是0的情况下，当前num1与上一轮的num1相同则跳过 初始化第2个数的index为l，第三个数的index为r=len(nums)-1 在确保l&lt;r的情况下开始移动 如果out_sum为None，即第一次遍历，或者out_sum与target的距离比当前三数之和temp_sum大，则将temp_sum赋值给out_sum 如果当前三数之和等于target：直接返回，必定是最接近target的值 如果当前三数之和大于target：r向左移动 如果当前三数之和小于target：l向右移动 实现： 1234567891011121314151617181920212223class Solution: def threeSumClosest(self, nums: List[int], target: int) -&gt; int: if len(nums) &lt; 3: return sum(nums) nums.sort() out_sum = None for i in range(0, len(nums) - 2): if i &gt; 0 and nums[i] == nums[i - 1]: continue l = i + 1 r = len(nums) - 1 while l &lt; r: temp_sum = nums[i] + nums[l] + nums[r] if out_sum is None or abs(out_sum - target) &gt; abs(temp_sum - target): out_sum = temp_sum continue if temp_sum == target: return temp_sum elif temp_sum &gt; target: r -= 1 else: l += 1 return out_sum 如果大家有更好的方法，欢迎一起探讨。]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[LeetCode-15 三数之和]]></title>
     <url>%2FLeetCode-15-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C.html</url>
     <content type="text"><![CDATA[题目： 三数之和给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。 注意：答案中不可以包含重复的三元组。 1234567例如, 给定数组 nums = [-1, 0, 1, 2, -1, -4]，满足要求的三元组集合为：[ [-1, 0, 1], [-1, -1, 2]] 思路之前曾有两数之和的题目，这次其实可以先把给定数组进行排序之和，依次取0到len(nums)-2的数当做第一个数，然后计算剩下的数组的两数之和是否加上第一个数为0即可。 使用sort()方法进行排序，如果长度小于3直接返回空 依次取i为第0到len(nums)-2个数作为第一个数num1 为了防止重复，如果i不是0的情况下，当前num1与上一轮的num1相同则跳过 依次取j从i+1开始到len(nums)-1个数做为第二个数num2 如果当前j不等于i+1的情况下，当前num2与上一轮的num2相同则跳过 判断num3=-(num1+num2)是否在剩余数组中，存在则加入到输出 实现： 12345678910111213141516171819class Solution: def threeSum(self, nums: List[int]) -&gt; List[List[int]]: out = [] nums.sort() if len(nums) &lt; 3: return [] for i in range(0, len(nums) -2): if i &gt; 0 and nums[i] == nums[i - 1]: continue num1 = nums[i] for j in range(i + 1, len(nums) - 1): num2 = nums[j] if j &gt; i + 1 and num2 == nums[j - 1]: continue num3 = -(num1 + num2) if num3 in nums[j + 1:]: temp_out = [num1, num2, num3] out.append(temp_out) return out 优化方法上述方法嵌套了两次层循环，且第二层循环需完全遍历剩余数组。可以使用双指针的方式前后同时移动来提升效率。 使用sort()方法进行排序，如果长度小于3直接返回空 依次取i为第0到len(nums)-2个数作为第一个数num1 为了防止重复，如果i不是0的情况下，当前num1与上一轮的num1相同则跳过 初始化第2个数的index为l，第三个数的index为r=len(nums)-1 在确保l&lt;r的情况下开始移动 如果当前三个数相加为0：记录当前组合后，l向后移动，r向前移动 如果移动后的l,r值与上一值相等则继续移动 如果当前三个数相加大于0：r向左移动 如果当前三个数相加小于0：l向右移动 实现： 12345678910111213141516171819202122232425262728class Solution: def threeSum(self, nums: List[int]) -&gt; List[List[int]]: out = [] nums.sort() if len(nums) &lt; 3: return [] for i in range(0, len(nums) -2): if i &gt; 0 and nums[i] == nums[i - 1]: continue num1 = nums[i] l = i + 1 r = len(nums) - 1 while l &lt; r: temp_sum = nums[l] + nums[r] + num1 if temp_sum == 0: temp_out = [num1, nums[l], nums[r]] out.append(temp_out) l += 1 r -= 1 while l &lt; r and nums[l] == nums[l - 1]: l += 1 while l &lt; r and nums[r] == nums[r + 1]: r -= 1 elif temp_sum &gt; 0: r -= 1 else: l += 1 return out 如果大家有更好的方法，欢迎一起探讨。]]></content>
@@ -589,8 +601,8 @@
         <category>JavaScript</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>JavaScript</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -601,8 +613,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -654,8 +666,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -777,8 +789,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

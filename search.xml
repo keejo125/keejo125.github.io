@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[LeetCode-20 有效的括号]]></title>
+    <url>%2FLeetCode-20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7.html</url>
+    <content type="text"><![CDATA[题目：有效的括号给定一个只包括 &#39;(&#39;，&#39;)&#39;，&#39;{&#39;，&#39;}&#39;，&#39;[&#39;，&#39;]&#39; 的字符串，判断字符串是否有效。 有效字符串需满足： 左括号必须用相同类型的右括号闭合。 左括号必须以正确的顺序闭合。 注意空字符串可被认为是有效字符串。 示例 1: 12输入: &quot;()&quot;输出: true 示例 2: 12输入: &quot;()[]&#123;&#125;&quot;输出: true 示例 3: 12输入: &quot;(]&quot;输出: false 示例 4: 12输入: &quot;([)]&quot;输出: false 示例 5: 12输入: &quot;&#123;[]&#125;&quot;输出: true 思路这题可以通过堆栈的概念来解决，利用堆栈先进先出的特点实现 先初始化一个括号对应关系的字典 依次遍历字符串 如果遇到左括号，则写入堆栈 遇到非左括号的，则从堆栈中弹出最新写入的字符，比较是否成对 成对的话，则匹配出了一个括号对，继续遍历 如果当前堆栈还是空的，说明先出现右括号，直接返回False 如果不成对，说明括号顺序有误，无法成对，返回False 结束遍历时，如果堆栈已空说明全部成对，返回True，否则返回False 实现： 123456789101112131415class Solution: def isValid(self, s: str) -&gt; bool: flag_map = &#123;'(': ')', '[': ']', '&#123;': '&#125;'&#125; stack = [] for char in s: if char in flag_map: stack.append(char) else: if stack: element = stack.pop() if flag_map[element] != char: return False else: return False return not stack 优化方法把上述方法中的map进行反向，通过把右括号压入堆栈，来进行匹配，可以更简洁一点。 实现： 123456789101112class Solution: def isValid(self, s: str) -&gt; bool: flag_map = &#123;")": "(", "&#125;": "&#123;", "]": "["&#125; stack = [] for char in s: if char in flag_map: element = stack.pop() if stack else '#' if flag_map[char] != element: return False else: stack.append(char) return not stack 如果大家有更好的方法，欢迎一起探讨。]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[LeetCode-16 最接近的三数之和]]></title>
     <url>%2FLeetCode-16-%E6%9C%80%E6%8E%A5%E8%BF%91%E7%9A%84%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C.html</url>
     <content type="text"><![CDATA[题目：最接近的三数之和给定一个包括 n 个整数的数组 nums 和 一个目标值 target。找出 nums 中的三个整数，使得它们的和与 target 最接近。返回这三个数的和。假定每组输入只存在唯一答案。 123例如，给定数组 nums = [-1，2，1，-4], 和 target = 1.与 target 最接近的三个数的和为 2. (-1 + 2 + 1 = 2). 思路这题和之前的三数之和类似，在遍历是比较保留与target最近接的值即可。 使用sort()方法进行排序，如果长度小于3直接返回sum(nums) 初始化三数之和为out_sum=None 依次取i为第0到len(nums)-2个数作为第一个数num1 为了防止重复，如果i不是0的情况下，当前num1与上一轮的num1相同则跳过 初始化第2个数的index为l，第三个数的index为r=len(nums)-1 在确保l&lt;r的情况下开始移动 如果out_sum为None，即第一次遍历，或者out_sum与target的距离比当前三数之和temp_sum大，则将temp_sum赋值给out_sum 如果当前三数之和等于target：直接返回，必定是最接近target的值 如果当前三数之和大于target：r向左移动 如果当前三数之和小于target：l向右移动 实现： 1234567891011121314151617181920212223class Solution: def threeSumClosest(self, nums: List[int], target: int) -&gt; int: if len(nums) &lt; 3: return sum(nums) nums.sort() out_sum = None for i in range(0, len(nums) - 2): if i &gt; 0 and nums[i] == nums[i - 1]: continue l = i + 1 r = len(nums) - 1 while l &lt; r: temp_sum = nums[i] + nums[l] + nums[r] if out_sum is None or abs(out_sum - target) &gt; abs(temp_sum - target): out_sum = temp_sum continue if temp_sum == target: return temp_sum elif temp_sum &gt; target: r -= 1 else: l += 1 return out_sum 如果大家有更好的方法，欢迎一起探讨。]]></content>
@@ -563,8 +575,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -601,8 +613,8 @@
         <category>JavaScript</category>
       </categories>
       <tags>
-        <tag>JavaScript</tag>
         <tag>python</tag>
+        <tag>JavaScript</tag>
       </tags>
   </entry>
   <entry>
@@ -613,8 +625,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -666,8 +678,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -789,8 +801,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

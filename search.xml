@@ -145,8 +145,8 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[chromedriver之"此类型文件可能会损害您的计算机"提示处理]]></title>
-    <url>%2Fchromedriver%E4%B9%8B%22%E6%AD%A4%E7%B1%BB%E5%9E%8B%E6%96%87%E4%BB%B6%E5%8F%AF%E8%83%BD%E4%BC%9A%E6%8D%9F%E5%AE%B3%E6%82%A8%E7%9A%84%E8%AE%A1%E7%AE%97%E6%9C%BA%22%E6%8F%90%E7%A4%BA%E5%A4%84%E7%90%86.html</url>
+    <title><![CDATA[chromedriver之“”提示处理]]></title>
+    <url>%2Fchromedriver%E4%B9%8B%E2%80%9C%E6%AD%A4%E7%B1%BB%E5%9E%8B%E6%96%87%E4%BB%B6%E5%8F%AF%E8%83%BD%E4%BC%9A%E6%8D%9F%E5%AE%B3%E6%82%A8%E7%9A%84%E8%AE%A1%E7%AE%97%E6%9C%BA%E2%80%9D%E6%8F%90%E7%A4%BA%E5%A4%84%E7%90%86.html</url>
     <content type="text"><![CDATA[背景最近在使用selenium进行自动文件下载时，突然出现了一个报错： 下载进行不下去了。 思路经过各种谷歌、百度，均告诉我在要增加params，关闭浏览器安全选项，配置如下： 1234567chromeOptions = webdriver.ChromeOptions()prefs = &#123;"profile.default_content_settings.popups": 0, "download.default_directory": path, "download.prompt_for_download": False, # "download.directory_upgrade": 'true', "safebrowsing.enabled": True&#125;chromeOptions.add_experimental_option("prefs", prefs) 事实证明，可能以前的版本是可行的，现在的真心不行。 上面配置重点是&quot;safebrowsing.enabled&quot;: True。在MacOS的环境下，哪怕不配也是没有问题的，Windows就不行了。 最后在谷歌上找到一篇相关文章，大意是说这个是无解的，可能是windows系统安全的问题， 对于这个解释我还是比较认可的，所以在mac上就不会提示。 Let’s start frankly: you can’t disable this feature. You can merely tweak the download settings in order to avoid it. https://windowsreport.com/type-of-file-can-harm-computer/ 那么问题来了，既然这样，有什么曲线救国的办法呢？ 当chromedriver弹出这个提示的时候，其实文件已经下载完成，如下图： 我们只需要将文件名修改为正确的名字和后缀即可(比如test.txt)，直接无视警告提醒。思路如下： 找到最新下载的文件：通过对下载目录的文件按照创建时间排序，找到最新的 判断是否该文件是否已下载完成：通过判断时间间隔前后该文件是否有大小的变化 结论根据上面思路，实现的关键代码如下： 1234567891011121314151617181920212223242526272829303132def sort_file(): global path dir_lists = os.listdir(path) dir_lists.sort(key=lambda fn: os.path.getmtime(os.path.join(path, fn))) return dir_lists[-1] def changeName(path, oldname, newname): old_path = os.path.join(path, oldname) new_path = os.path.join(path, newname + '.txt') if os.path.exists(old_path): if os.path.exists(new_path): os.remove(new_path) os.rename(old_path, new_path) print ('rename done!' + newname) else: print ('no file found!') def download(): ... temp_filename = sort_file() if u'未确认' in temp_filename: temp_filesize_old = os.path.getsize(os.path.join(path, temp_filename)) while True: time.sleep(1) temp_filesize_new = os.path.getsize(os.path.join(path, temp_filename)) if temp_filesize_old == temp_filesize_new: changeName(path, temp_filename, ip) return else: temp_filesize_old = temp_filesize_new else: print(u'下载失败') 需要注意的是，在文件重命名的时候，先检查下文件是否已经存在，先删除，在创建。 以上。如果有更好的思路，欢迎分享。]]></content>
       <categories>
         <category>python</category>
@@ -587,8 +587,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -690,8 +690,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

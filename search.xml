@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[LeetCode-26 删除排序数组中的重复项]]></title>
+    <url>%2FLeetCode-26-%E5%88%A0%E9%99%A4%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E9%A1%B9.html</url>
+    <content type="text"><![CDATA[题目：删除排序数组中的重复项给定一个排序数组，你需要在原地删除重复出现的元素，使得每个元素只出现一次，返回移除后数组的新长度。 不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。 示例 1: 12345给定数组 nums = [1,1,2], 函数应该返回新的长度 2, 并且原数组 nums 的前两个元素被修改为 1, 2。 你不需要考虑数组中超出新长度后面的元素。 示例 2: 12345给定 nums = [0,0,1,1,1,2,2,3,3,4],函数应该返回新的长度 5, 并且原数组 nums 的前五个元素被修改为 0, 1, 2, 3, 4。你不需要考虑数组中超出新长度后面的元素。 说明: 为什么返回数值是整数，但输出的答案是数组呢? 请注意，输入数组是以“引用”方式传递的，这意味着在函数里修改输入数组对于调用者是可见的。 你可以想象内部操作如下: 12345678// nums 是以“引用”方式传递的。也就是说，不对实参做任何拷贝int len = removeDuplicates(nums);// 在函数里修改输入数组对于调用者是可见的。// 根据你的函数返回的长度, 它会打印出数组中该长度范围内的所有元素。for (int i = 0; i &lt; len; i++) &#123; print(nums[i]);&#125; 思路这题的题目表述稍微有点绕，其实意思比较简单，给定一个有序数组，存在重复的情况，要求在不新建一个数组的情况下，无视重复的数组，把非重复的数值往往前移动，并返回非重复数组的长度。 比如给定： 1nums = [0,0,1,1,1,2,2,3,3,4] 处理完后的数组为： 1nums = [0,1,2,3,4,2,2,3,3,4] 返回值为5，系统会自动输出前5个数： 1[0,1,2,3,4] 可以用双指针法： 初始化指针i从0开始，j从1开始一直遍历到len(lists) 如果j指向的数与i指向的数一样，那么继续遍历 如果j指向的数与i指向的数不一样，那么把i指向的数修改为j指向的数并继续 最后返回长度是i+1，此时数组中前i+1个数也都是非重复的数值了。 实现： 12345678910class Solution: def removeDuplicates(self, nums) -&gt; int: if len(nums) == 0: return 0 i = 0 for j in range(1, len(nums)): if nums[i] != nums[j]: i += 1 nums[i] = nums[j] return i + 1 如果大家有更好的方法，欢迎一起探讨。]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[LeetCode-23 合并K个排序链表]]></title>
     <url>%2FLeetCode-23-%E5%90%88%E5%B9%B6K%E4%B8%AA%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8.html</url>
     <content type="text"><![CDATA[题目：合并K个排序链表合并 k 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。 示例: 1234567输入:[ 1-&gt;4-&gt;5, 1-&gt;3-&gt;4, 2-&gt;6]输出: 1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4-&gt;5-&gt;6 思路这题可以看成是上一题合并两个有序列表）的扩展，可以直接遍历K个链表，然后依次进行两两排序。 实现如下： 1234567891011121314151617181920212223242526272829303132# Definition for singly-linked list.# class ListNode:# def __init__(self, x):# self.val = x# self.next = Nonedef mergeTwoLists(l1: ListNode, l2: ListNode) -&gt; ListNode: outNode = ListNode(None) curNode = outNode while l1 and l2: if l1.val &lt; l2.val: curNode.next = l1; l1 = l1.next else: curNode.next = l2; l2 = l2.next curNode = curNode.next if l1: curNode.next = l1; else: curNode.next = l2 return outNode.nextclass Solution: def mergeKLists(self, lists: List[ListNode]) -&gt; ListNode: if len(lists) == 0: return None tempNode = lists[0] for i in range(1, len(lists)): tempOutNode = mergeTwoLists(tempNode, lists[i]) tempNode = tempOutNode return tempNode 这里要注意输入为空列表的情况。 优化方法 1上面的方法在提交运行中，会超时，那么怎么加速一下呢，参考了大神们的解题，可以考虑通过递归的方式，思路如下： 当输入列表长度为0时，直接返回None 当输入列表长度为1时，直接返回列表内容：lists[0] 当输入列表长度为2时，返回这两个列表合并的运算结果：mergeTwoLists(lists[0], lists[1]) 当输入的列表长度大于2时，则先取长度的中位数mid，将列表分列两部分:l1 = lists[:mid]，l2=lists[mid:]。然后分别进行递归：self.mergeKLists(l1)，self.mergeKLists(l2)，并将最终递归的结果进行合并。 实现如下： 123456789101112131415161718192021222324252627282930313233343536# Definition for singly-linked list.# class ListNode:# def __init__(self, x):# self.val = x# self.next = Nonedef mergeTwoLists(l1: ListNode, l2: ListNode) -&gt; ListNode: outNode = ListNode(None) curNode = outNode while l1 and l2: if l1.val &lt; l2.val: curNode.next = l1; l1 = l1.next else: curNode.next = l2; l2 = l2.next curNode = curNode.next if l1: curNode.next = l1; else: curNode.next = l2 return outNode.nextclass Solution: def mergeKLists(self, lists: List[ListNode]) -&gt; ListNode: if len(lists) == 0: return None if len(lists) == 1: return lists[0] if len(lists) == 2: return mergeTwoLists(lists[0], lists[1]) tempNode = lists[0] mid = len(lists) // 2 l1 = lists[:mid] l2 = lists[mid:] return mergeTwoLists(self.mergeKLists(l1), self.mergeKLists(l2)) 优化方法 2其实换一种思路，正所谓不要重复的造轮子，已经有的常用的排序sort()方法其实很高效了，虽然有违算法题的初衷。 思路如下： 遍历所有的列表，把所有的值全部都写入一个list 通过list.sort()进行排序 然后将list转化为ListNode() 实现如下： 1234567891011121314151617181920# Definition for singly-linked list.# class ListNode:# def __init__(self, x):# self.val = x# self.next = Noneclass Solution: def mergeKLists(self, lists: List[ListNode]) -&gt; ListNode: allList = [] outNode = ListNode(0) curNode = outNode for item in lists: while item: allList.append(item.val) item = item.next allList.sort() for val in allList: curNode.next = ListNode(val) curNode = curNode.next return outNode.next 如果大家有更好的方法，欢迎一起探讨。]]></content>
@@ -659,8 +671,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -762,8 +774,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[LeetCode-43 字符串相乘]]></title>
+    <url>%2FLeetCode-43-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E4%B9%98.html</url>
+    <content type="text"><![CDATA[题目：字符串相乘给定两个以字符串形式表示的非负整数 num1 和 num2，返回 num1 和 num2 的乘积，它们的乘积也表示为字符串形式。 示例 1: 12输入: num1 = &quot;2&quot;, num2 = &quot;3&quot;输出: &quot;6&quot; 示例 2: 12输入: num1 = &quot;123&quot;, num2 = &quot;456&quot;输出: &quot;56088&quot; 说明： num1 和 num2 的长度小于110。 num1 和 num2 只包含数字 0-9。 num1 和 num2 均不以零开头，除非是数字 0 本身。 不能使用任何标准库的大数类型（比如 BigInteger）或直接将输入转换为整数来处理。 思路由于Python中的int类型是支持大数的，所以其实没有处理会不会数值过大的必要。 题目中说不允许直接转换成整数处理，其实就是希望我们实现一下乘法的过程，也就是以前学的竖式运算的过程。 1234567 11x 12----- 22 11----- 132 思路如下： 初始化结果res=0 进行嵌套循环，从右边依次取num2的每个字符串num2[-j]，转换成int类型，依次与num1从右边开始逐个字符串num1[-i]相乘 相乘过程中涉及到进位，可以找到规律是10 ** (i+j-2)。 实现如下： 1234567class Solution: def multiply(self, num1: str, num2: str) -&gt; str: res = 0 for i in range(1, len(num1) + 1): for j in range(1, len(num2) + 1): res += int(num1[-i]) * int(num2[-j]) * 10 ** (i + j - 2) return str(res) 其他思考如果不考虑要求，直接使用int()来转换的话，那么更简单了： 123class Solution: def multiply(self, num1: str, num2: str) -&gt; str: return str(int(num1) * int(num2)) 运行效果与上面相比的话： 1234567891011121314151617181920212223242526import timeclass Solution: def multiply1(self, num1, num2): res = 0 for i in range(1, len(num1) + 1): for j in range(1, len(num2) + 1): res += int(num1[-i]) * int(num2[-j]) * 10 ** (i + j - 2) return str(res) def multiply2(self, num1, num2): return str(int(num1) * int(num2))if __name__ == '__main__': num1 = "1111111" num2 = "2222222" t1 = time.time() print(Solution().multiply1(num1, num2)) t2 = time.time() print('Solution One spent &#123;&#125; seconds'.format(t2-t1)) t1 = time.time() print(Solution().multiply2(num1, num2)) t2 = time.time() print('Solution Two spent &#123;&#125; seconds'.format(t2 - t1)) 输出如下： 12342469135308642Solution One spent 7.581710815429688e-05 seconds2469135308642Solution Two spent 7.152557373046875e-06 seconds 还是差了一个数量级的，再实际使用中，还是用原生的方法比较好。 如果大家有更好的方法，欢迎一起探讨。]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[LeetCode-33 搜索旋转排序数组]]></title>
     <url>%2FLeetCode-33-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84.html</url>
     <content type="text"><![CDATA[题目：搜索旋转排序数组假设按照升序排序的数组在预先未知的某个点上进行了旋转。 ( 例如，数组 [0,1,2,4,5,6,7] 可能变为 [4,5,6,7,0,1,2] )。 搜索一个给定的目标值，如果数组中存在这个目标值，则返回它的索引，否则返回 -1 。 你可以假设数组中不存在重复的元素。 你的算法时间复杂度必须是 O(log n) 级别。 示例 1: 12输入: nums = [4,5,6,7,0,1,2], target = 0输出: 4 示例 2: 12输入: nums = [4,5,6,7,0,1,2], target = 3输出: -1 思路这题其实还是得使用二分法，但由于数组并不是完全有序的，所以得对二分法进行一定的修改。 初始化low = 0, high = len(nums) - 1， mid = (low + high) // 2 如果刚好target就是中间值，那就直接返回 否则得继续查找，那么就只有两种情况： 旋转点在右边，那么左边为有序数组，右边为无序数组 若target在左边，那么high = mid - 1 若target在右边，那么low = mid + 1 旋转点在左边，那么左边为无序数组，右边为有序数组 若target在右边，那么low = mid + 1 若target在左边，那么high = mid - 1 注意：在判断范围的时候，需要判断边界。 实现： 12345678910111213141516171819202122232425class Solution: def search(self, nums: List[int], target: int) -&gt; int: low = 0 high = len(nums) - 1 while low &lt;= high: mid = (low + high) // 2 if nums[mid] == target: return mid else: # 左边有序 if nums[low] &lt;= nums[mid]: # target在左边 if nums[low] &lt;= target &lt; nums[mid]: high = mid - 1 # target在右边 else: low = mid + 1 # 右边有序 else: # target在右边 if nums[mid] &lt; target &lt;= nums[high]: low = mid + 1 else: high = mid - 1 return -1 如果大家有更好的方法，欢迎一起探讨。]]></content>
@@ -683,8 +695,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>

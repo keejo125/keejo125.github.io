@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Python数据统计和可视化3]]></title>
+    <url>%2FPython%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%92%8C%E5%8F%AF%E8%A7%86%E5%8C%963.html</url>
+    <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 利用免费财经数据接口 TuShare获取和分析数据 安装 1pip install tushare 初始化程序 12345import pandas as pdimport numpy as npimport tushare as tsdf = ts.get_hist_data('600036',start='2018-07-01',end='2018-12-31') 利用 Tushare 包中的接口函数获取招商银行(股票代码 600036)2018 年下半年的股票数据并完成如下数据处理和分析任务: 1、数据只保留 date、open、high、close、low 和 volume 这几个属性，并按时间先后顺序对数据进行排序; 12df = df[['open', 'high', 'close', 'low', 'volume']]df.sort_index(inplace=True) 2、输出这半年内成交量最低和最高那两天的日期和分别的成交量; 123456min_day = df.sort_values('volume').iloc[0]min_volume = min_day.volumemin_volume_day = min_day.namemax_day = df.sort_values('volume', ascending=False).iloc[0]max_volume = max_day.volumemax_volume_day = max_day.name 3、列出成交量在 1000000 以上的记录; 1df[df.volume&gt;1000000] 4、计算这半年中收盘价(close)高于开盘价(open)的天数; 1len(df[df.close&gt;df.open]) 5、计算前后两天开盘价的涨跌情况，用两种方式表示，第一种输出每两天之间的差值(后一天减去前一天)，第二种输出一个开盘价涨跌列表，涨用 1 表示，跌用-1 表示; 1234# 第一种输出每两天之间的差值(后一天减去前一天)，df.open.diff()# 第二种输出一个开盘价涨跌列表，涨用 1 表示，跌用-1 表示;np.sign(np.diff(df.open)) 6、计算每月收盘价的平均值。 12df.index = pd.DatetimeIndex(df.index)df.open.resample('M').mean()]]></content>
+      <categories>
+        <category>python</category>
+        <category>用python玩转数据</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Python数据统计和可视化2]]></title>
     <url>%2FPython%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%92%8C%E5%8F%AF%E8%A7%86%E5%8C%962.html</url>
     <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 5.5 简单统计与处理 5.6 Grouping 5.7 Merge]]></content>
@@ -743,8 +755,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>

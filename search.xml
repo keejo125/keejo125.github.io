@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[树莓派设置固定IP]]></title>
+    <url>%2F%E6%A0%91%E8%8E%93%E6%B4%BE%E8%AE%BE%E7%BD%AE%E5%9B%BA%E5%AE%9AIP.html</url>
+    <content type="text"><![CDATA[背景树莓派默认是DHCP自动获取IP地址的，但在实际使用中，经常会有设置固定IP的情况。网上也有很多设置固定IP的方法，但要注意的是，不同版本的树莓派系统还是有区别的。 之前用的是树莓派8 （Jessie）版本，后来在树莓派9（stretch）中用相同的方法修改配置文件设置固定IP之后，导致整个网卡起不了了，无线和有线网卡都无法使用。这需要特别注意。 树莓派 Debian 8 (Jessie)在树莓派 Debian 8 (Jessie)版本的系统中，设置固定IP需要修改两个文件，详细操作如下： 备份原文件 12sudo cp /etc/network/interfaces /etc/network/interfaces.baksudo cp /etc/dhcpcd.conf /etc/dhcpcd.conf.bak 修改interfaces文件 1sudo nano /etc/network/interfaces 注释掉如下语句： 1iface eth0 inet dhcp 增加如下语句： 1234iface eth0 inet staticaddress xx.xx.xx.xxnetmask 255.255.255.0gateway xx.xx.xx.254 修改dhcpcd.conf文件 1sudo nano /etc/dhcpcd.conf 增加如下语句： 1234interface eth0static ip_address=xx.xx.xx.xx/24static routers=xx.xx.xx.254static domain_name_servers=xx.xx.xx.xx xx.xx.xx.xx 重启树莓派 1reboot 树莓派 Debian 9 (stretch)在树莓派 Debian 9 中，配置方法有了变化，我们看下/etc/network/interfaces文件： 根据提示，我们再看下dhcpcd.conf文件中的例子： 可见，直接修改这个文件即可： 备份原文件 1sudo cp /etc/dhcpcd.conf /etc/dhcpcd.conf.bak 修改dhcpcd.conf文件 增加如下语句： 1234interface eth0static ip_address=xx.xx.xx.xx/24static routers=xx.xx.xx.254static domain_name_servers=xx.xx.xx.xx xx.xx.xx.xx 重启树莓派 1reboot 需要注意的是，如果直接按照之前的方法，也修改了/etc/network/interfaces文件的话，会导致树莓派整个网卡挂了，无法连接网络。]]></content>
+      <categories>
+        <category>操作系统</category>
+        <category>树莓派</category>
+      </categories>
+      <tags>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[树莓派系统瘦身]]></title>
     <url>%2F%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E7%98%A6%E8%BA%AB.html</url>
     <content type="text"><![CDATA[背景树莓派系统一般烧录在sd卡中，sd卡的容量有限，当安装软件过多时就会占用很多不必要的空间。尤其在批量烧录树莓派镜像时，会增加镜像大小，导致烧录的时间变长。所以需要提前卸载一些不必要的软件，达到系统瘦身的效果。 系统瘦身在实现系统瘦身之前我们需要知道目前系统中安装了哪些软件包，都占用多少空间。 目前查看已安装的软件包有两种方法： 通过查看树莓派系统默认的 首选项 - Add/Remove Softeware查看。 通过运行dpkg -l查看安装的软件包 通过运行apt list —installed查看已安装的软件包 但以上三种方式都不能很直接的找出哪些是占用空间很大的软件，反而会列出过多的软件包。 这是强大的开源软件就派上了用场——Wajig。 这是一个基于Python的Debian包管理软件，可以很方便的对包进行管理并列出大容量的软件包。 操作如下： 安装wajia 1sudo apt-get install wajig 查看大软件包清单 1sudo wajig large 可以看出oracle-java8-jdk就占用了近350M的空间，如果不需要的话，那么可以直接卸载 卸载软件包 1sudo apt-get --purge autoremove oracle-java8-jdk 依次卸载对应的软件包即可，也可一次性列出多个软件包一并卸载： 1sudo apt-get --purge autoremove oracle-java8-jdk scratch2 拓展更多关于Wajig的信息可参考：https://en.wikipedia.org/wiki/Wajig]]></content>
@@ -882,8 +894,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

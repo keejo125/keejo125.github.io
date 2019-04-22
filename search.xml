@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[树莓派用户配置]]></title>
+    <url>%2F%E6%A0%91%E8%8E%93%E6%B4%BE%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE.html</url>
+    <content type="text"><![CDATA[背景树莓派是基于Debian系统的，总体用户配置与Debian Liunx类似，不同版本之间稍有不同，本文是基于树莓派 Debian 9 (stretch)。 默认用户 pi：这是树莓派的默认登陆用户。在初始化的系统的时候会提示配置密码，但即使设置了密码，在开机时，系统也会自动免密登陆。 root：这是树莓派的超级用户。默认没有设置密码，使用如下命令设置密码 1234sudo passwd root输入新的UNIX密码：重新输入新的UNIX密码：passwd：已成功更新密码 设置密码之后，可以在登陆页面选择使用root用户登陆，也可以通过su命令切换到root用户。 新建用户在管理员权限下，使用如下命令新建用户： 1sudo adduser raspi 按提示输入两次密码以及一些信息(可以为空)即可创建。同步会在/home路径下创建对应的文件夹。 新建的用户默认是普通用户，没有特殊权限。 sudo一般涉及系统配置等操作需要root权限，普通用户可以通过增加sudo前缀来使用管理员权限执行相关命令。 但不是所有的用户都可以使用sudo来执行命令的。在树莓派中，默认账号pi是有sudo权限的，而我们前面自己新建的用户则没有。 比如我们用raspi用户执行sudo ifconfig命令，虽然会提示我们输入密码，但是最终会提示报错，并记录日志。 那么如何将用户加入到可以使用sudo的分组呢？ 增加sudoer权限根据官网推荐，在管理员权限下运行如下命令 1sudo visudo 找到如下语句： 12# User privilege specificationroot ALL=(ALL:ALL) ALL 参考root增加： 1root ALL=(ALL:ALL) ALL 即可，如果希望可以不输入密码直接执行sudo命令，那么可以将该语句修改为： 1raspi ALL = NOPASSWD: ALL 再次使用raspi用户执行sudo命令： 注意： 也可用直接修改配置文件的方式增加sudoer： 1sudo nano /etc/sudoers sudoer的配置文件在修改sudoers配置文件时，我们可以看到这样一句话： 1#includedir /etc/sudoers.d 到对应的目录我们可以看到如下文件： 并且pi用户的配置了可以免密使用sudo权限。 这里是用了另外一种配置方法，我们可以参考同目录下README的说明。 删除sudoer权限对应的，删除某用户的sudo权限，只需要在配置文件中删除对应的条目即可。 但需要注意的是，pi用户是系统默认建立的用户，即使删除010_pi-nopasswd文件，依然无法删除pi用户的sudo权限。可以通过在文件010_pi-nopasswd文件的末尾加上~符号，使文件异常的方式来曲线实现。但该方法会导致整个sudo命令无法使用，即使在其他用户下使用sudo也会报错： 注：这方法是由于在sudo配置文件中不允许存在~符号，否则会导致解析出错。 比较建议的方法是，自己按需建立用户，并赋予权限之后，删除pi用户。 删除用户在管理员权限下，使用如下命令删除用户： 1sudo userdel -r raspi 这里的-r是用于在删除用户的同时删除他们的文件。 扩展其他更多的关于树莓派用户配置的信息可参考：https://www.raspberrypi.org/documentation/linux/usage/users.md]]></content>
+      <categories>
+        <category>操作系统</category>
+        <category>树莓派</category>
+      </categories>
+      <tags>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[树莓派设置固定IP]]></title>
     <url>%2F%E6%A0%91%E8%8E%93%E6%B4%BE%E8%AE%BE%E7%BD%AE%E5%9B%BA%E5%AE%9AIP.html</url>
     <content type="text"><![CDATA[背景树莓派默认是DHCP自动获取IP地址的，但在实际使用中，经常会有设置固定IP的情况。网上也有很多设置固定IP的方法，但要注意的是，不同版本的树莓派系统还是有区别的。 之前用的是树莓派8 （Jessie）版本，后来在树莓派9（stretch）中用相同的方法修改配置文件设置固定IP之后，导致整个网卡起不了了，无线和有线网卡都无法使用。这需要特别注意。 树莓派 Debian 8 (Jessie)在树莓派 Debian 8 (Jessie)版本的系统中，设置固定IP需要修改两个文件，详细操作如下： 备份原文件 12sudo cp /etc/network/interfaces /etc/network/interfaces.baksudo cp /etc/dhcpcd.conf /etc/dhcpcd.conf.bak 修改interfaces文件 1sudo nano /etc/network/interfaces 注释掉如下语句： 1iface eth0 inet dhcp 增加如下语句： 1234iface eth0 inet staticaddress xx.xx.xx.xxnetmask 255.255.255.0gateway xx.xx.xx.254 修改dhcpcd.conf文件 1sudo nano /etc/dhcpcd.conf 增加如下语句： 1234interface eth0static ip_address=xx.xx.xx.xx/24static routers=xx.xx.xx.254static domain_name_servers=xx.xx.xx.xx xx.xx.xx.xx 重启树莓派 1reboot 树莓派 Debian 9 (stretch)在树莓派 Debian 9 中，配置方法有了变化，我们看下/etc/network/interfaces文件： 根据提示，我们再看下dhcpcd.conf文件中的例子： 可见，直接修改这个文件即可： 备份原文件 1sudo cp /etc/dhcpcd.conf /etc/dhcpcd.conf.bak 修改dhcpcd.conf文件 增加如下语句： 1234interface eth0static ip_address=xx.xx.xx.xx/24static routers=xx.xx.xx.254static domain_name_servers=xx.xx.xx.xx xx.xx.xx.xx 重启树莓派 1reboot 需要注意的是，如果直接按照之前的方法，也修改了/etc/network/interfaces文件的话，会导致树莓派整个网卡挂了，无法连接网络。]]></content>
@@ -791,8 +803,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -894,8 +906,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

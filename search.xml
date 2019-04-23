@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[树莓派开机启动与桌面快捷方式]]></title>
     <url>%2F%E6%A0%91%E8%8E%93%E6%B4%BE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8%E4%B8%8E%E6%A1%8C%E9%9D%A2%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F.html</url>
-    <content type="text"><![CDATA[背景虽然树莓派系统精简，性能一般，但是在当做桌面终端使用时，桌面快捷方式和一些开机自启动配置还是很有用的。 开机自启动在树莓派中，可以通过在当前用户目录下新建.config/autostart/目录，并在目录中创建对应的.desktop文件来实现开机自启动。 比如我们要实现树莓派开机就自动全屏打开chromium浏览器，并跳转到百度页面。 先进入.config目录，我们发现是没有autostart目录的 创建auotstart目录，并新建一个.desktop文件 123mkdir autostartcd autostartnano my.desktop 输入如下语句： 123[Desktop Entry] Type=Application Exec=chromium-browser --disable-popup-blocking --no-first-run -disable-desktop-notifications --kiosk &quot;https://www.baidu.com&quot; 保存之后重启系统即可 桌面快捷方式参考上面开机自启动的脚本，我们将脚本拷贝到桌面之后，双击打开即可。 同时，可以通过右键该文件 - 属性，来设置该快捷方式的图标等信息。 拓展特别要注意的是，PC桌面版的Raspi Debian 9 Stretch并不支持上述操作。]]></content>
+    <content type="text"><![CDATA[背景虽然树莓派系统精简，性能一般，但是在当做桌面终端使用时，桌面快捷方式和一些开机自启动配置还是很有用的。 在树莓派中，双击运行以及程序自动运行都通过.desktop的桌面配置文件实现。 开机自启动在树莓派中，可以通过在当前用户目录下新建.config/autostart/目录，并在目录中创建对应的.desktop文件来实现开机自启动。 比如我们要实现树莓派开机就自动全屏打开chromium浏览器，并跳转到百度页面。 先进入.config目录，我们发现是没有autostart目录的 创建auotstart目录，并新建一个.desktop文件 123mkdir autostartcd autostartnano my.desktop 输入如下语句： 123[Desktop Entry] Type=Application Exec=chromium-browser --disable-popup-blocking --no-first-run -disable-desktop-notifications --kiosk &quot;https://www.baidu.com&quot; 保存之后重启系统即可 桌面快捷方式参考上面开机自启动的脚本，我们将脚本拷贝到桌面之后，双击打开即可实现相同的功能。 同时，可以通过右键该文件 - 属性，来进一步配置。其中，可以点击如下图标部分，来更换图标。 类似的，如果我们想做一个关机快捷方式，那么也新建一个后缀为.desktop的空白文件，输入如下代码即可。 1234[Desktop Entry]Name=ShutdownType=ApplicationExec=shutdown -h now 拓展特别要注意的是，PC桌面版的Raspi Debian 9 Stretch上的命令与树莓派版的并不一样。 比如上述功能在PC桌面版的系统中，代码应该为： 12345[Desktop Entry]name=baiduExec=chromium %U www.baidu.comType=ApplicationIcon=screensaver 系统默认也会安装很多类似的桌面配置文件，可以打开/usr/share/applications目录查看： 通过参考这些，可以配置更多内容。]]></content>
       <categories>
         <category>操作系统</category>
         <category>树莓派</category>
@@ -815,8 +815,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -853,8 +853,8 @@
         <category>JavaScript</category>
       </categories>
       <tags>
-        <tag>JavaScript</tag>
         <tag>python</tag>
+        <tag>JavaScript</tag>
       </tags>
   </entry>
   <entry>
@@ -865,8 +865,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -918,8 +918,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -1041,8 +1041,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

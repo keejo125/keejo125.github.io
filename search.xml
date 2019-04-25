@@ -51,7 +51,7 @@
   <entry>
     <title><![CDATA[树莓派系统瘦身]]></title>
     <url>%2F%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E7%98%A6%E8%BA%AB.html</url>
-    <content type="text"><![CDATA[背景树莓派系统一般烧录在sd卡中，sd卡的容量有限，当安装软件过多时就会占用很多不必要的空间。尤其在批量烧录树莓派镜像时，会增加镜像大小，导致烧录的时间变长。所以需要提前卸载一些不必要的软件，达到系统瘦身的效果。 系统瘦身在实现系统瘦身之前我们需要知道目前系统中安装了哪些软件包，都占用多少空间。 目前查看已安装的软件包有两种方法： 通过查看树莓派系统默认的 首选项 - Add/Remove Softeware查看。 通过运行dpkg -l查看安装的软件包 通过运行apt list —installed查看已安装的软件包 但以上三种方式都不能很直接的找出哪些是占用空间很大的软件，反而会列出过多的软件包。 这是强大的开源软件就派上了用场——Wajig。 这是一个基于Python的Debian包管理软件，可以很方便的对包进行管理并列出大容量的软件包。 操作如下： 安装wajia 1sudo apt-get install wajig 查看大软件包清单 1sudo wajig large 可以看出oracle-java8-jdk就占用了近350M的空间，如果不需要的话，那么可以直接卸载 卸载软件包 1sudo apt-get --purge autoremove oracle-java8-jdk 依次卸载对应的软件包即可，也可一次性列出多个软件包一并卸载： 1sudo apt-get --purge autoremove oracle-java8-jdk scratch2 拓展更多关于Wajig的信息可参考：https://en.wikipedia.org/wiki/Wajig]]></content>
+    <content type="text"><![CDATA[背景树莓派系统一般烧录在sd卡中，sd卡的容量有限，当安装软件过多时就会占用很多不必要的空间。尤其在批量烧录树莓派镜像时，会增加镜像大小，导致烧录的时间变长。所以需要提前卸载一些不必要的软件，达到系统瘦身的效果。 系统瘦身在实现系统瘦身之前我们需要知道目前系统中安装了哪些软件包，都占用多少空间。 目前查看已安装的软件包有两种方法： 通过查看树莓派系统默认的 首选项 - Add/Remove Softeware查看。 通过运行dpkg -l查看安装的软件包 通过运行apt list —installed查看已安装的软件包 但以上三种方式都不能很直接的找出哪些是占用空间很大的软件，反而会列出过多的软件包。 这是强大的开源软件就派上了用场——Wajig。 这是一个基于Python的Debian包管理软件，可以很方便的对包进行管理并列出大容量的软件包。 操作如下： 安装wajia 1sudo apt-get install wajig 查看大软件包清单 1sudo wajig large 可以看出oracle-java8-jdk就占用了近350M的空间，如果不需要的话，那么可以直接卸载 卸载软件包 1sudo apt-get --purge autoremove oracle-java8-jdk 依次卸载对应的软件包即可，也可一次性列出多个软件包一并卸载： 1sudo apt-get --purge autoremove oracle-java8-jdk scratch2 拓展 常见可卸载软件列表： | 软件名 | 说明 || —————– | ————————- || wolfram-engine | wolfram编程语言引擎 || oracle-java | java jdk || scratch | scratch编程语言相关组件 || minecraft-pi | minecraft沙盒游戏开发软件 || x2goclient | x2go客户端，远程连接工具 || sonic-pi | 编曲软件 || claws-mail | 邮件客户端 || geany | 开源集成开发ide || idle | python ide || java-common | java软件包 || libreoffice | 办公软件 || nuscratch | scratch编程语言相关组件 || penguinspuzzle | 游戏 || smartsim | 仿真软件 || realvnc | 远程控制软件 || nodered | 物联网开发工具 || epiphany-browser | epiphany浏览器 || dillo | 浏览器 || xarchiver | 解压软件 || python-pygame | python游戏开发包 || python3-pygame | python3游戏开发包 || leafpad | 轻量级编辑器 || freepats | 音频处理 || lxtask | 轻量级任务管理器 || omxplayer | 视频播放软件 || vlc | 多媒体软件 | wajig： 更多关于Wajig的信息可参考：https://en.wikipedia.org/wiki/Wajig]]></content>
       <categories>
         <category>操作系统</category>
         <category>树莓派</category>
@@ -827,8 +827,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>

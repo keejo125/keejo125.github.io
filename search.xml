@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Python高级数据处理和可视化1]]></title>
+    <url>%2FPython%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%92%8C%E5%8F%AF%E8%A7%86%E5%8C%961.html</url>
+    <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 6.1 聚类分析 6.1 扩展 scikit-learn 机器学习经典入门项目scikit-learn 是基于 NumPy、SciPy 和 Matplotlib 的著名的 Python 机器学习包，里面包含了大量经典机器学习的数据集和算法实现，请基于经典的鸢尾花数据集 iris 实现简单的分类和聚类功能。 实现： 1234567891011121314151617181920212223242526# -*- coding: utf-8 -*-# author：zhengkfrom sklearn import datasets, neighbors, cluster, svmiris = datasets.load_iris()# 利用KNN分类算法进行分析knn = neighbors.KNeighborsClassifier()knn.fit(iris.data, iris.target)pred = knn.predict([[5.0, 3.0, 5.0, 2.0]])print('result of KNN is ', pred)# 利用支持向量机SVM分析svc = svm.LinearSVC()svc.fit(iris.data, iris.target)pred = svc.predict([[5.0, 3.0, 5.0, 2.0]])print('result of svm is ', pred)# 利用k-means聚类算法进行聚类kmeans = cluster.KMeans(n_clusters=3).fit(iris.data)pred = kmeans.predict(iris.data)for label in pred: print(label, end='')print('\n')for label in iris.target: print(label, end='') 6.2 Matplotlib绘图基础 6.3 Matplotlib图像属性控制 6.3 练习1、数据比较图绘制请将 Intel 和 IBM 公司近一年来每个月开票价的平均值绘制在一张图中(用 subplot()或subplots()函数)。 实现： 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657# -*- coding: utf-8 -*-# author：zhengkimport requestsimport reimport jsonimport pandas as pdfrom datetime import dateimport timeimport matplotlib.pyplot as pltdef retrieve_quotes_historical(stock_code): quotes = [] url = 'https://finance.yahoo.com/quote/%s/history?p=%s' % (stock_code, stock_code) try: r = requests.get(url) except ConnectionError as err: print(err) m = re.findall('"HistoricalPriceStore":&#123;"prices":(.*?),"isPending"', r.text) if m: quotes = json.loads(m[0]) quotes = quotes[::-1] return [item for item in quotes if not 'type' in item]def create_aveg_open(stock_code): quotes = retrieve_quotes_historical(stock_code) list1 = [] for i in range(len(quotes)): x = date.fromtimestamp(quotes[i]['date']) y = date.strftime(x, '%Y-%m-%d') list1.append(y) quotesdf_ori = pd.DataFrame(quotes, index=list1) listtemp = [] for i in range(len(quotesdf_ori)): temp = time.strptime(quotesdf_ori.index[i], '%Y-%m-%d') listtemp.append(temp.tm_mon) tempdf = quotesdf_ori.copy() tempdf['month'] = listtemp meanopen = tempdf.groupby('month').open.mean() return meanopenopen1 = create_aveg_open('INTC')open2 = create_aveg_open('IBM')plt.subplot(211)plt.title('Mean Open of INTC')plt.xlabel('Month')plt.ylabel('$')plt.plot(open1.index, open1.values, color='r', marker='o')plt.subplot(212)plt.title('Mean Open of IBM')plt.xlabel('Month')plt.ylabel('$')plt.plot(open2.index, open2.values, color='green', marker='o')plt.show() 结果： 2、iris数据集绘图利用“6.1 扩展:Scikit-learn 经典机器学习经典入门小项目开发”中介绍的鸢尾花 iris数据集中的某两个特征(例如萼片长度和花瓣长度)绘制散点图。 实现： 123456789101112131415161718# -*- coding: utf-8 -*-# author：zhengkfrom sklearn import datasetsimport matplotlib.pyplot as pltiris = datasets.load_iris()x = [item[0] for item in iris.data]y = [item[2] for item in iris.data]# sample of setosaplt.scatter(x[:50], y[:50], color='red', marker='o', label='setosa')# sample of versicolorplt.scatter(x[50:100], y[50:100], color='green', marker='o', label='versicolor')# sample of virginicaplt.scatter(x[100:150], y[100:150], color='blue', marker='o', label='virginica')plt.legend(loc='best')plt.xlabel('sepal length in cm')plt.ylabel('petal length in cm')plt.show() 结果： 6.4 Pandas作图]]></content>
+      <categories>
+        <category>python</category>
+        <category>用python玩转数据</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[树莓派开机自动登录]]></title>
     <url>%2F%E6%A0%91%E8%8E%93%E6%B4%BE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.html</url>
     <content type="text"><![CDATA[背景树莓派一般作为瘦终端或者小服务器使用，通过配置开机自动登录在后续的使用中会方便很多。而且在默认系统配置中，也是自动登录pi用户。那么如何配置自动登录其他用户呢？ 自动登录配置首先我们需要新建一个自己的账户，可以参考树莓派用户配置。假设我们配置了一个raspi的用户，现在需要配置每次开机自动登录raspi。 su到root用户执行raspi-config或者用允许sudo的用户执行sudo raspi-config进入配置页面： 选择”3 Boot Options” 选择”B1 Desktop / CLI” 选择”B3 Desktop”，并”确定”后退出，在提示的重启界面选择”否” 在终端输入”sudo nano /etc/lightdm/lightdm.conf”，编辑该文件： 找到[Seat：*]配置块下的#autologin-user=，将其替换成autologin-user=raspi，raspi为需要默认登陆的账户名。 重启即可。 注意 初始系统中，默认使用pi用户自动登录，如果直接修改/etc/lightdm/lightdm.conf文件，也可以实现指定的用户自动登录，但是系统的后台仍会有一个pi用户的登陆进程。且该进程无法kill， 从而导致pi用户无法删除等问题。]]></content>
@@ -827,8 +839,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -930,8 +942,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

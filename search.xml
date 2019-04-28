@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Python高级数据处理和可视化2]]></title>
+    <url>%2FPython%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%92%8C%E5%8F%AF%E8%A7%86%E5%8C%962.html</url>
+    <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 6.5 数据存取 扩展：箱型图分析成绩数据把以下数据复制到 excel 工作表中(文件名为 score.xlsx): Maths English Python Music Physics Chemistry PE Wang 88 64 96 85 90 81 95 Ma 92 99 95 94 92 94 90 Liu 91 87 99 95 95 92 70 Qian 78 99 75 81 83 88 92 Meng 88 78 98 84 70 95 98 Song 100 95 100 92 98 95 65 利用 pandas 的 read_excel()方法读出数据保存到一个 DataFrame 中，并绘制相应的箱形图。 实现： 123456789# -*- coding: utf-8 -*-# author：zhengkimport pandas as pdimport matplotlib.pyplot as pltscores = pd.read_excel('scores.xlsx')scores.boxplot()plt.show() 图像显示： (1)哪些课程的成绩分布比较集中，哪些比较分散?你是通过什么来观察到的? Maths、Python 和 Chemistry 分布比较集中，而 English 和 PE 的分布则比较分散，从箱子的长度可以获得这些信息; (2)哪些课程的成绩分布比较平均(对称)?你是通过什么来观察到的? 在 7 门课程中，Python 的成绩分布最为均匀，PE 的成绩分布最不均匀，从中位数到上四分位和下四分位的距离比较可以获得这些信息; (3)哪些课程的成绩总体较好?哪些总体较差?你是通过什么来观察到的? Python 的总体情况最好，Maths、English 和 Music 的总体情况不太理想，从中位数的位置可以获得这些信息，分析数据可以发现这 3 门课程中各有 3 个同学没有达到 90 分，PE 虽然从图中看平均值应该不高，但其总体情况较好，分析数据可以发现有 2 个同学考了低分但 90 以上的有 4 个同学; (4)哪些课程的成绩存在与总体情况不相符的值?你是通过什么来观察到的? Maths、Python 和 Physics 中分别有 2 个、1 个、1 个异常值(离群点)，箱形图中会将这些异常值单独列出，一是为了一目了然地表明数据中的异常，二是为了不因为这些少数的异常数据导致整体特征的偏移。 6.6 Python的理工类应用 扩展：WAV音频处理入门研究1. 网络数据读取与保存主要使用 urllib.request 模块此处选择位于 http://www.nch.com.au/acm/11k16bitpcm.wav 的音频作为数据源，使用 urllib.request.urlopen()函数取得该文件，并以‘english.wav’的文件名保存在本地的程序所在路径。 实现： 123456# 获取wav文件response = urllib.request.urlopen('http://www.nch.com.au/acm/11k16bitpcm.wav')wav_file = 'english.wav'file = open(wav_file, 'wb+')file.write(response.read())file.close() 2. 简单幅度处理使用 wavfile 模块可以比较简单地从 wav 格式的文件中读取出相应的采样率、数据等信息，而不必关心文件的格式细节。python 的 wave 模块也有相应的操作，示例详见代码。读取后使用 pyplot 模块，可以绘制出音频文件的波形图。 将信号幅值按比例减小，表现出来的效果就是声音强度减小。使用 numpy 模块，将原始数据与常数相乘，得到一个值减小的新数组。这里利用了 numpy的广播机制，如果两个相乘的对象长度不等，numpy 会根据一定的规则将对象扩展为相同的类型，再做运算。 计算完成后，使用 wavfile.write()函数将修改后的音频信号写入一个新的文件中，命名为’silent.wav’，采样率未修改，与原音频相同。 最后使用 matplotlib.pyplot 绘制波形图对比。 12345678910111213141516171819202122232425# 读取wav文件wavefile = wave.open(wav_file, 'r')params = wavefile.getparams()nchannels, sample_width, framerate, numframes = params[:4]#nchannels:声道数#sample_width:采样宽度,每个采样的字节数#framerate:采样率#numframes:总采样数sample_rate, data = scipy.io.wavfile.read(wav_file)matplotlib.pyplot.subplot(2,1,1)matplotlib.pyplot.title('Original')matplotlib.pyplot.plot(data)newdata = data * 0.2newdata = newdata.astype(numpy.int16)scipy.io.wavfile.write('silent.wav', sample_rate, newdata)matplotlib.pyplot.subplot(2,1,2)matplotlib.pyplot.title('Quiet')matplotlib.pyplot.plot(newdata)matplotlib.pyplot.show() 图像显示： 3. 简单时频分析音频信号是一种常见的非平稳信号，频域特性随时间变化。时频图是分析音频信号的常用工具，在一幅图中表示出信号的频率、幅度随时间的变化。pylab 模块提供了 specgram 函数，可以简单地通过配置相应参数进行短时傅里叶变换，并输出时频图。 实现： 12345result = matplotlib.pylab.specgram(newdata, NFFT=1024, Fs=sample_rate, noverlap=900)#y:音频信号#NFFT:每个进行快速傅里叶变换的数据块大小，一般取 2 的幂次#Fs:采样率 #noverlap:数据块之间重叠数据点的个数matplotlib.pylab.show() 图像显示： 6.7 Python的人文社科类应用]]></content>
+      <categories>
+        <category>python</category>
+        <category>用python玩转数据</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Python高级数据处理和可视化1]]></title>
     <url>%2FPython%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%92%8C%E5%8F%AF%E8%A7%86%E5%8C%961.html</url>
     <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 6.1 聚类分析 6.1 扩展 scikit-learn 机器学习经典入门项目scikit-learn 是基于 NumPy、SciPy 和 Matplotlib 的著名的 Python 机器学习包，里面包含了大量经典机器学习的数据集和算法实现，请基于经典的鸢尾花数据集 iris 实现简单的分类和聚类功能。 实现： 1234567891011121314151617181920212223242526# -*- coding: utf-8 -*-# author：zhengkfrom sklearn import datasets, neighbors, cluster, svmiris = datasets.load_iris()# 利用KNN分类算法进行分析knn = neighbors.KNeighborsClassifier()knn.fit(iris.data, iris.target)pred = knn.predict([[5.0, 3.0, 5.0, 2.0]])print('result of KNN is ', pred)# 利用支持向量机SVM分析svc = svm.LinearSVC()svc.fit(iris.data, iris.target)pred = svc.predict([[5.0, 3.0, 5.0, 2.0]])print('result of svm is ', pred)# 利用k-means聚类算法进行聚类kmeans = cluster.KMeans(n_clusters=3).fit(iris.data)pred = kmeans.predict(iris.data)for label in pred: print(label, end='')print('\n')for label in iris.target: print(label, end='') 6.2 Matplotlib绘图基础 6.3 Matplotlib图像属性控制 6.3 练习1、数据比较图绘制请将 Intel 和 IBM 公司近一年来每个月开票价的平均值绘制在一张图中(用 subplot()或subplots()函数)。 实现： 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657# -*- coding: utf-8 -*-# author：zhengkimport requestsimport reimport jsonimport pandas as pdfrom datetime import dateimport timeimport matplotlib.pyplot as pltdef retrieve_quotes_historical(stock_code): quotes = [] url = 'https://finance.yahoo.com/quote/%s/history?p=%s' % (stock_code, stock_code) try: r = requests.get(url) except ConnectionError as err: print(err) m = re.findall('"HistoricalPriceStore":&#123;"prices":(.*?),"isPending"', r.text) if m: quotes = json.loads(m[0]) quotes = quotes[::-1] return [item for item in quotes if not 'type' in item]def create_aveg_open(stock_code): quotes = retrieve_quotes_historical(stock_code) list1 = [] for i in range(len(quotes)): x = date.fromtimestamp(quotes[i]['date']) y = date.strftime(x, '%Y-%m-%d') list1.append(y) quotesdf_ori = pd.DataFrame(quotes, index=list1) listtemp = [] for i in range(len(quotesdf_ori)): temp = time.strptime(quotesdf_ori.index[i], '%Y-%m-%d') listtemp.append(temp.tm_mon) tempdf = quotesdf_ori.copy() tempdf['month'] = listtemp meanopen = tempdf.groupby('month').open.mean() return meanopenopen1 = create_aveg_open('INTC')open2 = create_aveg_open('IBM')plt.subplot(211)plt.title('Mean Open of INTC')plt.xlabel('Month')plt.ylabel('$')plt.plot(open1.index, open1.values, color='r', marker='o')plt.subplot(212)plt.title('Mean Open of IBM')plt.xlabel('Month')plt.ylabel('$')plt.plot(open2.index, open2.values, color='green', marker='o')plt.show() 结果： 2、iris数据集绘图利用“6.1 扩展:Scikit-learn 经典机器学习经典入门小项目开发”中介绍的鸢尾花 iris数据集中的某两个特征(例如萼片长度和花瓣长度)绘制散点图。 实现： 123456789101112131415161718# -*- coding: utf-8 -*-# author：zhengkfrom sklearn import datasetsimport matplotlib.pyplot as pltiris = datasets.load_iris()x = [item[0] for item in iris.data]y = [item[2] for item in iris.data]# sample of setosaplt.scatter(x[:50], y[:50], color='red', marker='o', label='setosa')# sample of versicolorplt.scatter(x[50:100], y[50:100], color='green', marker='o', label='versicolor')# sample of virginicaplt.scatter(x[100:150], y[100:150], color='blue', marker='o', label='virginica')plt.legend(loc='best')plt.xlabel('sepal length in cm')plt.ylabel('petal length in cm')plt.show() 结果： 6.4 Pandas作图]]></content>
@@ -839,8 +851,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -942,8 +954,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

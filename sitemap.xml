@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://keejo.coding.me/MySQL%E6%8C%89%E6%97%B6%E9%97%B4%E7%BB%9F%E8%AE%A1%E6%95%B0%E6%8D%AE.html</loc>
+    
+    <lastmod>2019-04-29T09:04:13.850Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://keejo.coding.me/Python%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%92%8C%E5%8F%AF%E8%A7%86%E5%8C%963.html</loc>
+    
+    <lastmod>2019-04-29T07:55:50.375Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://keejo.coding.me/Python%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%92%8C%E5%8F%AF%E8%A7%86%E5%8C%962.html</loc>
     
     <lastmod>2019-04-28T15:46:55.020Z</lastmod>
@@ -439,13 +453,6 @@
     <loc>http://keejo.coding.me/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E5%9C%A8flask%E4%B8%AD%E8%AE%B0%E5%BD%95log.html</loc>
     
     <lastmod>2019-02-01T06:50:20.014Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://keejo.coding.me/MySQL%E6%8C%89%E6%97%B6%E9%97%B4%E7%BB%9F%E8%AE%A1%E6%95%B0%E6%8D%AE.html</loc>
-    
-    <lastmod>2019-01-30T10:36:46.589Z</lastmod>
     
   </url>
   

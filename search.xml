@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[GUI与面向对象1]]></title>
+    <url>%2FGUI%E4%B8%8E%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A11.html</url>
+    <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 7.1 GUI与面向对象 7.2 抽象 7.3 继承]]></content>
+      <categories>
+        <category>python</category>
+        <category>用python玩转数据</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Python高级数据处理和可视化3]]></title>
     <url>%2FPython%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%92%8C%E5%8F%AF%E8%A7%86%E5%8C%963.html</url>
     <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 数据分析项目—男女电影评分差异比较一、程序功能基于 MovieLens 100k 数据集中男性女性对电影的评分来判断男性还是女性电影评分的差异性更大。 二、数据来源数据集下载: http://files.grouplens.org/datasets/movielens/ml-100k.zip 数据含义: u.data 表示 100k 条评分记录，每一列的数值含义是:user id | item id | rating | timestamp u.user 表示用户的信息，每一列的数值含义是:user id | age | gender | occupation | zip code u.item 文件表示电影的相关信息，每一列的数值含义是:movie/item id | movie title | release date | video release date |IMDb URL | unknown | Action | Adventure | Animation | Children’s | Comedy | Crime | Documentary | Drama | Fantasy |Film-Noir | Horror | Musical | Mystery | Romance | Sci-Fi |Thriller | War | Western | API 文档请参考 http://pandas.pydata.org/pandas-docs/stable/ 三、分析和参考代码要判断男性还是女性电影评分的差异性大小则可以利用标准差，标准差越大表示评分离散程度大，即差异性大，反之表示数据越聚集，差异性小。 实现代码： 1234567891011121314151617# -*- coding: utf-8 -*-# author：zhengkimport pandas as pdusers_names = ['user id', 'age', 'gender', 'occupation', 'zip code']users = pd.read_csv('ml-100k/u.user', sep='|', names=users_names)data_names = ['user id', 'item id', 'rating', 'timestamp']data = pd.read_csv('ml-100k/u.data', sep='\t', names=data_names)users_df = users[['user id', 'gender']]data_df = data[['user id', 'rating']]rating_df = pd.merge(users_df, data_df)rating_df_mean = rating_df.groupby(['gender', 'user id']).mean()print(rating_df_mean.groupby(['gender']).std()) 输出结果： 1234 ratinggender F 0.481241M 0.430076 结论：女生的电影评分差异更大。]]></content>

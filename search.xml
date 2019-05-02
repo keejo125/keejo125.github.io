@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[GUI与面向对象2]]></title>
+    <url>%2FGUI%E4%B8%8E%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A12.html</url>
+    <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 7.4 GUI的基本框架 7.5 GUI的常用组件 7.6 布局管理 7.7 其他GUI库]]></content>
+      <categories>
+        <category>python</category>
+        <category>用python玩转数据</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[GUI与面向对象1]]></title>
     <url>%2FGUI%E4%B8%8E%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A11.html</url>
     <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 7.1 GUI与面向对象 7.2 抽象 7.3 继承]]></content>
@@ -978,8 +990,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

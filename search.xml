@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[项目实践——动态新闻标题热点挖掘]]></title>
     <url>%2F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E5%8A%A8%E6%80%81%E6%96%B0%E9%97%BB%E6%A0%87%E9%A2%98%E7%83%AD%E7%82%B9%E6%8C%96%E6%8E%98.html</url>
-    <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 8.2 动态新闻标题热点挖掘课件是通过正则获取新浪新闻热点标题并绘制词云，现通过抓取今日头条热点新闻进行挖掘 获取热点新闻 通过chrome访问https://www.toutiao.com/ch/news_hot/，在开发者工具中可以看到，是有api接口可以直接获取热点新闻的json数据的。 通过分析这几个请求的网址可以发现： 首次访问：https://www.toutiao.com/api/pc/feed/?category=news_hot&amp;utm_source=toutiao&amp;widen=1&amp;max_behot_time=0&amp;max_behot_time_tmp=0 即可获取数据，并会有一个next_behot_time值，将该值替换掉上述url中就可获取后续的数据。 注意：直接从chrome工具中看到的网址比较长https://www.toutiao.com/api/pc/feed/?category=news_hot&amp;utm_source=toutiao&amp;widen=1&amp;max_behot_time=0&amp;max_behot_time_tmp=0&amp;tadrequire=true&amp;as=A1258C7D00422B9&amp;cp=5CD032F26B29AE1&amp;_signature=z.t.3AAAkzMhvSCXMjx438.7f8，后面的一些被删除的参数代表的是浏览器等信息，如果不删除会导致python请求异常。 分词 分词用到了jieba分词，可以直接调用jieba第三方包进行分词，要注意停用词的使用，词频需要自行统计。 词云绘制 词云绘制用到了wordcloud第三方库，课件中采用默认词云生成，一般默认的词云比较难看，可以通过numpy计算原图的颜色，并对生成的词云进行重新上色的方式改善效果。 需要注意的是图片不能太小，可能会导致异常。 实现: 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576# -*- coding: utf-8 -*-# author：zhengkimport requestsimport jsonimport reimport jieba.posseg as psegfrom wordcloud import WordCloud, ImageColorGeneratorimport matplotlib.pyplot as pltimport numpy as npimport PIL.Image as Imageimport osdef get_news_hot(loop=5): max_behot_time = 0 headers = &#123;'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'&#125; with open('hot_news.txt', 'w', encoding='utf-8') as f: for x in range(loop): url = "https://www.toutiao.com/api/pc/feed/?category=news_hot&amp;utm_source=toutiao" \ "&amp;widen=1&amp;max_behot_time=" + str(max_behot_time) + "&amp;max_behot_time_tmp=" + str(max_behot_time) res = requests.get(url, headers=headers) if res.status_code == 200: data = json.loads(res.text) for news in data['data']: f.write(news['title']) max_behot_time = data['next']['max_behot_time']def extract_words(): with open('hot_news.txt', 'r', encoding='utf-8') as f: news_subjects = f.readlines() stop_words = set(line.strip() for line in open('stopwords.txt', encoding='utf-8')) news_list = [] for subject in news_subjects: if subject.isspace(): continue p = re.compile("n[a-z0-9]&#123;0,2&#125;") word_list = pseg.cut(subject) for word, flag in word_list: if not word in stop_words and p.search(flag) != None: news_list.append(word) content = &#123;&#125; for item in news_list: content[item] = content.get(item, 0) + 1 d = os.path.dirname(__file__) img = Image.open(os.path.join(d, "toutiao.jpg")) width = img.width / 80 height = img.height / 80 alice_coloring = np.array(img) my_wordcloud = WordCloud(background_color="white", max_words=500, mask=alice_coloring, max_font_size=200, random_state=42, font_path=(os.path.join(d, "PingFang.ttc"))) my_wordcloud = my_wordcloud.generate_from_frequencies(content) image_colors = ImageColorGenerator(alice_coloring) plt.figure(figsize=(width, height)) plt.imshow(my_wordcloud.recolor(color_func=image_colors)) plt.imshow(my_wordcloud) plt.axis("off") # 通过设置subplots_adjust来控制画面外边框 plt.subplots_adjust(bottom=.01, top=.99, left=.01, right=.99) plt.savefig("jupiter_wordcloud_1.png") plt.show()if __name__ == '__main__': get_news_hot(5) extract_words()]]></content>
+    <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 8.2 动态新闻标题热点挖掘课件是通过正则获取新浪新闻热点标题并绘制词云，现通过抓取今日头条热点新闻进行挖掘 获取热点新闻 通过chrome访问https://www.toutiao.com/ch/news_hot/，在开发者工具中可以看到，是有api接口可以直接获取热点新闻的json数据的。 通过分析这几个请求的网址可以发现： 首次访问：https://www.toutiao.com/api/pc/feed/?category=news_hot&amp;utm_source=toutiao&amp;widen=1&amp;max_behot_time=0&amp;max_behot_time_tmp=0 即可获取数据，并会有一个next_behot_time值，将该值替换掉上述url中就可获取后续的数据。 注意：直接从chrome工具中看到的网址比较长https://www.toutiao.com/api/pc/feed/?category=news_hot&amp;utm_source=toutiao&amp;widen=1&amp;max_behot_time=0&amp;max_behot_time_tmp=0&amp;tadrequire=true&amp;as=A1258C7D00422B9&amp;cp=5CD032F26B29AE1&amp;_signature=z.t.3AAAkzMhvSCXMjx438.7f8，后面的一些被删除的参数代表的是浏览器等信息，如果不删除会导致python请求异常。 分词 分词用到了jieba分词，可以直接调用jieba第三方包进行分词，要注意停用词的使用，词频需要自行统计。 词云绘制 词云绘制用到了wordcloud第三方库，课件中采用默认词云生成，一般默认的词云比较难看，可以通过numpy计算原图的颜色，并对生成的词云进行重新上色的方式改善效果。 需要注意的是图片不能太小，可能会导致异常。 实现: 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576# -*- coding: utf-8 -*-# author：zhengkimport requestsimport jsonimport reimport jieba.posseg as psegfrom wordcloud import WordCloud, ImageColorGeneratorimport matplotlib.pyplot as pltimport numpy as npimport PIL.Image as Imageimport osdef get_news_hot(loop=5): max_behot_time = 0 headers = &#123;'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'&#125; with open('hot_news.txt', 'w', encoding='utf-8') as f: for x in range(loop): url = "https://www.toutiao.com/api/pc/feed/?category=news_hot&amp;utm_source=toutiao" \ "&amp;widen=1&amp;max_behot_time=" + str(max_behot_time) + "&amp;max_behot_time_tmp=" + str(max_behot_time) res = requests.get(url, headers=headers) if res.status_code == 200: data = json.loads(res.text) for news in data['data']: f.write(news['title']) max_behot_time = data['next']['max_behot_time']def extract_words(): with open('hot_news.txt', 'r', encoding='utf-8') as f: news_subjects = f.readlines() stop_words = set(line.strip() for line in open('stopwords.txt', encoding='utf-8')) news_list = [] for subject in news_subjects: if subject.isspace(): continue p = re.compile("n[a-z0-9]&#123;0,2&#125;") word_list = pseg.cut(subject) for word, flag in word_list: if not word in stop_words and p.search(flag) != None: news_list.append(word) content = &#123;&#125; for item in news_list: content[item] = content.get(item, 0) + 1 d = os.path.dirname(__file__) img = Image.open(os.path.join(d, "toutiao.jpg")) width = img.width / 80 height = img.height / 80 alice_coloring = np.array(img) my_wordcloud = WordCloud(background_color="white", max_words=500, mask=alice_coloring, max_font_size=200, random_state=42, font_path=(os.path.join(d, "PingFang.ttc"))) my_wordcloud = my_wordcloud.generate_from_frequencies(content) image_colors = ImageColorGenerator(alice_coloring) plt.figure(figsize=(width, height)) plt.imshow(my_wordcloud.recolor(color_func=image_colors)) plt.imshow(my_wordcloud) plt.axis("off") # 通过设置subplots_adjust来控制画面外边框 plt.subplots_adjust(bottom=.01, top=.99, left=.01, right=.99) plt.savefig("jupiter_wordcloud_1.png") plt.show()if __name__ == '__main__': get_news_hot(5) extract_words() 原图： 最终效果：]]></content>
       <categories>
         <category>python</category>
         <category>[object Object]</category>
@@ -973,8 +973,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -1026,8 +1026,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -1149,8 +1149,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[chromedriver之版本选择]]></title>
+    <url>%2Fchromedriver%E4%B9%8B%E7%89%88%E6%9C%AC%E9%80%89%E6%8B%A9.html</url>
+    <content type="text"><![CDATA[背景在跑一个以前的使用chromedriver的selenium程序的时候突然异常，报了如下的错： 12345678910111213141516171819Traceback (most recent call last): File "run.py", line 139, in &lt;module&gt; do_loop() File "run.py", line 90, in do_loop cookies = get_cookies() File "run.py", line 30, in get_cookies driver = webdriver.Chrome(executable_path='./chromedriver', options=option) File "/Users/zhengk/PycharmProjects/zhelitou/venv/lib/python3.7/site-packages/selenium/webdriver/chrome/webdriver.py", line 81, in __init__ desired_capabilities=desired_capabilities) File "/Users/zhengk/PycharmProjects/zhelitou/venv/lib/python3.7/site-packages/selenium/webdriver/remote/webdriver.py", line 157, in __init__ self.start_session(capabilities, browser_profile) File "/Users/zhengk/PycharmProjects/zhelitou/venv/lib/python3.7/site-packages/selenium/webdriver/remote/webdriver.py", line 252, in start_session response = self.execute(Command.NEW_SESSION, parameters) File "/Users/zhengk/PycharmProjects/zhelitou/venv/lib/python3.7/site-packages/selenium/webdriver/remote/webdriver.py", line 321, in execute self.error_handler.check_response(response) File "/Users/zhengk/PycharmProjects/zhelitou/venv/lib/python3.7/site-packages/selenium/webdriver/remote/errorhandler.py", line 242, in check_response raise exception_class(message, screen, stacktrace)selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome version must be between 70 and 73 (Driver info: chromedriver=2.45.615355 (d5698f682d8b2742017df6c81e0bd8e6a3063189),platform=Mac OS X 10.14.4 x86_64) 这个报错是说明当前的chromedriver版本不匹配，之前也是一样的代码，怎么突然就不匹配了呢？ 检查了下自己的chrome版本，原来是不知道什么时候chrome升级了，到了74版本。 然后去下载了最新版本的chromedriver，问题解决。 chromedriver的版本选择在下载chromedriver的时候，会发现chromedriver的版本也相当的多，那么到底应该选择呢？ 其实在chromedriver的官网有详细的介绍： chromedriver使用的版本号跟chrome是一样的。 每个版本的chromedriver都有大版本号、小版本号、和构建版本。 在大版本前会有Bete版，同步的也会有一个chromedriver 在新版本发布的时候，也会发布chromedriver 那么如何正确的选择chromedriver，方法如下： 先看你的Chrome版本：比如我的是74.0.3729.131 然后取版本号的前三位，加到url： https://chromedriver.storage.googleapis.com/LATEST_RELEASE_ 后面，比如我的就是： https://chromedriver.storage.googleapis.com/LATEST_RELEASE_74.0.3729 访问这个网址，就会获得我们chrome对应的chromedriver的版本号： 访问https://chromedriver.storage.googleapis.com/index.html网址找到对应的版本的chromedriver即可。也可以直接通过获取的版本号来构建url： https://chromedriver.storage.googleapis.com/index.html?path=74.0.3729.6/ 修改上面url的最后版本号数字即可。 更多信息可参考官网说明： http://chromedriver.chromium.org/downloads/version-selection 扩展有时候直接chromedriver的网址会被墙导致无法访问，这是可以访问国内的淘宝镜像： https://npm.taobao.org/mirrors/chromedriver/]]></content>
+      <categories>
+        <category>python</category>
+        <category>网络爬虫与数据分析</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[项目实践——动态新闻标题热点挖掘]]></title>
     <url>%2F%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E5%8A%A8%E6%80%81%E6%96%B0%E9%97%BB%E6%A0%87%E9%A2%98%E7%83%AD%E7%82%B9%E6%8C%96%E6%8E%98.html</url>
     <content type="text"><![CDATA[该系列为南京大学课程《用Python玩转数据》学习笔记，主要以思维导图的记录 8.2 动态新闻标题热点挖掘课件是通过正则获取新浪新闻热点标题并绘制词云，现通过抓取今日头条热点新闻进行挖掘 获取热点新闻 通过chrome访问https://www.toutiao.com/ch/news_hot/，在开发者工具中可以看到，是有api接口可以直接获取热点新闻的json数据的。 通过分析这几个请求的网址可以发现： 首次访问：https://www.toutiao.com/api/pc/feed/?category=news_hot&amp;utm_source=toutiao&amp;widen=1&amp;max_behot_time=0&amp;max_behot_time_tmp=0 即可获取数据，并会有一个next_behot_time值，将该值替换掉上述url中就可获取后续的数据。 注意：直接从chrome工具中看到的网址比较长https://www.toutiao.com/api/pc/feed/?category=news_hot&amp;utm_source=toutiao&amp;widen=1&amp;max_behot_time=0&amp;max_behot_time_tmp=0&amp;tadrequire=true&amp;as=A1258C7D00422B9&amp;cp=5CD032F26B29AE1&amp;_signature=z.t.3AAAkzMhvSCXMjx438.7f8，后面的一些被删除的参数代表的是浏览器等信息，如果不删除会导致python请求异常。 分词 分词用到了jieba分词，可以直接调用jieba第三方包进行分词，要注意停用词的使用，词频需要自行统计。 词云绘制 词云绘制用到了wordcloud第三方库，课件中采用默认词云生成，一般默认的词云比较难看，可以通过numpy计算原图的颜色，并对生成的词云进行重新上色的方式改善效果。 需要注意的是图片不能太小，可能会导致异常。 实现: 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576# -*- coding: utf-8 -*-# author：zhengkimport requestsimport jsonimport reimport jieba.posseg as psegfrom wordcloud import WordCloud, ImageColorGeneratorimport matplotlib.pyplot as pltimport numpy as npimport PIL.Image as Imageimport osdef get_news_hot(loop=5): max_behot_time = 0 headers = &#123;'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'&#125; with open('hot_news.txt', 'w', encoding='utf-8') as f: for x in range(loop): url = "https://www.toutiao.com/api/pc/feed/?category=news_hot&amp;utm_source=toutiao" \ "&amp;widen=1&amp;max_behot_time=" + str(max_behot_time) + "&amp;max_behot_time_tmp=" + str(max_behot_time) res = requests.get(url, headers=headers) if res.status_code == 200: data = json.loads(res.text) for news in data['data']: f.write(news['title']) max_behot_time = data['next']['max_behot_time']def extract_words(): with open('hot_news.txt', 'r', encoding='utf-8') as f: news_subjects = f.readlines() stop_words = set(line.strip() for line in open('stopwords.txt', encoding='utf-8')) news_list = [] for subject in news_subjects: if subject.isspace(): continue p = re.compile("n[a-z0-9]&#123;0,2&#125;") word_list = pseg.cut(subject) for word, flag in word_list: if not word in stop_words and p.search(flag) != None: news_list.append(word) content = &#123;&#125; for item in news_list: content[item] = content.get(item, 0) + 1 d = os.path.dirname(__file__) img = Image.open(os.path.join(d, "toutiao.jpg")) width = img.width / 80 height = img.height / 80 alice_coloring = np.array(img) my_wordcloud = WordCloud(background_color="white", max_words=500, mask=alice_coloring, max_font_size=200, random_state=42, font_path=(os.path.join(d, "PingFang.ttc"))) my_wordcloud = my_wordcloud.generate_from_frequencies(content) image_colors = ImageColorGenerator(alice_coloring) plt.figure(figsize=(width, height)) plt.imshow(my_wordcloud.recolor(color_func=image_colors)) plt.imshow(my_wordcloud) plt.axis("off") # 通过设置subplots_adjust来控制画面外边框 plt.subplots_adjust(bottom=.01, top=.99, left=.01, right=.99) plt.savefig("jupiter_wordcloud_1.png") plt.show()if __name__ == '__main__': get_news_hot(5) extract_words() 原图： 最终效果：]]></content>
@@ -973,8 +986,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -1149,8 +1162,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

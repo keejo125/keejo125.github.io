@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Mac下csv文件在excel中打开乱码问题]]></title>
+    <url>%2FMac%E4%B8%8Bcsv%E6%96%87%E4%BB%B6%E5%9C%A8excel%E4%B8%AD%E6%89%93%E5%BC%80%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景今天在爬虫抓取网页信息并写如为csv文件时，使用excel打开后，竟然中文部分都是乱码。 一般出现乱码问题都是文本编码不对的问题，修改成对应的编码即可。 操作系统：MAC 解决办法 方法一： 在windows环境下，可以只用使用notepad++或者系统自带的记事本打开，之后另外保存一份为ANSI编码格式，再使用excel打开即可。 在MAC下也可以安装对应的软件修改编码。 方法二： 上面的方法需要另外保存一份文档，而且mac上还得另外安装软件才行。研究了一下，其实excel是有自带的转换方法的。 操作如下： 首先打开excel并新建一个文档 在 数据 - 从文本 导入数据 在弹出来的导入向导中，我们就可以发现文本的原始格式有误了 将文本的原始格式选择为”Unicode(UTF-8)”之后，我们发现乱码变中文了 继续”下一步”，按照默认的”分号”分割或者自定义的其他分隔符分割 再”下一步”，按需选择后完成即可。 扩展这次的csv文件是在进行网络爬虫抓取数据中遇到的，在浏览器中，现在基本上都是UTF-8格式的编码，所以这点还是要注意一下。]]></content>
+      <categories>
+        <category>操作系统</category>
+        <category>mac</category>
+      </categories>
+  </entry>
+  <entry>
     <title><![CDATA[git ssh之Could not resolve hostname github.com问题]]></title>
     <url>%2Fgit-ssh%E4%B9%8BCould-not-resolve-hostname-github-com%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景今天在使用hexo提交github代码的时候，突然有了如下的报错： 123456ssh: Could not resolve hostname github.com: nodename nor servname provided, or not knownfatal: Could not read from remote repository.Please make sure you have the correct access rightsand the repository exists.FATAL Something's wrong. Maybe you can find the solution here: http://hexo.io/docs/troubleshooting.html 解决分析按照报错的提示，是无法解析访问github.com了。 于是立马访问了下http://github.com网站，没有问题。 检查了下\etc\hosts文件，也没有写死github的地址，那么问题出在哪里呢？ 我是通过ssh来提交的，突然想来在添加ssh秘钥后第一次访问的时候，会有一个警告，说明是否要在本地添加一次秘钥并记录hosts地址。 于是找了下ssh记录hosts的地址：~/.ssh/known_hosts 果然有一段记录如下： 1github.com,13.250.177.223 ssh-rsa .... 那么问题就出在这儿了。 将这段记录删除，再次提交git，就又出现了首次访问的警告： 再次yes就可以了。 结论ssh提交的时候，为了方便会通过写known_hosts文件来记录提交地址，而外网地址是dns控制，实际ip可能会变化导致。 是否要记住写入，就看大家实际情况了。 该问题很多网上给的建议是手动写etc\hosts文件，如果是因为之前有让ssh记录，那么改hosts文件也没有用。]]></content>
@@ -847,6 +856,10 @@
     <title><![CDATA[Mac下使用tree命令展示文件树]]></title>
     <url>%2FMac%E4%B8%8B%E4%BD%BF%E7%94%A8tree%E5%91%BD%E4%BB%A4%E5%B1%95%E7%A4%BA%E6%96%87%E4%BB%B6%E6%A0%91.html</url>
     <content type="text"><![CDATA[背景在写代码文档的时候，经常会用到展示项目架构，这时候如果可以有命令直接打印出目录树那就再好不过了，免的截图了。 思路网上找了下，果然是有这种工具的，Mac - tree命令。 Mac默认是没有tree命令的，需要手工安装下： 1brew install tree 安装好之后，看下帮助文档： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364$ tree --helpusage: tree [-acdfghilnpqrstuvxACDFJQNSUX] [-H baseHREF] [-T title ] [-L level [-R]] [-P pattern] [-I pattern] [-o filename] [--version] [--help] [--inodes] [--device] [--noreport] [--nolinks] [--dirsfirst] [--charset charset] [--filelimit[=]#] [--si] [--timefmt[=]&lt;f&gt;] [--sort[=]&lt;name&gt;] [--matchdirs] [--ignore-case] [--fromfile] [--] [&lt;directory list&gt;] ------- Listing options ------- -a All files are listed. -d List directories only. -l Follow symbolic links like directories. -f Print the full path prefix for each file. -x Stay on current filesystem only. -L level Descend only level directories deep. -R Rerun tree when max dir level reached. -P pattern List only those files that match the pattern given. -I pattern Do not list files that match the given pattern. --ignore-case Ignore case when pattern matching. --matchdirs Include directory names in -P pattern matching. --noreport Turn off file/directory count at end of tree listing. --charset X Use charset X for terminal/HTML and indentation line output. --filelimit # Do not descend dirs with more than # files in them. --timefmt &lt;f&gt; Print and format time according to the format &lt;f&gt;. -o filename Output to file instead of stdout. ------- File options ------- -q Print non-printable characters as '?'. -N Print non-printable characters as is. -Q Quote filenames with double quotes. -p Print the protections for each file. -u Displays file owner or UID number. -g Displays file group owner or GID number. -s Print the size in bytes of each file. -h Print the size in a more human readable way. --si Like -h, but use in SI units (powers of 1000). -D Print the date of last modification or (-c) status change. -F Appends '/', '=', '*', '@', '|' or '&gt;' as per ls -F. --inodes Print inode number of each file. --device Print device ID number to which each file belongs. ------- Sorting options ------- -v Sort files alphanumerically by version. -t Sort files by last modification time. -c Sort files by last status change time. -U Leave files unsorted. -r Reverse the order of the sort. --dirsfirst List directories before files (-U disables). --sort X Select sort: name,version,size,mtime,ctime. ------- Graphics options ------- -i Don't print indentation lines. -A Print ANSI lines graphic indentation lines. -S Print with CP437 (console) graphics indentation lines. -n Turn colorization off always (-C overrides). -C Turn colorization on always. ------- XML/HTML/JSON options ------- -X Prints out an XML representation of the tree. -J Prints out an JSON representation of the tree. -H baseHREF Prints out HTML format with baseHREF as top directory. -T string Replace the default HTML title and H1 header with string. --nolinks Turn off hyperlinks in HTML output. ------- Input options ------- --fromfile Reads paths from files (.=stdin) ------- Miscellaneous options ------- --version Print version and exit. --help Print usage and this help message and exit. -- Options processing terminator. 可以添加的参数很多，那么该用那些呢？ 在一个python项目中，先只加文件夹名看下： 1234567891011121314151617181920212223$ tree appapp├── __init__.py├── __pycache__│ └── __init__.cpython-37.pyc├── main│ ├── __init__.py│ ├── __pycache__│ │ ├── __init__.cpython-37.pyc│ │ ├── functions.cpython-37.pyc│ │ └── views.cpython-37.pyc│ ├── functions.py│ └── views.py└── module ├── __init__.py ├── __pycache__ │ ├── __init__.cpython-37.pyc │ ├── functions.cpython-37.pyc │ └── views.cpython-37.pyc ├── functions.py └── views.py5 directories, 14 files pyc是编译的临时文件，我们要把删掉，看下说明，可以用-I来： 12345678910111213141516$ tree -I *.pyc appapp├── __init__.py├── __pycache__├── main│ ├── __init__.py│ ├── __pycache__│ ├── functions.py│ └── views.py└── module ├── __init__.py ├── __pycache__ ├── functions.py └── views.py5 directories, 7 files __pycache__也是临时文件，也把删掉： 12345678910111213tree -I *.pyc -I __pycache__ appapp├── __init__.py├── main│ ├── __init__.py│ ├── functions.py│ └── views.py└── module ├── __init__.py ├── functions.py └── views.py2 directories, 7 files 可以看出-I是可以加多个的，每个-I后面加一个pattern。 在上面的例子中，其实所有的.pyc文件都在__pychache__文件夹下，可以直接忽略该文件夹即可： 12345678910111213$ tree -I __pycache__ appapp├── __init__.py├── main│ ├── __init__.py│ ├── functions.py│ └── views.py└── module ├── __init__.py ├── functions.py └── views.py2 directories, 7 files 那么如果只要文件夹的结构呢？-d参数 123456789$ tree -d appapp├── __pycache__├── main│ └── __pycache__└── module └── __pycache__5 directories 忽略__pycache__文件夹： 123456$ tree -d -I __pycache__ appapp├── main└── module2 directories 总结通过brew安装tree工具之后，即可在命令行中使用tree命令展示文件\文件夹目录树： 直接加对应的文件夹来展示某文件夹范围内的文件树 1$ tree app 使用-I参数来忽略不展示的文件或子文件夹，可添加多个-I 1$ tree -I *.pyc -I __pycache__ app 使用-d来仅展示文件夹树 1$ tree -d app 多参数可以混合使用 1$ tree -d -I __pycache__ app 更多的参数使用，可以在有需要的时候参考--help内容 1$ tree --help]]></content>
+      <categories>
+        <category>操作系统</category>
+        <category>mac</category>
+      </categories>
       <tags>
         <tag>mac</tag>
       </tags>
@@ -948,8 +961,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -998,8 +1011,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -1051,8 +1064,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -1174,8 +1187,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

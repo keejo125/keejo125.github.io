@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[获取爱奇艺用户评论分析我是唱作人到底谁最火]]></title>
+    <url>%2F%E8%8E%B7%E5%8F%96%E7%88%B1%E5%A5%87%E8%89%BA%E7%94%A8%E6%88%B7%E8%AF%84%E8%AE%BA%E5%88%86%E6%9E%90%E6%88%91%E6%98%AF%E5%94%B1%E4%BD%9C%E4%BA%BA%E5%88%B0%E5%BA%95%E8%B0%81%E6%9C%80%E7%81%AB.html</url>
+    <content type="text"><![CDATA[背景《我是唱作人》是爱奇艺自制的原创音乐节目，当前十分火爆，本周更是上半季的最后一集。我们可通过抓取人们观看节目并发表的评论，看看这节目以及最后决赛究竟如何。 评论抓取我们先访问爱奇艺的官网，找到对应的节目：https://www.iqiyi.com/a_19rrhuo9bd.html 会发现仅有节目观看，但是并没有用户的评论，而我们手机APP应用上却是可以看到很多评论的. 那么我们在chrome中打开开发者界面，勾选手机版，并将网址换成手机版地址：https://m.iqiyi.com/v_19rsh3hwuo.html 接下来就是要找到对应评论的接口地址了。 通过不断的下拉会发现，评论是会自动加载的，打开chrome开发者工具中的Network信息，可以很容易的发现，在下拉过程中会有新的请求产生，且都是以get_comments.action开头的，查看这些请求信息： 这就是我们需要找的评论接口了。我们比较几个地址，来查找规律： 123https://sns-comment.iqiyi.com/v3/comment/get_comments.action?content_id=2400411900&amp;types=hot%2Ctime&amp;business_type=17&amp;agent_type=119&amp;agent_version=9.9.0&amp;authcookie=https://sns-comment.iqiyi.com/v3/comment/get_comments.action?content_id=2400411900&amp;types=time&amp;last_id=200771562121&amp;business_type=17&amp;agent_type=119&amp;agent_version=9.9.0&amp;authcookie=https://sns-comment.iqiyi.com/v3/comment/get_comments.action?content_id=2400411900&amp;types=time&amp;last_id=200763395821&amp;business_type=17&amp;agent_type=119&amp;agent_version=9.9.0&amp;authcookie= 可以发现主要有这么几个参数： content_id：对应某个视频 types：直接访问页面时会自动加载一部分评论这时候types值为hot，在不断下拉加载新的评论是，types的值变为time last_id：这个参数在后续下拉加载中会不断变化，是记录目前已加载到哪条评论的参数 其他参数：&amp;business_type=17&amp;agent_type=119&amp;agent_version=9.9.0&amp;authcookie=保持不变 我们再观看第一个请求的具体内容 可以发现最后一个评论的id，正好是下一次请求中last_id参数的值。 另外，我们发现有一个remaining的返回值，并且是1，所以我们猜想这个是用于判断是否已加载所有评论。 最后我们看下我们可以获取哪些数据： 根据上图，可以看到，我们可以获取到评论的时间（addTime）、评论的内容(content)、用户信息(userInfo)等，其中用户信息中可以获取用户昵称(uname)，性别(gender)等。 我们这次分析观看该节目的用户男女比例和评论内容中的词频分析，那么只要获取评论内容，用户昵称、性别即可。 根据上述思路，整个抓取过程就出来了： 先访问节目首页获取初始评论 解析返回值并获取数据 通过初始评论中的最后一条评论的id构造新的评论获取url 通过remaining返回值进行循环，直至获取所有评论数据 实现： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152# -*- coding: utf-8 -*-# author：zhengkimport requestsimport jsonimport csvimport timedef update_url(last_comment_id): global content_id url = 'https://sns-comment.iqiyi.com/v3/comment/get_comments.action?' \ 'content_id=' + content_id + \ '&amp;types=time&amp;' \ 'last_id=' + last_comment_id + \ '&amp;business_type=17&amp;agent_type=119&amp;agent_version=9.9.0&amp;authcookie=' return urlif __name__ == '__main__': content_id = '2400411900' init_url = 'https://sns-comment.iqiyi.com/v3/comment/get_comments.action?' \ 'content_id=' + content_id + \ '&amp;types=hot%2Ctime&amp;business_type=17&amp;agent_type=119&amp;agent_version=9.9.0&amp;authcookie=' headers = &#123; 'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'&#125; res = requests.get(url=init_url, headers=headers) # 初始化csvwriter f = open('comments.csv', 'w+', newline='') writer = csv.writer(f, delimiter=';') count = 0 while res.status_code == 200: data = json.loads(res.content) last_comment_id = '' for comment in data['data']['comments']: c_content = comment['content'].strip().replace('\n',';') c_time = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(comment['addTime'])) c_nickname = comment['userInfo']['uname'] c_gender = comment['userInfo']['gender'] writer.writerow([c_time, c_nickname, c_gender, c_content]) last_comment_id = comment['id'] count += 1 print('获取第' + str(count) + '条评论：' + c_content) url = update_url(last_comment_id) if data['data']['remaining'] == 1: res = requests.get(url, headers=headers) else: break print('抓取结束') f.close() 统计分析观看性别比例分析上面我们将需要的信息都写入了comments.csv文件中，我们通过pandas来读取。在性别比例分析中，我们仅需要nickname和gender信息。 分析思路如下： 筛选dateframe，仅保留所需要的nickname和gender信息 由于存在有人重复评论，需要先使用drop_duplicates函数去重 通过groupby函数，按照性别统计总数 画图 实现代码如下： 12345678910111213def gender_analysis(gender_df): # 通过设置中文字体方式解决中文展示问题 font = FontProperties(fname='../common/font/PingFang.ttc') gender_df.drop_duplicates() gender_df['gender'].replace(&#123;0: 'man', 1: 'female'&#125;, inplace=True) g_df = gender_df.groupby(['gender']).count() g_df.plot(kind='bar', legend=False) plt.title("我是唱作人观众性别分析", fontproperties=font) plt.xlabel("性别", fontproperties=font) plt.ylabel("人数", fontproperties=font) plt.xticks(rotation=360) plt.show() 绘制结果： 可见观看节目的男性要远多于女性。 评论分析及词云绘制评论都保存在comment字段中，那么先获每条评论的内容，通过使用结巴分词进行逐行分词。为了提高分词处理效率，可以先对评论中的空格等进行剔除。主要思路如下： 获取一条评论，并替换空格等符号 通过结巴分词进行分词 提取分词中的名词部分并保存 计算保存的所有名词的频率 使用wordcloud第三方库绘制词云 实现如下： 1234567891011121314151617181920212223242526272829303132333435363738def extract_words(comment_df): stop_words = set(line.strip() for line in open('../common/stopwords.txt', encoding='utf-8')) news_list = [] for item in comment_df.itertuples(index=False): comment = item.comment.replace(' ','') if comment.isspace(): continue p = re.compile("n[a-z0-9]&#123;0,2&#125;") word_list = pseg.cut(comment) for word, flag in word_list: if not word in stop_words and p.search(flag) != None: news_list.append(word) content = &#123;&#125; for item in news_list: content[item] = content.get(item, 0) + 1 return contentdef draw_word_cloud(content): d = os.path.dirname(__file__) img = Image.open(os.path.join(d, "changzuoren.jpg")) width = img.width / 80 height = img.height / 80 alice_coloring = np.array(img) my_wordcloud = WordCloud(background_color="white", max_words=500, mask=alice_coloring, max_font_size=200, random_state=42, font_path=(os.path.join(d, "../common/font/PingFang.ttc"))) my_wordcloud = my_wordcloud.generate_from_frequencies(content) image_colors = ImageColorGenerator(alice_coloring) plt.figure(figsize=(width, height)) plt.imshow(my_wordcloud.recolor(color_func=image_colors)) plt.imshow(my_wordcloud) plt.axis("off") # 通过设置subplots_adjust来控制画面外边框 plt.subplots_adjust(bottom=.01, top=.99, left=.01, right=.99) plt.savefig("changzuoren_wordcloud.png") plt.show() 绘制结果： 可见还是王源的呼声最高，其次汪苏泷、曾轶可、梁博。 拓展完整代码和信息参考：https://github.com/keejo125/web_scraping_and_data_analysis/tree/master/iqiyi]]></content>
+      <categories>
+        <category>python</category>
+        <category>网络爬虫与数据分析</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Mac下csv文件在excel中打开乱码问题]]></title>
     <url>%2FMac%E4%B8%8Bcsv%E6%96%87%E4%BB%B6%E5%9C%A8excel%E4%B8%AD%E6%89%93%E5%BC%80%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景今天在爬虫抓取网页信息并写如为csv文件时，使用excel打开后，竟然中文部分都是乱码。 一般出现乱码问题都是文本编码不对的问题，修改成对应的编码即可。 操作系统：MAC 解决办法 方法一： 在windows环境下，可以只用使用notepad++或者系统自带的记事本打开，之后另外保存一份为ANSI编码格式，再使用excel打开即可。 在MAC下也可以安装对应的软件修改编码。 方法二： 上面的方法需要另外保存一份文档，而且mac上还得另外安装软件才行。研究了一下，其实excel是有自带的转换方法的。 操作如下： 首先打开excel并新建一个文档 在 数据 - 从文本 导入数据 在弹出来的导入向导中，我们就可以发现文本的原始格式有误了 将文本的原始格式选择为”Unicode(UTF-8)”之后，我们发现乱码变中文了 继续”下一步”，按照默认的”分号”分割或者自定义的其他分隔符分割 再”下一步”，按需选择后完成即可。 扩展这次的csv文件是在进行网络爬虫抓取数据中遇到的，在浏览器中，现在基本上都是UTF-8格式的编码，所以这点还是要注意一下。]]></content>
@@ -961,8 +974,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1064,12 +1077,12 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
-        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
         <tag>tsung</tag>
+        <tag>windows</tag>
+        <tag>SuSE</tag>
       </tags>
   </entry>
   <entry>
@@ -1231,8 +1244,8 @@
         <category>windows</category>
       </categories>
       <tags>
-        <tag>操作系统</tag>
         <tag>windows</tag>
+        <tag>操作系统</tag>
       </tags>
   </entry>
   <entry>

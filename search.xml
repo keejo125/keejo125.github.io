@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[TypeError: can only concatenate str (not bytes) to str]]></title>
+    <url>%2FTypeError-can-only-concatenate-str-not-bytes-to-str.html</url>
+    <content type="text"><![CDATA[背景最近原来运行的好好的代码突然异常了，检查下日志，发现有如下的报错： 1234Traceback (most recent call last): File "run.py", line 69, in send_mail_attachment logging.info(str(response.status_code) + ':' + response.body)TypeError: can only concatenate str (not "bytes") to str 思路从报错上看，是由于类型不匹配导致的。 在用python发请求时，response.status_code返回的是int类型的，通过用来判断返回是否正常： 123456if response.status_code == 200: # 返回正常 passelse: # 返回异常 pass 所以在输出字符串的时候，前面加了str()用来前强制转换成str类型。 那么问题应该就出在response.body上了，正常情况response.body返回应该是字符串，但根据提示，实际上是一个bytes类型数据。 对实际程序进行调试看下输出： 果然body输出变成了bytes类型。 结论定位了问题，那么该如何转换呢？ 通过str()转换 上面返回是个空值，那么我们也强制转换看下： 123body = b''str(body)"b''" 强制转换之后，虽然变成了str类型，但会有前缀b&#39;&#39;，虽然不会报错，但明显不是我们想要的。 通过decode()转换 那么编码问题，就尝试用编码解码来解决了。我们用decode()试下： 12body.decode()'' 这次就对了。 至于请求的返回结果以前是str类型，现在变成了bytes类型，这就不纠结了，毕竟网络瞬息万变，还是要多用多总结。]]></content>
+      <categories>
+        <category>python</category>
+        <category>异常处理</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[猫眼电影评论爬取异常问题解析]]></title>
     <url>%2F%E7%8C%AB%E7%9C%BC%E7%94%B5%E5%BD%B1%E8%AF%84%E8%AE%BA%E7%88%AC%E5%8F%96%E5%BC%82%E5%B8%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E6%9E%90.html</url>
     <content type="text"><![CDATA[背景前期以《流浪地球》为例，介绍了抓取猫眼电影评论和分析的爬虫，参考：获取猫眼电影的评论，通过猫眼的接口获取了全量的电影评论。 最近有人在github上提了两个issue，说无法获取评论信息了。 分析根据最开始的思路，猫眼获取电影评论的接口url如下： 1http://m.maoyan.com/review/v2/comments.json?movieId=248172&amp;userId=-1&amp;offset=45&amp;limit=15&amp;ts=1557915814000&amp;type=3 其中主要参数为： movieId：电影的id offset：获取的起始评论为第几条 limit：每次获取评论的条数 ts：获取评论的时间，该数值为以ms为单位的unix时间戳 之前获取的思路是， 初始ts为0，及当前时间 获取评论之后，将最后一条评论的时间转换为时间戳ts，并构造请求url 再次获取以上次ts为当前时间的评论 这样通过不断的将时间往前推，就可以获取所有的评论了。 现在用相同的接口测试我们会发现： 当ts=0时，可以获取当前最新的评论，并返回当前的时间戳。 当我们将ts修改为前一天的时间则会返回异常，并且返回的时间即为我们输入的时间。 1&#123;&quot;data&quot;:&#123;&quot;t2total&quot;:219089,&quot;total&quot;:330321&#125;,&quot;paging&quot;:&#123;&quot;hasMore&quot;:false,&quot;limit&quot;:0,&quot;offset&quot;:0,&quot;total&quot;:0&#125;,&quot;ts&quot;:1557834316000&#125; 注：1557920573965转为时间为：2019-05-15 19:42:53； 前一天 2019-05-14 19:42:53 转为时间戳：1557834173000 我们将时间修改为当前时间之前1小时（1557916973000）就会发现又可以获取数据了。 前期我们可以将limit指定为30，来每次获取30条数据。当我们将ts设置为0是，limit保持为30，同样的返回异常： 1&#123;&quot;data&quot;:&#123;&quot;t2total&quot;:219106,&quot;total&quot;:330348&#125;,&quot;paging&quot;:&#123;&quot;hasMore&quot;:false,&quot;limit&quot;:0,&quot;offset&quot;:0,&quot;total&quot;:0&#125;,&quot;ts&quot;:1557921388556&#125; 我们将limit设置为15时，返回正常。 结论根据上述分析，基本上可以得出如下结论： 我们可以通过猫眼的接口获取电影评论，但无法通过修改ts来获取全量评论。 猫眼通过ts来判断是否为人为浏览，当ts与当前时间差距小于一小时时，可以获取数据，而大于一小时则不行。 猫眼显示每次最多获取15条评论，超过15则也返回异常。 那么获取评论的思路就变为： 通过接口，初始设置ts=0来获取数据 使用返回的ts值，以及offset和limit来构成url 获取更多的数据 需要注意的是，该接口仅可获取1000条评论，超过1000之后返回hasMore:false，无法继续获取。 具体时间参考：https://github.com/keejo125/web_scraping_and_data_analysis/tree/master/maoyan issue参考：https://github.com/keejo125/web_scraping_and_data_analysis/issues/1]]></content>
@@ -923,6 +935,7 @@
     <content type="text"><![CDATA[背景在检查web服务器日志的时候，发现有KeyError的异常报错。检查了下出错的代码： 1applyId = session['applyId'] 应该是用户首次访问时，session为空，所以就获取异常了。 思路根据上面的情况，KeyError就是在获取dict中不存在的key值时触发的。那么有解决方案就有两种： 在读取key值的时候，先校验一下是否存在改key： 1234567d = &#123;'a': 1, 'b': 2, 'c': 3&#125;if 'd' in d: print(d['d'])else: print('not exists!') 输出： 1not exists! 在读取dict时，设置default值。这时候需要使用dict内置的get(key[,default])方法： 1234d = &#123;'a': 1, 'b': 2, 'c': 3&#125;print(d.get('d', 'not exits!')) 输出： 1not exists! 结论最后采用了方法二，如果没有该key，就设置默认为空&#39;&#39;。 1applyId = session.get(&apos;applyId&apos;, &apos;&apos;) 后续再涉及到dict的时候都要注意下默认值的处理，避免出现KeyError的方法还有其他几种方法，可以参考如下的链接，会比较麻烦一点： https://blog.csdn.net/u011089523/article/details/72887163/]]></content>
       <categories>
         <category>python</category>
+        <category>异常处理</category>
       </categories>
       <tags>
         <tag>python</tag>
@@ -1037,8 +1050,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -1090,8 +1103,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -1213,8 +1226,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

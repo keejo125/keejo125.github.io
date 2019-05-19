@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[celery之后台定时任务]]></title>
+    <url>%2Fcelery%E4%B9%8B%E5%90%8E%E5%8F%B0%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1.html</url>
+    <content type="text"><![CDATA[背景最近有一个定时任务的需求，而当前的系统环境是Flask + Celery + Redis，而celery刚好是可以配置定时任务的，于是参考官网研究了一下。 主要实现思路如下： 程序中定义任务 celery配置celerybeat_schedule 启动celery beat来执行定时任务 官网描述的比较简单，在demo开发测试也遇到一些问题，记录如下。 定时任务配置celery定时任务的配置如下： 12345678910from celery.schedules import crontabCELERYBEAT_SCHEDULE = &#123; 'add-every-minute': &#123; 'task': 'app.scheduled_task', 'schedule': crontab(minute='*'), 'args': (16, 16) &#125; &#125;,CELERY_TIMEZONE='Asia/Shanghai' 主要有两个： CELERYBEAT_SCHEDULE：这里列出了每个定时任务的具体内容。 task：任务的函数 schedule：定时配置，可以通过crontab方式。 args：传给任务的参数。 CELERY_TIMEZONE：时间的时区。支持pytz中的所有时区，中国为：Asia/Shanghai。 单文件模式的celery定时任务单文件模式的flask+celery由于不存在相互引用，所以比较简单。 创建任务： 123@celery.taskdef scheduled_task(*args, **kwargs): print(time.strftime('%Y.%m.%d %H:%M:%S', time.localtime(time.time()))) 更新配置： 123456789101112app.config.update( CELERY_BROKER_URL = "redis://localhost:6379/0", CELERY_RESULT_BACKEND = 'redis://localhost:6379/0', CELERYBEAT_SCHEDULE = &#123; 'add-every-minute': &#123; 'task': 'app.scheduled_task', 'schedule': crontab(minute='*'), 'args': (16, 16) &#125; &#125;, CELERY_TIMEZONE='Asia/Shanghai') 启动celery，并开启beat进行定时任务 1celery worker -A app.celery -B --loglevel=info 工厂模式的celery定时任务项目架构如下： 123456789101112131415├── app│ ├── __init__.py│ ├── main│ │ ├── __init__.py│ │ ├── tasks.py│ │ ├── views.py│ └── scheduled│ ├── __init__.py│ ├── tasks.py├── celery_app│ ├── __init__.py│ ├── tasks.py├── config.py├── manager.py└── README.md 其中celery的配置在放在celery_app文件夹中的__init__.py中进行。 创建任务： 在flask的scheduled模块中定义定时任务： 123456789# -*- coding: utf-8 -*-# app/scheduled/tasks.pyfrom celery_app import celeryimport time@celery.taskdef scheduled_task(*args, **kwargs): print(time.strftime('%Y.%m.%d %H:%M:%S', time.localtime(time.time()))) 更新配置： 在celery的配置中更新，这里不仅需要配置定时任务部分，还必须在celery初始化时把任务对应的文件加入到include中。 12345678910111213141516171819202122# -*- coding: utf-8 -*-# /celery_app/__init__.pyfrom celery import Celeryfrom celery.schedules import crontabcelery = Celery('celery_app',broker='redis://localhost:6379/1',backend='redis://localhost:6379/1',include=['celery_app.tasks','app.main.tasks', 'app.scheduled.tasks'],)celery.conf.update( CELERY_BROKER_URL = 'redis://localhost:6379/1', CELERY_RESULT_BACKEND = 'redis://localhost:6379/1', CELERYBEAT_SCHEDULE = &#123; 'add-every-minute': &#123; 'task': 'app.scheduled.tasks.scheduled_task', 'schedule': crontab(minute='*'), 'args': (16, 16) &#125; &#125;, CELERY_TIMEZONE = 'Asia/Shanghai') 启动celery，并开启beat进行定时任务 1celery worker -A manager.celery -B --loglevel=info 坑与建议 在配置CELERYBEAT_SCHEDULE时，schedule参数建议使用crontab的方式配置，但需要注意的是这里的crontab是从celery.schedules中引用的，而不是直接import contab，否则会有如下报错： 1234raceback (most recent call last): File "app.py", line 19, in &lt;module&gt; 'schedule': crontab(minute='*'),TypeError: 'module' object is not callable 在工厂模式中，celery配置部分，不仅在include中需要加入任务的文件，在CELERYBEAT_SCHEDULE的task里，也需要指定具体的任务函数名而不是函数所在的文件名，否则会提示： 12345678910111213141516[2019-05-19 12:24:00,380: ERROR/MainProcess] Received unregistered task of type u'app.scheduled.tasks'.The message has been ignored and discarded.Did you remember to import the module containing this task?Or maybe you're using relative imports?Please seehttp://docs.celeryq.org/en/latest/internals/protocol.htmlfor more information.The full contents of the message body was:'[[16, 16], &#123;&#125;, &#123;"chord": null, "callbacks": null, "errbacks": null, "chain": null&#125;]' (83b)Traceback (most recent call last): File "/home/coding/.local/lib/python2.7/site-packages/celery/worker/consumer/consumer.py", line 558, in on_task_received strategy = strategies[type_]KeyError: u'app.scheduled.tasks' 启动celery时，如果程序中指定了borker(比如文中的redis)，那么需要使用-B参数直接启用celery beat。 在官网的例子中，启动执行定时任务可以在启动celery之后 1celery worker -A app.celery --loglevel=info 在启动beat进行定时任务： 1celery beat 但是，这种方式启动后我们发现， 12345678910celery beat v4.2.1 (windowlicker) is starting.__ - ... __ - _LocalTime -&gt; 2019-05-19 15:41:25Configuration -&gt; . broker -&gt; amqp://guest:**@localhost:5672// . loader -&gt; celery.loaders.default.Loader . scheduler -&gt; celery.beat.PersistentScheduler . db -&gt; celerybeat-schedule . logfile -&gt; [stderr]@%WARNING . maxinterval -&gt; 5.00 minutes (300s) broker变成了默认配置，而非我们在程序中配置的redis。所以导致看起来完全没有报错，但实际无法启动定时任务。 所以建议还是通过增加-B参数，一次性启动celery和celery beat。]]></content>
+      <categories>
+        <category>python</category>
+        <category>flask</category>
+      </categories>
+      <tags>
+        <tag>celery</tag>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[TypeError: can only concatenate str (not bytes) to str]]></title>
     <url>%2FTypeError-can-only-concatenate-str-not-bytes-to-str.html</url>
     <content type="text"><![CDATA[背景最近原来运行的好好的代码突然异常了，检查下日志，发现有如下的报错： 1234Traceback (most recent call last): File "run.py", line 69, in send_mail_attachment logging.info(str(response.status_code) + ':' + response.body)TypeError: can only concatenate str (not "bytes") to str 思路从报错上看，是由于类型不匹配导致的。 在用python发请求时，response.status_code返回的是int类型的，通过用来判断返回是否正常： 123456if response.status_code == 200: # 返回正常 passelse: # 返回异常 pass 所以在输出字符串的时候，前面加了str()用来前强制转换成str类型。 那么问题应该就出在response.body上了，正常情况response.body返回应该是字符串，但根据提示，实际上是一个bytes类型数据。 对实际程序进行调试看下输出： 果然body输出变成了bytes类型。 结论定位了问题，那么该如何转换呢？ 通过str()转换 上面返回是个空值，那么我们也强制转换看下： 123body = b''str(body)"b''" 强制转换之后，虽然变成了str类型，但会有前缀b&#39;&#39;，虽然不会报错，但明显不是我们想要的。 通过decode()转换 那么编码问题，就尝试用编码解码来解决了。我们用decode()试下： 12body.decode()'' 这次就对了。 至于请求的返回结果以前是str类型，现在变成了bytes类型，这就不纠结了，毕竟网络瞬息万变，还是要多用多总结。]]></content>
@@ -1000,8 +1013,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>

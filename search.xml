@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[oracle数据库全量导出与导入]]></title>
+    <url>%2Foracle%E6%95%B0%E6%8D%AE%E5%BA%93%E5%85%A8%E9%87%8F%E5%AF%BC%E5%87%BA%E4%B8%8E%E5%AF%BC%E5%85%A5.html</url>
+    <content type="text"><![CDATA[背景环境生产数据库A：linux环境 测试数据库B：windows环境 需求：从生产库A全量导出oracle数据库，包含存储过程等，然后导入到测试数据库B中，以更新测试数据库。 导出 在生产环境中，使用管理员账号登陆 切换到数据库用户，登录sqlplus并创建目录 12345su - orallexport ORACLE_SID=hzdevsqlplus &quot;/as sysdba&quot;create directory dumpdir as &apos;\tmp&apos;;quit 导出数据库dump文件（shell环境，非sqlplus） 12345expdp srmis/srmis directory=dumpdir dumpfile=20190520.dump full=y parallel=10 logfile=20190520.logDump file set for SRMIS.SYS_EXPORT_FULL_01 is: /tmp/20190520.dumpJob "SRMIS"."SYS_EXPORT_FULL_01" successfully completed at 12:16:49 导入 将导出的dump文件上传到测试环境 在测试环境，登录sqlplus并创建目录 123456789C:\Users\Administrator&gt;sqlplus "/as sysdba"SQL*Plus: Release 11.2.0.3.0 Production on 星期一 5月 20 11:54:07 2019Copyright (c) 1982, 2011, Oracle. All rights reserved.连接到:Oracle Database 11g Release 11.2.0.3.0 - 64bit ProductionSQL&gt; create or replace directory dumpdir as 'D:\新建文件夹';目录已创建。SQL&gt; quit从 Oracle Database 11g Release 11.2.0.3.0 - 64bit Production 断开 导入数据库dump文件（shell环境，非sqlplus） 123C:\Users\Administrator&gt;impdp srmis/srmis directory=dumpdir dumpfile=20190520.dump full=y table_exists_action=replace logfile=20190520.log作业 "SRMIS"."SYS_IMPORT_FULL_01" 已经完成, 但是有 7304 个错误 (于 12:41:19 完成) 扩展说明 关于导入时table_exists_action参数，用于选择如何处理重复数据，有四个选项： skip：忽略跳过 append：在原有数据上增加 replace：先drop表后在创建，最后完成数据插入 truncate：截断表后并插入 导入时由于有些数据异常或者队列已存在，会有错误出现，需根据实际情况判断是否需要修正。]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>oracle</category>
+      </categories>
+      <tags>
+        <tag>oracle</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[celery之后台定时任务]]></title>
     <url>%2Fcelery%E4%B9%8B%E5%90%8E%E5%8F%B0%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1.html</url>
     <content type="text"><![CDATA[背景最近有一个定时任务的需求，而当前的系统环境是Flask + Celery + Redis，而celery刚好是可以配置定时任务的，于是参考官网研究了一下。 主要实现思路如下： 程序中定义任务 celery配置celerybeat_schedule 启动celery beat来执行定时任务 官网描述的比较简单，在demo开发测试也遇到一些问题，记录如下。 定时任务配置celery定时任务的配置如下： 12345678910from celery.schedules import crontabCELERYBEAT_SCHEDULE = &#123; 'add-every-minute': &#123; 'task': 'app.scheduled_task', 'schedule': crontab(minute='*'), 'args': (16, 16) &#125; &#125;,CELERY_TIMEZONE='Asia/Shanghai' 主要有两个： CELERYBEAT_SCHEDULE：这里列出了每个定时任务的具体内容。 task：任务的函数 schedule：定时配置，可以通过crontab方式。 args：传给任务的参数。 CELERY_TIMEZONE：时间的时区。支持pytz中的所有时区，中国为：Asia/Shanghai。 单文件模式的celery定时任务单文件模式的flask+celery由于不存在相互引用，所以比较简单。 创建任务： 123@celery.taskdef scheduled_task(*args, **kwargs): print(time.strftime('%Y.%m.%d %H:%M:%S', time.localtime(time.time()))) 更新配置： 123456789101112app.config.update( CELERY_BROKER_URL = "redis://localhost:6379/0", CELERY_RESULT_BACKEND = 'redis://localhost:6379/0', CELERYBEAT_SCHEDULE = &#123; 'add-every-minute': &#123; 'task': 'app.scheduled_task', 'schedule': crontab(minute='*'), 'args': (16, 16) &#125; &#125;, CELERY_TIMEZONE='Asia/Shanghai') 启动celery，并开启beat进行定时任务 1celery worker -A app.celery -B --loglevel=info 工厂模式的celery定时任务项目架构如下： 123456789101112131415├── app│ ├── __init__.py│ ├── main│ │ ├── __init__.py│ │ ├── tasks.py│ │ ├── views.py│ └── scheduled│ ├── __init__.py│ ├── tasks.py├── celery_app│ ├── __init__.py│ ├── tasks.py├── config.py├── manager.py└── README.md 其中celery的配置在放在celery_app文件夹中的__init__.py中进行。 创建任务： 在flask的scheduled模块中定义定时任务： 123456789# -*- coding: utf-8 -*-# app/scheduled/tasks.pyfrom celery_app import celeryimport time@celery.taskdef scheduled_task(*args, **kwargs): print(time.strftime('%Y.%m.%d %H:%M:%S', time.localtime(time.time()))) 更新配置： 在celery的配置中更新，这里不仅需要配置定时任务部分，还必须在celery初始化时把任务对应的文件加入到include中。 12345678910111213141516171819202122# -*- coding: utf-8 -*-# /celery_app/__init__.pyfrom celery import Celeryfrom celery.schedules import crontabcelery = Celery('celery_app',broker='redis://localhost:6379/1',backend='redis://localhost:6379/1',include=['celery_app.tasks','app.main.tasks', 'app.scheduled.tasks'],)celery.conf.update( CELERY_BROKER_URL = 'redis://localhost:6379/1', CELERY_RESULT_BACKEND = 'redis://localhost:6379/1', CELERYBEAT_SCHEDULE = &#123; 'add-every-minute': &#123; 'task': 'app.scheduled.tasks.scheduled_task', 'schedule': crontab(minute='*'), 'args': (16, 16) &#125; &#125;, CELERY_TIMEZONE = 'Asia/Shanghai') 启动celery，并开启beat进行定时任务 1celery worker -A manager.celery -B --loglevel=info 坑与建议 在配置CELERYBEAT_SCHEDULE时，schedule参数建议使用crontab的方式配置，但需要注意的是这里的crontab是从celery.schedules中引用的，而不是直接import contab，否则会有如下报错： 1234raceback (most recent call last): File "app.py", line 19, in &lt;module&gt; 'schedule': crontab(minute='*'),TypeError: 'module' object is not callable 在工厂模式中，celery配置部分，不仅在include中需要加入任务的文件，在CELERYBEAT_SCHEDULE的task里，也需要指定具体的任务函数名而不是函数所在的文件名，否则会提示： 12345678910111213141516[2019-05-19 12:24:00,380: ERROR/MainProcess] Received unregistered task of type u'app.scheduled.tasks'.The message has been ignored and discarded.Did you remember to import the module containing this task?Or maybe you're using relative imports?Please seehttp://docs.celeryq.org/en/latest/internals/protocol.htmlfor more information.The full contents of the message body was:'[[16, 16], &#123;&#125;, &#123;"chord": null, "callbacks": null, "errbacks": null, "chain": null&#125;]' (83b)Traceback (most recent call last): File "/home/coding/.local/lib/python2.7/site-packages/celery/worker/consumer/consumer.py", line 558, in on_task_received strategy = strategies[type_]KeyError: u'app.scheduled.tasks' 启动celery时，如果程序中指定了borker(比如文中的redis)，那么需要使用-B参数直接启用celery beat。 在官网的例子中，启动执行定时任务可以在启动celery之后 1celery worker -A app.celery --loglevel=info 在启动beat进行定时任务： 1celery beat 但是，这种方式启动后我们发现， 12345678910celery beat v4.2.1 (windowlicker) is starting.__ - ... __ - _LocalTime -&gt; 2019-05-19 15:41:25Configuration -&gt; . broker -&gt; amqp://guest:**@localhost:5672// . loader -&gt; celery.loaders.default.Loader . scheduler -&gt; celery.beat.PersistentScheduler . db -&gt; celerybeat-schedule . logfile -&gt; [stderr]@%WARNING . maxinterval -&gt; 5.00 minutes (300s) broker变成了默认配置，而非我们在程序中配置的redis。所以导致看起来完全没有报错，但实际无法启动定时任务。 所以建议还是通过增加-B参数，一次性启动celery和celery beat。]]></content>
@@ -1063,8 +1076,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -1116,8 +1129,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -1239,8 +1252,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

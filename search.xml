@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[oracle中的两表更新]]></title>
+    <url>%2Foracle%E4%B8%AD%E7%9A%84%E4%B8%A4%E8%A1%A8%E6%9B%B4%E6%96%B0.html</url>
+    <content type="text"><![CDATA[背景现在有表一(goods)： no sn 1 aaa 2 bbb 3 ccc 4 ddd 我们发现其中sn字段有写值存在错误，需要批量更新，比如我们需要把表一中的bbb，ccc变成xxx，zzz。 所以在临时表test中插入对应的变换关系： 临时表(test)： before after bbb xxx ccc zzz 解决办法由于oracle中没有update … set … from … 的结构，所以得用子查询的办法解决。 方法一： 1update goods g set g.sn = (select t.after from test t where t.before = g.sn) where exists (select t.before from test t where t.before = g.sn) 这里需要注意的是，必须加上where exists条件，否则会因为有些值并不在更新范围而导致执行报错： 1ORA-01407: 无法更新(&quot;GOODS&quot;.&quot;SN&quot;)为NULL 方法二： 1update goods g set g.sn = (select t.after from test t where t.before = g.sn) where g.sn in (select t.before from test t where t.before = g.sn) 拓展这里方法一中用了exists的方法用来判断哪些需要更新，哪些不需要更新，是一个内建方法。而方法二使用in来判断。 通常情况下exists的效率会比in的效率高，主要因为exists使用了索引技术而in没有。不过数据不大的情况下，差距也不大，相对来说in更好理解一点。]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>oracle</category>
+      </categories>
+      <tags>
+        <tag>oracle</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[oracle数据库全量导出与导入]]></title>
     <url>%2Foracle%E6%95%B0%E6%8D%AE%E5%BA%93%E5%85%A8%E9%87%8F%E5%AF%BC%E5%87%BA%E4%B8%8E%E5%AF%BC%E5%85%A5.html</url>
     <content type="text"><![CDATA[背景环境生产数据库A：linux环境 测试数据库B：windows环境 需求：从生产库A全量导出oracle数据库，包含存储过程等，然后导入到测试数据库B中，以更新测试数据库。 导出 在生产环境中，使用管理员账号登陆 切换到数据库用户，登录sqlplus并创建目录 12345su - orallexport ORACLE_SID=hzdevsqlplus &quot;/as sysdba&quot;create directory dumpdir as &apos;\tmp&apos;;quit 导出数据库dump文件（shell环境，非sqlplus） 12345expdp srmis/srmis directory=dumpdir dumpfile=20190520.dump full=y parallel=10 logfile=20190520.logDump file set for SRMIS.SYS_EXPORT_FULL_01 is: /tmp/20190520.dumpJob "SRMIS"."SYS_EXPORT_FULL_01" successfully completed at 12:16:49 导入 将导出的dump文件上传到测试环境 在测试环境，登录sqlplus并创建目录 123456789C:\Users\Administrator&gt;sqlplus "/as sysdba"SQL*Plus: Release 11.2.0.3.0 Production on 星期一 5月 20 11:54:07 2019Copyright (c) 1982, 2011, Oracle. All rights reserved.连接到:Oracle Database 11g Release 11.2.0.3.0 - 64bit ProductionSQL&gt; create or replace directory dumpdir as 'D:\新建文件夹';目录已创建。SQL&gt; quit从 Oracle Database 11g Release 11.2.0.3.0 - 64bit Production 断开 导入数据库dump文件（shell环境，非sqlplus） 123C:\Users\Administrator&gt;impdp srmis/srmis directory=dumpdir dumpfile=20190520.dump full=y table_exists_action=replace logfile=20190520.log作业 "SRMIS"."SYS_IMPORT_FULL_01" 已经完成, 但是有 7304 个错误 (于 12:41:19 完成) 扩展说明 关于导入时table_exists_action参数，用于选择如何处理重复数据，有四个选项： skip：忽略跳过 append：在原有数据上增加 replace：先drop表后在创建，最后完成数据插入 truncate：截断表后并插入 导入时由于有些数据异常或者队列已存在，会有错误出现，需根据实际情况判断是否需要修正。]]></content>
@@ -1076,8 +1089,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -1252,8 +1265,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

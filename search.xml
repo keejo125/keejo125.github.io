@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[ORA-01653: 表xxx.xxx 无法通过 8 （在表空间xxx中）扩展 问题]]></title>
+    <url>%2FORA-01653-%E8%A1%A8xxx-xxx-%E6%97%A0%E6%B3%95%E9%80%9A%E8%BF%87-8-%EF%BC%88%E5%9C%A8%E8%A1%A8%E7%A9%BA%E9%97%B4xxx%E4%B8%AD%EF%BC%89%E6%89%A9%E5%B1%95-%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景今天发现系统异常，无法新增数据了，检查了下系统日志，有如下报错： 1ORA-01653: 表xxx.xxx 无法通过 8 （在表空间xxx中）扩展 直接登录数据库，手工插入一条数据，果然报错一样。 解决办法既然有oracle问题编号，直接百度，解决过程如下： 查看表空间使用情况： 1234567891011121314151617SELECT UPPER(F.TABLESPACE_NAME) "表空间名", D.TOT_GROOTTE_MB "表空间大小(M)", D.TOT_GROOTTE_MB - F.TOTAL_BYTES "已使用空间(M)", TO_CHAR(ROUND((D.TOT_GROOTTE_MB - F.TOTAL_BYTES) / D.TOT_GROOTTE_MB * 100,2),'990.99') "使用比", F.TOTAL_BYTES "空闲空间(M)", F.MAX_BYTES "最大块(M)" FROM (SELECT TABLESPACE_NAME, ROUND(SUM(BYTES) / (1024 * 1024), 2) TOTAL_BYTES, ROUND(MAX(BYTES) / (1024 * 1024), 2) MAX_BYTES FROM SYS.DBA_FREE_SPACE GROUP BY TABLESPACE_NAME) F, (SELECT DD.TABLESPACE_NAME, ROUND(SUM(DD.BYTES) / (1024 * 1024), 2) TOT_GROOTTE_MB FROM SYS.DBA_DATA_FILES DD GROUP BY DD.TABLESPACE_NAME) D WHERE D.TABLESPACE_NAME = F.TABLESPACE_NAME ORDER BY 4 DESC; 查询结果如下： 可是问题出现了，在log中报错的表空间并不存在，直接下一步。 查询表空间是否可扩展 12345SELECT T.TABLESPACE_NAME,D.FILE_NAME, D.AUTOEXTENSIBLE,D.BYTES,D.MAXBYTES,D.STATUS FROM DBA_TABLESPACES T,DBA_DATA_FILES D WHERE T.TABLESPACE_NAME =D.TABLESPACE_NAME ORDER BY TABLESPACE_NAME,FILE_NAME; 查询结果如下： 发现都是不可扩展的，MAXBYTES为0，问题应该就在这儿了。 将表空间改为可扩展 123ALTER DATABASE DATAFILE 'xxxDAT1.DBF' AUTOEXTEND ON NEXT 100M MAXSIZE UNLIMITED 改完之后再次查询是否可扩展(上一步)，结果如下： 再次尝试插入数据，已经成功了。 扩展由于有oracle的问题号，所以问题定位比较明确。虽然在查询表空间大小的时候查询不到，但是如果我们直接搜索所有表空间： 1SELECT T.TABLESPACE_NAME FROM DBA_TABLESPACES T 还是可以搜索到的，所以不必怀疑。 另外需要注意的是，在第三步，将表空间改为可扩展。是需要sys用户的，普通用户会提示权限不够。 1ORA-01031: insufficient privileges]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>oracle</category>
+      </categories>
+      <tags>
+        <tag>oracle</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[oracle中的两表更新]]></title>
     <url>%2Foracle%E4%B8%AD%E7%9A%84%E4%B8%A4%E8%A1%A8%E6%9B%B4%E6%96%B0.html</url>
     <content type="text"><![CDATA[背景现在有表一(goods)： no sn 1 aaa 2 bbb 3 ccc 4 ddd 我们发现其中sn字段有写值存在错误，需要批量更新，比如我们需要把表一中的bbb，ccc变成xxx，zzz。 所以在临时表test中插入对应的变换关系： 临时表(test)： before after bbb xxx ccc zzz 解决办法由于oracle中没有update … set … from … 的结构，所以得用子查询的办法解决。 方法一： 1update goods g set g.sn = (select t.after from test t where t.before = g.sn) where exists (select t.before from test t where t.before = g.sn) 这里需要注意的是，必须加上where exists条件，否则会因为有些值并不在更新范围而导致执行报错： 1ORA-01407: 无法更新(&quot;GOODS&quot;.&quot;SN&quot;)为NULL 方法二： 1update goods g set g.sn = (select t.after from test t where t.before = g.sn) where g.sn in (select t.before from test t where t.before = g.sn) 拓展这里方法一中用了exists的方法用来判断哪些需要更新，哪些不需要更新，是一个内建方法。而方法二使用in来判断。 通常情况下exists的效率会比in的效率高，主要因为exists使用了索引技术而in没有。不过数据不大的情况下，差距也不大，相对来说in更好理解一点。]]></content>
@@ -35,8 +48,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1039,8 +1052,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1215,9 +1228,9 @@
         <category>oracle</category>
       </categories>
       <tags>
-        <tag>数据库</tag>
         <tag>oracle</tag>
         <tag>sql</tag>
+        <tag>数据库</tag>
       </tags>
   </entry>
   <entry>

@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[selenium之网页密码控件无法定位输入解决办法]]></title>
+    <url>%2Fselenium%E4%B9%8B%E7%BD%91%E9%A1%B5%E5%AF%86%E7%A0%81%E6%8E%A7%E4%BB%B6%E6%97%A0%E6%B3%95%E5%AE%9A%E4%BD%8D%E8%BE%93%E5%85%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.html</url>
+    <content type="text"><![CDATA[背景在进行selenium进行网页自动化的时候，当涉及到密码控件的时候，就会发现密码控件无法通过F12定位到，也就是无法通过selenium定位元素。 解决思路由于涉及到控件，无法通过网页定位，那么只能曲线救国了。 在我们人工处理的这种登陆页面的时候，可以通过键盘输入tab键来切换到密码框。 所以规避办法是，直接无视selenium，我们通过直接控制键盘，模拟输入 输入tab键来切换当前元素到密码框 再输入密码 最后回到selenium点击提交按钮。 那么怎么直接模拟键盘输入呢？ 在python中，第三方库：PyUserInput提供了鼠标和键盘输入功能。 实现办法根据上述思路，实现步骤如下 安装PyUserInput库 初始化键盘对象 selenium定位到用户名元素，输入用户名 模拟键盘输入tab，使定位到密码控件 模拟键盘输入密码 selenium定位到提交按钮，点击提交 实现代码： 12345678910111213141516from selenium import webdriverfrom pykeyboard import PyKeyboardfrom time import sleepusername = ''password = ''k = PyKeyboard()driver = webdriver.Ie()# 省略打开页面代码driver.find_element_by_id('userName').send_keys(username)k.tap_key(k.tab_key)sleep(1)for char in password: k.tab_key(char) sleep(1)driver.find_element_by_id('login').click() 注意： 上述代码里，每使用PyKeyboard()输入一次，都暂停1秒，那是因为测试发现直接输入的话，可能会存在异常，或输入失败的情况。 虽然PyUserInput提供了PyKeyboard.type_string()的方法用于直接输入字符串，但在控件的场景下会输入失败。估计是因为控件还需要处理加密的关系吧。 扩展PyUserInput库的详细介绍可参考：https://pypi.org/project/PyUserInput/ 在安装时，MAC OS直接通过pip安装即可： 1pip install PyUserInput 但Windows系统直接pip安装会有报错提示： 12 Could not find a version that satisfies the requirement pyHook (from PyUserInput) (from versions: )No matching distribution found for pyHook (from PyUserInput) 根据提示，需要先安装pyHook，但是使用pip安装就会提示找不到对应的包： 12 Could not find a version that satisfies the requirement pyHook (from versions: )No matching distribution found for pyHook 需要手动在官网：https://sourceforge.net/projects/pyhook/ 中下载 不过建议直接在如下网站下载编译好的whl文件： https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyhook 安装whl文件命令为： 1pip install xxx.whl 先安装好pyHook在安装PyUserInput即可。]]></content>
+      <categories>
+        <category>python</category>
+        <category>网络爬虫与数据分析</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[ORA-01653: 表xxx.xxx 无法通过 8 （在表空间xxx中）扩展 问题]]></title>
     <url>%2FORA-01653-%E8%A1%A8xxx-xxx-%E6%97%A0%E6%B3%95%E9%80%9A%E8%BF%87-8-%EF%BC%88%E5%9C%A8%E8%A1%A8%E7%A9%BA%E9%97%B4xxx%E4%B8%AD%EF%BC%89%E6%89%A9%E5%B1%95-%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景今天发现系统异常，无法新增数据了，检查了下系统日志，有如下报错： 1ORA-01653: 表xxx.xxx 无法通过 8 （在表空间xxx中）扩展 直接登录数据库，手工插入一条数据，果然报错一样。 解决办法既然有oracle问题编号，直接百度，解决过程如下： 查看表空间使用情况： 1234567891011121314151617SELECT UPPER(F.TABLESPACE_NAME) "表空间名", D.TOT_GROOTTE_MB "表空间大小(M)", D.TOT_GROOTTE_MB - F.TOTAL_BYTES "已使用空间(M)", TO_CHAR(ROUND((D.TOT_GROOTTE_MB - F.TOTAL_BYTES) / D.TOT_GROOTTE_MB * 100,2),'990.99') "使用比", F.TOTAL_BYTES "空闲空间(M)", F.MAX_BYTES "最大块(M)" FROM (SELECT TABLESPACE_NAME, ROUND(SUM(BYTES) / (1024 * 1024), 2) TOTAL_BYTES, ROUND(MAX(BYTES) / (1024 * 1024), 2) MAX_BYTES FROM SYS.DBA_FREE_SPACE GROUP BY TABLESPACE_NAME) F, (SELECT DD.TABLESPACE_NAME, ROUND(SUM(DD.BYTES) / (1024 * 1024), 2) TOT_GROOTTE_MB FROM SYS.DBA_DATA_FILES DD GROUP BY DD.TABLESPACE_NAME) D WHERE D.TABLESPACE_NAME = F.TABLESPACE_NAME ORDER BY 4 DESC; 查询结果如下： 可是问题出现了，在log中报错的表空间并不存在，直接下一步。 查询表空间是否可扩展 12345SELECT T.TABLESPACE_NAME,D.FILE_NAME, D.AUTOEXTENSIBLE,D.BYTES,D.MAXBYTES,D.STATUS FROM DBA_TABLESPACES T,DBA_DATA_FILES D WHERE T.TABLESPACE_NAME =D.TABLESPACE_NAME ORDER BY TABLESPACE_NAME,FILE_NAME; 查询结果如下： 发现都是不可扩展的，MAXBYTES为0，问题应该就在这儿了。 将表空间改为可扩展 123ALTER DATABASE DATAFILE 'xxxDAT1.DBF' AUTOEXTEND ON NEXT 100M MAXSIZE UNLIMITED 改完之后再次查询是否可扩展(上一步)，结果如下： 再次尝试插入数据，已经成功了。 扩展由于有oracle的问题号，所以问题定位比较明确。虽然在查询表空间大小的时候查询不到，但是如果我们直接搜索所有表空间： 1SELECT T.TABLESPACE_NAME FROM DBA_TABLESPACES T 还是可以搜索到的，所以不必怀疑。 另外需要注意的是，在第三步，将表空间改为可扩展。是需要sys用户的，普通用户会提示权限不够。 1ORA-01031: insufficient privileges]]></content>
@@ -48,8 +61,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1052,8 +1065,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1102,8 +1115,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -1228,9 +1241,9 @@
         <category>oracle</category>
       </categories>
       <tags>
+        <tag>数据库</tag>
         <tag>oracle</tag>
         <tag>sql</tag>
-        <tag>数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -1278,8 +1291,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

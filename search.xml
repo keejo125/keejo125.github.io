@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[windows自动更新失败之0x80244010错误]]></title>
+    <url>%2Fwindows%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0%E5%A4%B1%E8%B4%A5%E4%B9%8B0x80244010%E9%94%99%E8%AF%AF.html</url>
+    <content type="text"><![CDATA[背景今天一台重新安装了win7 64位操作系统的电脑连入内网后，自动更新失败，错误代码是：0x80244010 原因根据微软官方问答：https://blogs.technet.microsoft.com/sus/2008/09/18/wsus-clients-fail-with-warning-syncserverupdatesinternal-failed-0x80244010/ 该问题仅出现在新安装完的系统上，且该系统比较早了，有较多的补丁需要安装。 而微软规定每次客户机连接wsus获取更新是有大小限制的，且不可修改，每次只可以200k。 The error, 0x80244010, means WU_E_PT_EXCEEDED_MAX_SERVER_TRIPS and happens when a client has exceeded the number of trips allowed to a WSUS server. We have defined the maximum number of trips as 200 within code and it cannot reconfigured. A “trip” to the server consist of the client going to the server and saying give me all updates within a certain scope. The server will give the client a certain number of updates within this trip based on the size of the update metadata. The server can send 200k worth of update metadata in a single trip so it’s possible that 10 small updates will fit in that single trip. Other larger updates may require a single trip for each update if they exceed the 200k limit. Due to the way Office updates are published you are more likely to see this error if you’re syncing Office updates since their metadata is typically larger in size. 解决办法根据上面的描述，那么解决办法就是： 如果点击”立即更新”，最后出现报错”0x80244010”，那么说明自动更新正常，仅本次更新完全获取到所有的更新信息。 那么继续点击”立即更新”即可。 至于需要点击多少次立即更新，这取决于本次安装的操作系统所需要安装的补丁多少而定。只要报错代码没变，那么就放心的继续更新就好了。 扩展一般自动更新报错，我们会尝试将自动更新的缓存文件C:\Windows\SoftwareDistribution文件夹重命名后再试。 但在这个报错中，一旦我们清空了自动更新的缓存文件，那么就又得重头来过了。 还是需要具体问题具体分析来处理。]]></content>
+      <categories>
+        <category>操作系统</category>
+        <category>windows</category>
+      </categories>
+      <tags>
+        <tag>操作系统</tag>
+        <tag>windows</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[selenium之网页密码控件无法定位输入解决办法]]></title>
     <url>%2Fselenium%E4%B9%8B%E7%BD%91%E9%A1%B5%E5%AF%86%E7%A0%81%E6%8E%A7%E4%BB%B6%E6%97%A0%E6%B3%95%E5%AE%9A%E4%BD%8D%E8%BE%93%E5%85%A5%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.html</url>
     <content type="text"><![CDATA[背景在进行selenium进行网页自动化的时候，当涉及到密码控件的时候，就会发现密码控件无法通过F12定位到，也就是无法通过selenium定位元素。 解决思路由于涉及到控件，无法通过网页定位，那么只能曲线救国了。 在我们人工处理的这种登陆页面的时候，可以通过键盘输入tab键来切换到密码框。 所以规避办法是，直接无视selenium，我们通过直接控制键盘，模拟输入 输入tab键来切换当前元素到密码框 再输入密码 最后回到selenium点击提交按钮。 那么怎么直接模拟键盘输入呢？ 在python中，第三方库：PyUserInput提供了鼠标和键盘输入功能。 实现办法根据上述思路，实现步骤如下 安装PyUserInput库 初始化键盘对象 selenium定位到用户名元素，输入用户名 模拟键盘输入tab，使定位到密码控件 模拟键盘输入密码 selenium定位到提交按钮，点击提交 实现代码： 12345678910111213141516from selenium import webdriverfrom pykeyboard import PyKeyboardfrom time import sleepusername = ''password = ''k = PyKeyboard()driver = webdriver.Ie()# 省略打开页面代码driver.find_element_by_id('userName').send_keys(username)k.tap_key(k.tab_key)sleep(1)for char in password: k.tab_key(char) sleep(1)driver.find_element_by_id('login').click() 注意： 上述代码里，每使用PyKeyboard()输入一次，都暂停1秒，那是因为测试发现直接输入的话，可能会存在异常，或输入失败的情况。 虽然PyUserInput提供了PyKeyboard.type_string()的方法用于直接输入字符串，但在控件的场景下会输入失败。估计是因为控件还需要处理加密的关系吧。 扩展PyUserInput库的详细介绍可参考：https://pypi.org/project/PyUserInput/ 在安装时，MAC OS直接通过pip安装即可： 1pip install PyUserInput 但Windows系统直接pip安装会有报错提示： 12 Could not find a version that satisfies the requirement pyHook (from PyUserInput) (from versions: )No matching distribution found for pyHook (from PyUserInput) 根据提示，需要先安装pyHook，但是使用pip安装就会提示找不到对应的包： 12 Could not find a version that satisfies the requirement pyHook (from versions: )No matching distribution found for pyHook 需要手动在官网：https://sourceforge.net/projects/pyhook/ 中下载 不过建议直接在如下网站下载编译好的whl文件： https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyhook 安装whl文件命令为： 1pip install xxx.whl 先安装好pyHook在安装PyUserInput即可。]]></content>
@@ -1168,8 +1181,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

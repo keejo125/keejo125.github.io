@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[oracle之查询重复项]]></title>
+    <url>%2Foracle%E4%B9%8B%E6%9F%A5%E8%AF%A2%E9%87%8D%E5%A4%8D%E9%A1%B9.html</url>
+    <content type="text"><![CDATA[背景数据库系统：Oracle 表结构： IP_ADDRESS IP_TYPE IP_STATUS IP_USERNAME IP_DEVICE IP_DESCRIPTION 现需要找出有用多个IP地址的用户，并列出他的姓名（IP_USERNAME）、IP地址（IP_ADDRESS）和IP类型（IP_TYPE） 思路 首先需要根据用户姓名进行分组排序，那么就得用到group by。 1select il.ip_username, count(il.ip_username) from ip_list il where il.ip_status = '已分配' group by il.ip_username; 注意：group by在使用中需要注意的是，前面select的内容，除聚合函数（如count()）外，必须出现在group by后面，否则会有系统报错。如： 1select * from ip_list il where il.ip_status = '已分配' group by il.ip_username; 就会出现ORA-00979的报错： 我们需要查找一人有多IP的清单，那么可以直接使用having关键来筛选： 1select il.ip_username from ip_list il where il.ip_status = '已分配' group by il.ip_username having count(1) &gt; 1; 由于我们需要查询出姓名、IP、类型三个信息，如将这三个字段都列在group by后，那么将无法获取针对姓名的count()计算，如： 1select il.ip_username, count(il.ip_username) from ip_list il where il.ip_status = '已分配' group by il.ip_username having count(il.ip_username) &gt; 1; 该查询语句不会报错，但会查询出空结果。 所以只能采用子查询的方式，先查出来所有需要输出的人员清单，用in来再次查询详细信息： 123select il1.ip_username, il1.ip_address, il1.ip_type from ip_list il1 where il1.ip_username in (select il.ip_username from ip_list il where il.ip_status = '已分配' group by il.ip_username having count(il.ip_username) &gt; 1) 拓展这个查询用到了group by 、having、in三种，其中group by中查询列不能多于group by后的列，需要注意，更多信息可查看： group by:https://www.runoob.com/sql/sql-groupby.html having:https://www.runoob.com/sql/sql-having.html]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>oracle</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>oracle</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[windows自动更新失败之0x80244010错误]]></title>
     <url>%2Fwindows%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0%E5%A4%B1%E8%B4%A5%E4%B9%8B0x80244010%E9%94%99%E8%AF%AF.html</url>
     <content type="text"><![CDATA[背景今天一台重新安装了win7 64位操作系统的电脑连入内网后，自动更新失败，错误代码是：0x80244010 原因根据微软官方问答：https://blogs.technet.microsoft.com/sus/2008/09/18/wsus-clients-fail-with-warning-syncserverupdatesinternal-failed-0x80244010/ 该问题仅出现在新安装完的系统上，且该系统比较早了，有较多的补丁需要安装。 而微软规定每次客户机连接wsus获取更新是有大小限制的，且不可修改，每次只可以200k。 The error, 0x80244010, means WU_E_PT_EXCEEDED_MAX_SERVER_TRIPS and happens when a client has exceeded the number of trips allowed to a WSUS server. We have defined the maximum number of trips as 200 within code and it cannot reconfigured. A “trip” to the server consist of the client going to the server and saying give me all updates within a certain scope. The server will give the client a certain number of updates within this trip based on the size of the update metadata. The server can send 200k worth of update metadata in a single trip so it’s possible that 10 small updates will fit in that single trip. Other larger updates may require a single trip for each update if they exceed the 200k limit. Due to the way Office updates are published you are more likely to see this error if you’re syncing Office updates since their metadata is typically larger in size. 解决办法根据上面的描述，那么解决办法就是： 如果点击”立即更新”，最后出现报错”0x80244010”，那么说明自动更新正常，仅本次更新完全获取到所有的更新信息。 那么继续点击”立即更新”即可。 至于需要点击多少次立即更新，这取决于本次安装的操作系统所需要安装的补丁多少而定。只要报错代码没变，那么就放心的继续更新就好了。 扩展一般自动更新报错，我们会尝试将自动更新的缓存文件C:\Windows\SoftwareDistribution文件夹重命名后再试。 但在这个报错中，一旦我们清空了自动更新的缓存文件，那么就又得重头来过了。 还是需要具体问题具体分析来处理。]]></content>
@@ -1128,8 +1142,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -1304,8 +1318,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

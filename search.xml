@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[ORA-01461:仅可以为插入 LONG 列的 LONG 值赋值]]></title>
+    <url>%2FORA-01461-%E4%BB%85%E5%8F%AF%E4%BB%A5%E4%B8%BA%E6%8F%92%E5%85%A5-LONG-%E5%88%97%E7%9A%84-LONG-%E5%80%BC%E8%B5%8B%E5%80%BC.html</url>
+    <content type="text"><![CDATA[背景在一个Flask + Oracle项目中，使用第三方库cx_oracle在更新表时突然出现了报错： 1cx_Oracle.DatabaseError: ORA-01461: 仅可以为插入 LONG 列的 LONG 值赋值 表结构如下： 12345678910-- Create tablecreate table FW_SRC_POOLS( id NUMBER not null, isvaild VARCHAR2(1) default 1 not null, name VARCHAR2(1000) not null, department VARCHAR2(1000) not null, ip VARCHAR2(4000) not null, description VARCHAR2(4000)) 排查过程先根据错误号，看下说明，可能原因有如下三种。 1、插入到字符串长度大于4000字节。2、插入到表中的记录的某个字段数据的实际长度大于2000个字节（如果是UTF-8，则是1333个字节）；或者是插入的记录中有两个或两个以上长度大于2000字节的字符串。3、数据库与客户端的JDBC驱动不匹配。 检查字符串长度 考虑可能是ip字段过长，打印一下长度： 12len(s)3653 虽然比较长，但是还是在表字段定义的长度4000范围之内的。 尝试直接连接数据库操作： 1update FW_SRC_POOLS set ip = 'xxxx' where id = 'XXX' 发现也是执行成功的。 检查字符串编码类型 的确是unicode类型，那么我们通过str()转换成str类型试下，果然就成功了。 结论不同类型的字符编码在oracle中占据的长度是不同的，在python2环境下，使用str类型要比unicode类型节省空间，但python3中默认都是unicode，应该就比较麻烦一点。不过这也仅仅是比较偷懒的做法。 再看下oracle官网的说明，还是建议把字段类型换成CLOB，可以一劳永逸。 The Oracle docs note this on the ORA-01461 error: ORA-01461 can bind a LONG value only for insert into a LONG column Cause: An attempt was made to insert a value from a LONG datatype into another datatype. This is not allowed. Action: Do not try to insert LONG datatypes into other types of columns. Answer: The LONG and LONG RAW datatypes have been deprecated and the easiest solution to the ORA-01461 error is to change the column datatype to as CLOB. http://www.dba-oracle.com/t_ora_01461_can_bind_a_long_value_only_for_insert_into_a_long_column.htm]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>oracle</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>oracle</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[celery beat之windows环境的使用]]></title>
     <url>%2Fcelery-beat%E4%B9%8Bwindows%E7%8E%AF%E5%A2%83%E7%9A%84%E4%BD%BF%E7%94%A8.html</url>
     <content type="text"><![CDATA[背景前期使用Flask + Celery + Redis搭建了一个后台定时任务，由于服务器是windows环境，在部署后，启动celery beat出现了如下的报错： 12E:\Python\WorkSpace\hzinfo&gt;celery worker -A manage.celery -B --loglevel=info-B option does not work on Windows. Please run celery beat as a separate service. 解决办法既然提示说需要单独运行celery beat，那么还是分步进行： 启动celery： 1start /b celery worker -A manage.celery --loglevel=info -c 1 -f "celery_app/celery.log" 启动celery beat： 1celery -A manage.celery beat -s "celery_app/celerybeat-schedule" 启动flask： 1python manage.py runserver 在程序中，配置的是晚上18点35分执行任务，执行情况如下： 在celery beat窗口： 1[2019-05-29 18:35:00,006: INFO/MainProcess] Scheduler: Sending due task fw_pool_src_sync (app.firewall.fwPoolSync.src_sync) 在celery主程序中指定为log文件中： 123[2019-05-29 18:35:00,006: INFO/MainProcess] Received task: app.firewall.fwPoolSync.src_sync[f7e89a84-caaa-42dd-a799-d939fb5d95b4][2019-05-29 18:35:23,858: INFO/Worker-1] start[2019-05-29 18:35:23,904: INFO/MainProcess] Task app.firewall.fwPoolSync.src_sync[f7e89a84-caaa-42dd-a799-d939fb5d95b4] succeeded in 23.8989999294s: success! 扩展果然部署服务器还是Linux比较好，windows就比较麻烦。看了下celery官网，并没有针对不同的操作系统进行区分。 更多可参考：http://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html#starting-the-scheduler]]></content>
@@ -9,8 +23,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -101,8 +115,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1105,8 +1119,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>

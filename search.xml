@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[VMWare之虚拟机频繁挂起问题]]></title>
+    <url>%2FVMWare%E4%B9%8B%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%A2%91%E7%B9%81%E6%8C%82%E8%B5%B7%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景VMware环境：Vsphere ESXi 5.5 虚拟机：win7 32bit 近期新安装了一台虚拟机，发现在运行过程中会时不时就出现挂起的情况。 问题排查 先检查控制台报警信息，发现没有任何报警。 再检查这台虚拟机所在的主机是否有资源异常或警报，也未发现任何警报。 检查这台虚拟机所在的存储是否有告警，也未发现任何警报。 检查这台虚拟机编辑配置 - 选项 - 电源管理，可以发现当客户端操作系统进入待机是，会导致虚拟机挂起。 再检查下这台虚拟机的电源选项 果然，是30分钟进入睡眠的。将电源和关闭显示器修改了”从不”即可。 结论虚拟机挂起，除了显而易见的警报告警之外就要考虑一下是不是windows系统的睡眠、休眠、待机的问题了。 华为的论坛上也有相关的案例，可参考： https://support.huawei.com/enterprise/zh/knowledge/EKB1000098044]]></content>
+      <categories>
+        <category>操作系统</category>
+        <category>VMware</category>
+      </categories>
+      <tags>
+        <tag>操作系统</tag>
+        <tag>VMware</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[ORA-01461:仅可以为插入 LONG 列的 LONG 值赋值]]></title>
     <url>%2FORA-01461-%E4%BB%85%E5%8F%AF%E4%BB%A5%E4%B8%BA%E6%8F%92%E5%85%A5-LONG-%E5%88%97%E7%9A%84-LONG-%E5%80%BC%E8%B5%8B%E5%80%BC.html</url>
     <content type="text"><![CDATA[背景在一个Flask + Oracle项目中，使用第三方库cx_oracle在更新表时突然出现了报错： 1cx_Oracle.DatabaseError: ORA-01461: 仅可以为插入 LONG 列的 LONG 值赋值 表结构如下： 12345678910-- Create tablecreate table FW_SRC_POOLS( id NUMBER not null, isvaild VARCHAR2(1) default 1 not null, name VARCHAR2(1000) not null, department VARCHAR2(1000) not null, ip VARCHAR2(4000) not null, description VARCHAR2(4000)) 排查过程先根据错误号，看下说明，可能原因有如下三种。 1、插入到字符串长度大于4000字节。2、插入到表中的记录的某个字段数据的实际长度大于2000个字节（如果是UTF-8，则是1333个字节）；或者是插入的记录中有两个或两个以上长度大于2000字节的字符串。3、数据库与客户端的JDBC驱动不匹配。 检查字符串长度 考虑可能是ip字段过长，打印一下长度： 12len(s)3653 虽然比较长，但是还是在表字段定义的长度4000范围之内的。 尝试直接连接数据库操作： 1update FW_SRC_POOLS set ip = 'xxxx' where id = 'XXX' 发现也是执行成功的。 检查字符串编码类型 的确是unicode类型，那么我们通过str()转换成str类型试下，果然就成功了。 结论不同类型的字符编码在oracle中占据的长度是不同的，在python2环境下，使用str类型要比unicode类型节省空间，但python3中默认都是unicode，应该就比较麻烦一点。不过这也仅仅是比较偷懒的做法。 再看下oracle官网的说明，还是建议把字段类型换成CLOB，可以一劳永逸。 The Oracle docs note this on the ORA-01461 error: ORA-01461 can bind a LONG value only for insert into a LONG column Cause: An attempt was made to insert a value from a LONG datatype into another datatype. This is not allowed. Action: Do not try to insert LONG datatypes into other types of columns. Answer: The LONG and LONG RAW datatypes have been deprecated and the easiest solution to the ORA-01461 error is to change the column datatype to as CLOB. http://www.dba-oracle.com/t_ora_01461_can_bind_a_long_value_only_for_insert_into_a_long_column.htm]]></content>
@@ -23,8 +36,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -115,8 +128,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1119,8 +1132,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1222,8 +1235,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

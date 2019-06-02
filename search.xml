@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[python之微信登陆KeyError: pass_ticket问题]]></title>
+    <url>%2Fpython%E4%B9%8B%E5%BE%AE%E4%BF%A1%E7%99%BB%E9%99%86KeyError-pass-ticket%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景需求：当有异常情况时，通过python控制微信向自己发送消息。 当前python的微信第三方库比较成熟的有itchat，pywx等。浏览了一下他们的官网，pywx是基于itchat的封装，并且直接封装提供logger，可以给通过logger的方式调用来给指定的人发送微信消息推送。 于是选择pywx。 参考官网进行调用登陆时，刚扫登陆二维码就异常报错了： 123456789101112131415Loading the contact, this may take a little while.Traceback (most recent call last): File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/IPython/core/interactiveshell.py", line 3291, in run_code exec(code_obj, self.user_global_ns, self.user_ns) File "&lt;ipython-input-4-ba7301e4edc6&gt;", line 1, in &lt;module&gt; bot = Bot(console_qr=True) File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/wxpy/api/bot.py", line 86, in __init__ loginCallback=login_callback, exitCallback=logout_callback File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/itchat/components/register.py", line 35, in auto_login loginCallback=loginCallback, exitCallback=exitCallback) File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/itchat/components/login.py", line 66, in login self.show_mobile_login() File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/itchat/components/login.py", line 212, in show_mobile_login self.loginInfo['url'], self.loginInfo['pass_ticket'])KeyError: 'pass_ticket' 排查 先尝试下直接调用原生的itchat登陆： 12import itchatitchat.auto_login() 扫码果然也是异常： 123456789101112Traceback (most recent call last): File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/IPython/core/interactiveshell.py", line 3291, in run_code exec(code_obj, self.user_global_ns, self.user_ns) File "&lt;ipython-input-6-c245a7379b4c&gt;", line 1, in &lt;module&gt; itchat.auto_login() File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/itchat/components/register.py", line 35, in auto_login loginCallback=loginCallback, exitCallback=exitCallback) File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/itchat/components/login.py", line 66, in login self.show_mobile_login() File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/itchat/components/login.py", line 212, in show_mobile_login self.loginInfo['url'], self.loginInfo['pass_ticket'])KeyError: 'pass_ticket' 在官网git的issue里搜索了一下，果然有提这个issue 大意就是说微信现在把一些新账号做了限制网页登陆处理，从而导致出现上述的报错，用老的微信账号就不会有问题。 https://github.com/youfou/wxpy/issues/340 自己直接用网页版微信登陆测试： 访问：https://wx.qq.com 扫码登陆，果然是报错的 使用自己的老微信号，尝试可以登录网页版后，在通过wxpy或itchat登陆，果然是登陆成功了。 12345678itchat.auto_login()Getting uuid of QR code.Downloading QR code.Please scan the QR code to log in.Please press confirm on your phone.Loading the contact, this may take a little while.TERM environment variable not set.Login successfully as XXX 总结与扩展根据上述分析，结合Github上的issue。 的确是新注册的微信号被腾讯限制登陆网页版，而无论是wxpy还是itchat都是基于网页版微信的。只能使用注册的比较早的微信号了。 但是如果使用自己的主微信号，后续是否有被封号的危险，这个不得而知，不建议长期使用。 那么使用微信作为后台推送消息这条路差不多都封死了。 itchat项目上有介绍一个itchatmp项目，是控制微信公众号实现自动答复的，但是微信公众号是否有办法主动给用户推送消息。这个还有待研究。 更多内容可参考项目的官网： itchat：https://itchat.readthedocs.io/zh/latest/ itchatmp：https://itchatmp.readthedocs.io/zh_CN/latest/ wxpy：http://wxpy.readthedocs.io]]></content>
+      <categories>
+        <category>python</category>
+        <category>异常处理</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[celery beat之pidfile already exists问题]]></title>
     <url>%2Fcelery-beat%E4%B9%8Bpidfile-already-exists%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景在进行celery定时任务测试时，发现到点任务并未执行，检查了log发现在启动celery beat的时候有这样一个报错，所以celery beat并未启动成功。 1234(hzinfo) E:\Python\WorkSpace\hzinfo&gt;celery beat v3.1.0 (Cipater) is starting.ERROR: Pidfile (celerybeat.pid) already exists.Seems we&apos;re already running? (pid: 22220) * Restarting with stat 排查celery beat在运行时，会自动创建两个文件: pidfile：默认为celerybeat.pid，保存在项目根目录。 scheduler：默认为celerybeat-schedule，保存在项目根目录。 这里的报错说明pidfile已存在。 看下官网的说明 –pidfile File used to store the process pid. Defaults to celerybeat.pid. The program won’t start if this file already exists and the pid is still alive. 上次运行的时候，已经自动创建了，进程结束的时候并未自动删除，从而导致再次运行的时候报错了。 直接删除这个pidfile文件，再次启动celery beat 1celery -A manage.celery beat -s "celery_app/celerybeat-schedule" 运行成功了。 那么难道每次重启都得先删除么？ 虽然官网上没提，但是参考网上说法，如果在启动celery beat的时候配置pidfile参数，并将该参数设置为空，可以规避这个问题。 1start /b celery -A manage.celery beat -s &quot;celery_app/celerybeat-schedule&quot; --pidfile= 测试了下，果然并没有生成pidfile，且程序也运行成功了。 总结celery beat在运行时会生成一个pidfile文件用于记录当前的pid。且该文件不会因进程的结束而自动删除。当再次创建celery beat进程的时候，会因为已存在这个文件而启动失败。 解决方式有两种： 在启动前检测是否存在改文件并删除后再启动 通过启动时指定空参数的方式规避： 1celery -A manage.celery beat -s "celery_app/celerybeat-schedule" --pidfile=]]></content>
@@ -1248,8 +1260,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>

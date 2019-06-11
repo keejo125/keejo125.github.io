@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[FlaskFrom之单表多提交按钮实现]]></title>
+    <url>%2FFlaskFrom%E4%B9%8B%E5%8D%95%E8%A1%A8%E5%A4%9A%E6%8F%90%E4%BA%A4%E6%8C%89%E9%92%AE%E5%AE%9E%E7%8E%B0.html</url>
+    <content type="text"><![CDATA[背景使用flask实现一个针对AD账号的操作处理，需要前台输入一个ad账号，通过下面不同的按钮实现“查询”，“删除”等操作。 思路根据需求，这里涉及要一个表单中需要有多个submit按钮的实现了。 常规的FlaskForm使用为： 在forms.py中定义表单组件 123class AdUnlocker(FlaskForm): ad = StringField(u'AD账号', validators=[DataRequired()], default='kfzx-') submit = SubmitField(u'解锁') 在views.py中调用表单，并判断是否有submit触发 123456789@ad.route('/AdUnlock', methods=['GET', 'POST'])def adunlock(): form = AdUnlocker() if form.validate_on_submit(): ad = form.ad.data result = unLocker(ad) flash(result) return redirect(url_for('.adunlock')) return render_template("AD.html", form=form) 那么如果当我们需要有多个submit组件的情况呢： 在forms.py中定义表单组件 1234class AdDel(FlaskForm): ad = StringField(u'AD账号', validators=[DataRequired()], default='kfzx-') check = SubmitField(u'查询') delete = SubmitField(u'删除') 这里我们定义了两个SubmitField，不管点击了哪个按钮，均是触发了提交，那么怎么区分判断呢？ 根据官网说明，是可以检查submit按钮是否被点击，那么我们检查下对应的元素的data属性就会发现，当被提交按钮被点击是，它的data值为true，否则为false。 那就可以进行判断了： 在views.py中调用表单，并判断submit触发 123456789101112@ad.route('/AdDel', methods=['GET', 'POST'])def addel(): form = AdDel() if form.validate_on_submit(): ad = form.ad.data if form.check.data: result = queryAD(ad) elif form.delete.data: result = deleteAD(ad) flash(result) return redirect(url_for('.addel')) return render_template("AD.html", funcheader=funcheader, form=form) 扩展wtforms官网说明：https://wtforms.readthedocs.io/en/stable/fields.html#wtforms.fields.PasswordField]]></content>
+      <categories>
+        <category>python</category>
+        <category>flask</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>flask</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[python之微信登陆KeyError: pass_ticket问题]]></title>
     <url>%2Fpython%E4%B9%8B%E5%BE%AE%E4%BF%A1%E7%99%BB%E9%99%86KeyError-pass-ticket%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景需求：当有异常情况时，通过python控制微信向自己发送消息。 当前python的微信第三方库比较成熟的有itchat，pywx等。浏览了一下他们的官网，pywx是基于itchat的封装，并且直接封装提供logger，可以给通过logger的方式调用来给指定的人发送微信消息推送。 于是选择pywx。 参考官网进行调用登陆时，刚扫登陆二维码就异常报错了： 123456789101112131415Loading the contact, this may take a little while.Traceback (most recent call last): File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/IPython/core/interactiveshell.py", line 3291, in run_code exec(code_obj, self.user_global_ns, self.user_ns) File "&lt;ipython-input-4-ba7301e4edc6&gt;", line 1, in &lt;module&gt; bot = Bot(console_qr=True) File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/wxpy/api/bot.py", line 86, in __init__ loginCallback=login_callback, exitCallback=logout_callback File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/itchat/components/register.py", line 35, in auto_login loginCallback=loginCallback, exitCallback=exitCallback) File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/itchat/components/login.py", line 66, in login self.show_mobile_login() File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/itchat/components/login.py", line 212, in show_mobile_login self.loginInfo['url'], self.loginInfo['pass_ticket'])KeyError: 'pass_ticket' 排查 先尝试下直接调用原生的itchat登陆： 12import itchatitchat.auto_login() 扫码果然也是异常： 123456789101112Traceback (most recent call last): File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/IPython/core/interactiveshell.py", line 3291, in run_code exec(code_obj, self.user_global_ns, self.user_ns) File "&lt;ipython-input-6-c245a7379b4c&gt;", line 1, in &lt;module&gt; itchat.auto_login() File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/itchat/components/register.py", line 35, in auto_login loginCallback=loginCallback, exitCallback=exitCallback) File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/itchat/components/login.py", line 66, in login self.show_mobile_login() File "/Users/zhengk/PycharmProjects/Mine/venv/lib/python3.7/site-packages/itchat/components/login.py", line 212, in show_mobile_login self.loginInfo['url'], self.loginInfo['pass_ticket'])KeyError: 'pass_ticket' 在官网git的issue里搜索了一下，果然有提这个issue 大意就是说微信现在把一些新账号做了限制网页登陆处理，从而导致出现上述的报错，用老的微信账号就不会有问题。 https://github.com/youfou/wxpy/issues/340 自己直接用网页版微信登陆测试： 访问：https://wx.qq.com 扫码登陆，果然是报错的 使用自己的老微信号，尝试可以登录网页版后，在通过wxpy或itchat登陆，果然是登陆成功了。 12345678itchat.auto_login()Getting uuid of QR code.Downloading QR code.Please scan the QR code to log in.Please press confirm on your phone.Loading the contact, this may take a little while.TERM environment variable not set.Login successfully as XXX 总结与扩展根据上述分析，结合Github上的issue。 的确是新注册的微信号被腾讯限制登陆网页版，而无论是wxpy还是itchat都是基于网页版微信的。只能使用注册的比较早的微信号了。 但是如果使用自己的主微信号，后续是否有被封号的危险，这个不得而知，不建议长期使用。 那么使用微信作为后台推送消息这条路差不多都封死了。 itchat项目上有介绍一个itchatmp项目，是控制微信公众号实现自动答复的，但是微信公众号是否有办法主动给用户推送消息。这个还有待研究。 更多内容可参考项目的官网： itchat：https://itchat.readthedocs.io/zh/latest/ itchatmp：https://itchatmp.readthedocs.io/zh_CN/latest/ wxpy：http://wxpy.readthedocs.io]]></content>
@@ -21,8 +34,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -61,8 +74,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -153,8 +166,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1157,8 +1170,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1207,8 +1220,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -1260,8 +1273,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>windows</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -1383,8 +1396,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

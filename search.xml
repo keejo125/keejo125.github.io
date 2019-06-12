@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[oracle之varchar2修改为clob]]></title>
+    <url>%2Foracle%E4%B9%8Bvarchar2%E4%BF%AE%E6%94%B9%E4%B8%BAclob.html</url>
+    <content type="text"><![CDATA[背景前面为解决oracle中varchar类型过长导致插入异常提示ORA-01461问题，采用了规避的方法，详见：ORA-01461:仅可以为插入 LONG 列的 LONG 值赋值。 是在IP地址组表中，IP字段配置为varchar2(4000)类型，目前仅4000个字符，最后在使用过程中超过了大小限制。于是需要将其修改为clob类型（大小上限为4G）。 直接用alter修改 1alter table FW_SRC_POOLS modify ip clob; 报错ORA-22858：数据类型的变更无效错误。 解决方法由于表中已经存在数据了，所以不能直接修改，需要采用新增临时列的方式进行： 先将ip列名修改为ip_tmp 1alter table FW_SRC_POOLS rename column ip to IP_TMP; 新增ip列，类型为clob 1alter table FW_SRC_POOLS add ip clob; 将ip_tmp列的内容复制到ip列 1update fw_src_pools set ip=trim(ip_tmp); 删除ip_tmp列 1alter table fw_src_pools drop column ip_tmp; 以上就完成了对已有表格中存在数据的varchar类型更换为clob类型的操作，当然也可以建一个临时表的方法，不过还是这样比较方便。 需要注意的是，数据库中字段类型变了，对应的java或者python的后台也需要修改。 比如python中使用cx_oracle库，在读取clob类型时，需要使用read()方法才行。 1x = clob_param.read()]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>oracle</category>
+      </categories>
+      <tags>
+        <tag>oracle</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[FlaskFrom之单表多提交按钮实现]]></title>
     <url>%2FFlaskFrom%E4%B9%8B%E5%8D%95%E8%A1%A8%E5%A4%9A%E6%8F%90%E4%BA%A4%E6%8C%89%E9%92%AE%E5%AE%9E%E7%8E%B0.html</url>
     <content type="text"><![CDATA[背景使用flask实现一个针对AD账号的操作处理，需要前台输入一个ad账号，通过下面不同的按钮实现“查询”，“删除”等操作。 思路根据需求，这里涉及要一个表单中需要有多个submit按钮的实现了。 常规的FlaskForm使用为： 在forms.py中定义表单组件 123class AdUnlocker(FlaskForm): ad = StringField(u'AD账号', validators=[DataRequired()], default='kfzx-') submit = SubmitField(u'解锁') 在views.py中调用表单，并判断是否有submit触发 123456789@ad.route('/AdUnlock', methods=['GET', 'POST'])def adunlock(): form = AdUnlocker() if form.validate_on_submit(): ad = form.ad.data result = unLocker(ad) flash(result) return redirect(url_for('.adunlock')) return render_template("AD.html", form=form) 那么如果当我们需要有多个submit组件的情况呢： 在forms.py中定义表单组件 1234class AdDel(FlaskForm): ad = StringField(u'AD账号', validators=[DataRequired()], default='kfzx-') check = SubmitField(u'查询') delete = SubmitField(u'删除') 这里我们定义了两个SubmitField，不管点击了哪个按钮，均是触发了提交，那么怎么区分判断呢？ 根据官网说明，是可以检查submit按钮是否被点击，那么我们检查下对应的元素的data属性就会发现，当被提交按钮被点击是，它的data值为true，否则为false。 那就可以进行判断了： 在views.py中调用表单，并判断submit触发 123456789101112@ad.route('/AdDel', methods=['GET', 'POST'])def addel(): form = AdDel() if form.validate_on_submit(): ad = form.ad.data if form.check.data: result = queryAD(ad) elif form.delete.data: result = deleteAD(ad) flash(result) return redirect(url_for('.addel')) return render_template("AD.html", funcheader=funcheader, form=form) 扩展wtforms官网说明：https://wtforms.readthedocs.io/en/stable/fields.html#wtforms.fields.PasswordField]]></content>
@@ -1220,8 +1233,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -1396,8 +1409,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[cx_oracle之DPI-1054:connection cannot be closed when open statements or LOBs exist]]></title>
+    <url>%2Fcx-oracle%E4%B9%8BDPI-1054-connection-cannot-be-closed-when-open-statements-or-LOBs-exist.html</url>
+    <content type="text"><![CDATA[背景在flask项目中，将oracle数据表中有个字段从varchar2类型修改为clob之后，测试通过后，上线运行时发现有一个报错： 1234567891011raised exception: DatabaseError(&lt;cx_Oracle._Error object at 0x052B49C0&gt;,)Traceback (most recent call last): File "d:\python\venv\hzinfo\lib\site-packages\celery\app\trace.py", line 218, in trace_task R = retval = fun(*args, **kwargs) File "d:\python\venv\hzinfo\lib\site-packages\celery\app\trace.py", line 396, in __protected_call__ return self.run(*args, **kwargs) File "D:\hzinfoworkspace\hzinfo\app\firewall\fwPoolSync.py", line 106, in src_sync src_before, src_dict = getSrcPoolBefore(departments) File "D:\hzinfoworkspace\hzinfo\app\firewall\fwPoolSync.py", line 98, in getSrcPoolBefore db.close()DatabaseError: DPI-1054: connection cannot be closed when open statements or LOBs exist 排查根据报错，可定位到cx_oracle的问题，导致db连接无法关闭。检查下测试环境和线上环境差异： 线上环境cx_oracle版本：6.0.2 测试环境cx_oracle版本：5.3 python版本均为：2.7.9 那么应该就是cx_oracle版本导致了，尝试直接更新到最新版本的cx_oracle： 1234567pip install --upgrade cx_oracleInstalling collected packages: cx-oracle Found existing installation: cx-Oracle 6.0.2 Uninstalling cx-Oracle-6.0.2: Successfully uninstalled cx-Oracle-6.0.2Successfully installed cx-oracle-7.1.3 直接更新到了7.1.3版本，再次运行就成功了。 总结根据报错代码在github上查了下，果然有人提过issue。 作者答复说在6.2版本之前的确是存在这个问题的，有两种方法可以解决规避： 在flask或者Django项目中也可以不要显性的调用db.close()，让系统自动关闭就可以了。 更新cx_oracle版本到6.2及以上 更多内容可直接参考： https://github.com/oracle/python-cx_Oracle/issues/138 对LOBs的介绍可参考： https://docs.oracle.com/cd/B10501_01/appdev.920/a96591/adl01int.htm]]></content>
+      <categories>
+        <category>python</category>
+        <category>flask</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>flask</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[oracle之varchar2修改为clob]]></title>
     <url>%2Foracle%E4%B9%8Bvarchar2%E4%BF%AE%E6%94%B9%E4%B8%BAclob.html</url>
     <content type="text"><![CDATA[背景前面为解决oracle中varchar类型过长导致插入异常提示ORA-01461问题，采用了规避的方法，详见：ORA-01461:仅可以为插入 LONG 列的 LONG 值赋值。 是在IP地址组表中，IP字段配置为varchar2(4000)类型，目前仅4000个字符，最后在使用过程中超过了大小限制。于是需要将其修改为clob类型（大小上限为4G）。 直接用alter修改 1alter table FW_SRC_POOLS modify ip clob; 报错ORA-22858：数据类型的变更无效错误。 解决方法由于表中已经存在数据了，所以不能直接修改，需要采用新增临时列的方式进行： 先将ip列名修改为ip_tmp 1alter table FW_SRC_POOLS rename column ip to IP_TMP; 新增ip列，类型为clob 1alter table FW_SRC_POOLS add ip clob; 将ip_tmp列的内容复制到ip列 1update fw_src_pools set ip=trim(ip_tmp); 删除ip_tmp列 1alter table fw_src_pools drop column ip_tmp; 以上就完成了对已有表格中存在数据的varchar类型更换为clob类型的操作，当然也可以建一个临时表的方法，不过还是这样比较方便。 需要注意的是，数据库中字段类型变了，对应的java或者python的后台也需要修改。 比如python中使用cx_oracle库，在读取clob类型时，需要使用read()方法才行。 1x = clob_param.read()]]></content>
@@ -47,8 +60,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -87,8 +100,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -179,8 +192,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1183,8 +1196,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[java之clob类型数据的处理]]></title>
+    <url>%2Fjava%E4%B9%8Bclob%E7%B1%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E7%9A%84%E5%A4%84%E7%90%86.html</url>
+    <content type="text"><![CDATA[背景由于Java对于数据库返回的clob类型不能直接当做String类型处理，需经过转换才可以读取。之前的转换代码如下： 12345678public void setIp_clob(oracle.sql.CLOB ip_clob) &#123; this.ip_clob = ip_clob; try &#123; ip = ip_clob.getSubString(1, (int)ip_clob.getLength()); &#125; catch (SQLException e) &#123; e.printStackTrace(); &#125; &#125; 但是发现处理完返回给前台展示的数据不全。 排查考虑可能转换代码中截取长度这儿存在问题，oracle.sql.CLOB有两种获取长度的方式： Clob.getLenth() Clob.length() 分别打印出来： 12System.out.println(ip_clob.length());System.out.println(ip_clob.getLength()); 输出为： 123653106 果然是不一样的，length()会长一点。 于是修改代码： 12345678public void setIp_clob(oracle.sql.CLOB ip_clob) &#123; this.ip_clob = ip_clob; try &#123; ip = ip_clob.getSubString(1, (int)ip_clob.length()); &#125; catch (SQLException e) &#123; e.printStackTrace(); &#125; &#125; 注：在实际中，两者并非都是length()获取的更长，但根据length()获取的值来截取不会存在数据不全的问题。 修改了长度获取方式之后，问题就解决了。但通过getSubString()的方式不是很好，而且使用使用oracle.sql.COLB会存在于oracle驱动的强绑定。 还建议按如下方式处理： 123456789101112131415import java.sql.Clob;import org.apache.commons.io.IOUtils; public void setIp_clob(Clob ip_clob) &#123; this.ip_clob = ip_clob; try &#123; ip = IOUtils.toString(ip_clob.getCharacterStream()); &#125; catch (IOException e) &#123; // TODO Auto-generated catch block e.printStackTrace(); &#125; catch (SQLException e) &#123; // TODO Auto-generated catch block e.printStackTrace(); &#125; &#125; 通过调用java.sql.Clob，避难对oracle驱动的依赖，然后利用IOUtis包来进行处理得到string类型的输出。 拓展关于oracle.sql.CLOB中的长度获取： length():Implements the Clob interface method. Returns the number of characters in the CLOB value designated by this Clob object. Return length of the CLOB in characters。 https://download.oracle.com/otn_hosted_doc/jdeveloper/905/jdbc-javadoc/oracle/sql/CLOB.html#length() getLength(): Retreive the length of a datum. Return the length of the datum in bytes. https://download.oracle.com/otn_hosted_doc/jdeveloper/905/jdbc-javadoc/oracle/sql/Datum.html#getLength() 可见length()是返回字符数，而getLength()为返回bytes数。]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>oracle</tag>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[cx_oracle之DPI-1054:connection cannot be closed when open statements or LOBs exist]]></title>
     <url>%2Fcx-oracle%E4%B9%8BDPI-1054-connection-cannot-be-closed-when-open-statements-or-LOBs-exist.html</url>
     <content type="text"><![CDATA[背景在flask项目中，将oracle数据表中有个字段从varchar2类型修改为clob之后，测试通过后，上线运行时发现有一个报错： 1234567891011raised exception: DatabaseError(&lt;cx_Oracle._Error object at 0x052B49C0&gt;,)Traceback (most recent call last): File "d:\python\venv\hzinfo\lib\site-packages\celery\app\trace.py", line 218, in trace_task R = retval = fun(*args, **kwargs) File "d:\python\venv\hzinfo\lib\site-packages\celery\app\trace.py", line 396, in __protected_call__ return self.run(*args, **kwargs) File "D:\hzinfoworkspace\hzinfo\app\firewall\fwPoolSync.py", line 106, in src_sync src_before, src_dict = getSrcPoolBefore(departments) File "D:\hzinfoworkspace\hzinfo\app\firewall\fwPoolSync.py", line 98, in getSrcPoolBefore db.close()DatabaseError: DPI-1054: connection cannot be closed when open statements or LOBs exist 排查根据报错，可定位到cx_oracle的问题，导致db连接无法关闭。检查下测试环境和线上环境差异： 线上环境cx_oracle版本：6.0.2 测试环境cx_oracle版本：5.3 python版本均为：2.7.9 那么应该就是cx_oracle版本导致了，尝试直接更新到最新版本的cx_oracle： 1234567pip install --upgrade cx_oracleInstalling collected packages: cx-oracle Found existing installation: cx-Oracle 6.0.2 Uninstalling cx-Oracle-6.0.2: Successfully uninstalled cx-Oracle-6.0.2Successfully installed cx-oracle-7.1.3 直接更新到了7.1.3版本，再次运行就成功了。 总结根据报错代码在github上查了下，果然有人提过issue。 作者答复说在6.2版本之前的确是存在这个问题的，有两种方法可以解决规避： 在flask或者Django项目中也可以不要显性的调用db.close()，让系统自动关闭就可以了。 更新cx_oracle版本到6.2及以上 更多内容可直接参考： https://github.com/oracle/python-cx_Oracle/issues/138 对LOBs的介绍可参考： https://docs.oracle.com/cd/B10501_01/appdev.920/a96591/adl01int.htm]]></content>
@@ -60,8 +72,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -100,8 +112,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -192,8 +204,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1196,8 +1208,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>

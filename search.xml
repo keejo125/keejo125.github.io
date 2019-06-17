@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[python之中文字符串分割问题]]></title>
+    <url>%2Fpython%E4%B9%8B%E4%B8%AD%E6%96%87%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%86%E5%89%B2%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景现有人员的姓名，希望通过字符串分割，分别获取人员的姓和名。（默认都是单姓，即取第一个字就是姓，剩下的为名）。 由于python2存在中文字符编码问题，并非默认都是utf-8，所以在进行字符串截取时就可能存在问题。 12345name = '郑小凯'print(name[0])�print(name[1:])��小凯 发现就出现乱码了。 排查不通过print输出的话： 123456name'\xe9\x83\x91\xe5\xb0\x8f\xe5\x87\xaf'name[0]'\xe9'name[1:]'\x83\x91\xe5\xb0\x8f\xe5\x87\xaf' 可见由于python2中中文的编码为gbk，两个字符才是一个汉字，所以导致了乱码。 那么我们将字符转换成Unicode类型，即utf-8编码后再尝试一下： 1234567name1 = name.decode('utf-8')name1u'\u90d1\u5c0f\u51ef'print(name1[0])郑print(name1[1:])小凯 这样就得到我们想要的结果。 结论在utf-8编码中，每个汉字都是一个值，所以可以直接使用字符串分割来操作。而其他编码则存在多个字符合并起来才是一个汉字，导致字符串分割出现乱码问题。 故在python2中，对中文汉字进行字符串分割需要先通过decode转换成utf-8类型之后再操作，后续如有需要可以再通过encode转换回所需要的编码类型。 现在基本上在http请求中传递的均为utf-8类型，可以直接使用字符串分割处理。 当然后续可以的话还是建议使用python3，彻底摆脱中文字符串编码的问题。]]></content>
+      <categories>
+        <category>python</category>
+        <category>异常处理</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[iPhone之系统升级过程断电处理]]></title>
     <url>%2FiPhone%E4%B9%8B%E7%B3%BB%E7%BB%9F%E5%8D%87%E7%BA%A7%E8%BF%87%E7%A8%8B%E6%96%AD%E7%94%B5%E5%A4%84%E7%90%86.html</url>
     <content type="text"><![CDATA[背景之前在用的一个iPhone 5s手机在系统升级过程中，没有连接电源线，结果意外断电了。再次连上电源后，先白屏幕黑苹果图标之后，就显示”连接iTunes”的提示。 连接上mac并打开iTunes之后，提示”iPhone [您的设备名称] 出现问题，需要进行更新或恢复。” 点击恢复的话，会提示手机会抹掉所有数据并初始化，于是点击更新。 结果iTunes提示正在下载软件之后，过了很长一段时间，手机自动重启，再次回到”连接iTunes”提示。 无限循环了。 解决在查找了官网解决方案以及网上各种帖子之后，均没有任何进展，本来打算放弃点击恢复重新刷机了。 突然想到，会不会是因为下载软件没有失败的原因导致呢。 于是在iTunes提示正在下载软件的时候，点击iTunes页面出现的下载按钮，果然下载进度很慢，提示预计还需要5个小时。而手机自动重启时间远短于这个时间。 所以判断是由于手机等待iTunes更新系统有一定的超时时间，而系统固件下载没在超时时间内完成，导致不停的重复。 最后解决办法如下 在连接到iTunes之后，先取消更新， 待itunes识别到手机之后，会自动先下载系统更新包。 可点击下载按钮查看，待更新包下载完成 再次点击更新系统，更新过程中系统会自动重启 待系统启动即可。 苹果官方对该问题的解决办法描述如下： https://support.apple.com/zh-cn/HT203122 可能还是高估了网络下载的情况，而且iTunes软件的查看下载进度的按钮仅在有下载任务的时候才出现，这点也很不友好。 当然还是希望大家都不要碰到这种情况了。]]></content>

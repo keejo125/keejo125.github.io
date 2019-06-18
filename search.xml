@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[selenium之IE11环境配置]]></title>
+    <url>%2Fselenium%E4%B9%8BIE11%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE.html</url>
+    <content type="text"><![CDATA[安装配置 安装Python，当前使用的版本为Python3.7.3 官网下载地址：https://www.python.org/getit/ 安装selenium库，当前下载的selenium版本为selenium3.141 1pip install selenium 下载IEdriver IEdriver的版本与selenium的版本是有对应关系的，上面安装的selenium版本为3.141，故在下面的driver下载页面中找到对应的版本目录进去找到对应的版本下载。 https://selenium-release.storage.googleapis.com/index.html 放置IEdriver IEdriver需放在系统的PATH环境变量中，可以直接调用，否则在后续的运行中会提示找不到driver的报错。 由于python安装好之后是会将python的目录添加到环境变量的(在安装python的时候可选)，所以建议直接把IEdriver直接放到python安装的根目录即可，毕竟这个也只有python会调用。 配置IE11 在新版的selenium要求IE7及以上版本的IE中的保护模式进行配置。不同区域的保护模式配置需保持一致，要么全部启用，要么全部禁用。 配置方法为： IE - Internet选项 - 安全 分别将4个区域的”启用保护模式”选项配置为一致 配置注册表 仅IE11下使用selenium，需要进行配置，方法如下： 在运行中输入regedit打开注册表 找到键： 32位系统：HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BFCACHE 64位系统：HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BFCACHE 其中FEATURE_BFCACHE键可能不存在的，需要自己新建 创建一个DWORD类型的注册表键值对，键名叫iexplore.exe，值为0 配置结束在python代码中引入并运行即可。 扩展 关于IE配置 在上述的安装配置过程中，如果为配置IE的”启用保护模式”，就会引发如下的报错： 12 raise exception_class(message, screen, stacktrace)selenium.common.exceptions.SessionNotCreatedException: Message: Unexpected error launching Internet Explorer. Protected Mode settings are not the same for all zones. Enable Protected Mode must be set to the same value (enabled or disabled) for all zones. 网上有说通过配置如下代码： 12from selenium.webdriver.common.desired_capabilities import DesiredCapabilitiesDesiredCapabilities.INTERNETEXPLORER['ignoreProtectedModeSettings'] = True 但是我测试没有成功，还是按照官方要求，配置IE比较稳妥。 关于注册表配置 根据官网说明，仅IE11需要对注册表进行配置，在未配置注册表的情况下，大部分情况下selenium还是表现正常的，但是有时会有如下报错： 12345678910 File "C:\Program Files\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 841, in get_cookies return self.execute(Command.GET_ALL_COOKIES)['value'] File "C:\Program Files\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute self.error_handler.check_response(response) File "C:\Program Files\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response raise exception_class(message, screen, stacktrace)selenium.common.exceptions.NoSuchWindowException: Message: Unable to get browser 我是在通过driver获取cookies信息时不停的出现这种报错。 1cookies = driver.get_cookies() 修改注册表之后，问题解决。 有问题还是得多看看官网，很多都有说明。 官网地址：https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver]]></content>
+      <categories>
+        <category>python</category>
+        <category>网络爬虫与数据分析</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[python之中文字符串分割问题]]></title>
     <url>%2Fpython%E4%B9%8B%E4%B8%AD%E6%96%87%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%86%E5%89%B2%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景现有人员的姓名，希望通过字符串分割，分别获取人员的姓和名。（默认都是单姓，即取第一个字就是姓，剩下的为名）。 由于python2存在中文字符编码问题，并非默认都是utf-8，所以在进行字符串截取时就可能存在问题。 12345name = '郑小凯'print(name[0])�print(name[1:])��小凯 发现就出现乱码了。 排查不通过print输出的话： 123456name'\xe9\x83\x91\xe5\xb0\x8f\xe5\x87\xaf'name[0]'\xe9'name[1:]'\x83\x91\xe5\xb0\x8f\xe5\x87\xaf' 可见由于python2中中文的编码为gbk，两个字符才是一个汉字，所以导致了乱码。 那么我们将字符转换成Unicode类型，即utf-8编码后再尝试一下： 1234567name1 = name.decode('utf-8')name1u'\u90d1\u5c0f\u51ef'print(name1[0])郑print(name1[1:])小凯 这样就得到我们想要的结果。 结论在utf-8编码中，每个汉字都是一个值，所以可以直接使用字符串分割来操作。而其他编码则存在多个字符合并起来才是一个汉字，导致字符串分割出现乱码问题。 故在python2中，对中文汉字进行字符串分割需要先通过decode转换成utf-8类型之后再操作，后续如有需要可以再通过encode转换回所需要的编码类型。 现在基本上在http请求中传递的均为utf-8类型，可以直接使用字符串分割处理。 当然后续可以的话还是建议使用python3，彻底摆脱中文字符串编码的问题。]]></content>

@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[python logging的简单应用]]></title>
+    <url>%2Fpython-logging%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8.html</url>
+    <content type="text"><![CDATA[背景在一些简单场景下，可以使用单python文件实现。这是也可以通过logging模块来记录执行日志。 一般情况通过shell直接运行脚本，建议配置console输出和文件输出log。其中文件输出建议使用按时间分割或者按大小分割，以免日志文件过大，导致后续排查问题困难。 实现简单的场景下，可以直接使用basicConfig来配置： 123456789timedRotatingFileHandler = handlers.TimedRotatingFileHandler( filename='log.log', when='midnight' )streamHandler = logging.StreamHandler()logging.basicConfig(level=logging.INFO,#控制台打印的日志级别 format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s', #日志格式 handlers=[timedRotatingFileHandler, streamHandler] ) 其中： format：配置日志格式。 StreamHandler：即console输出，如使用命令行执行，就会直接在命令行输出信息。 TimedRotatingFileHandler：为按时间分割的log文件。 以上就是一个简单日志配置，实现脚本运行时，日志同步输出到按时间分割的文件和console。 拓展logging模块的basicConfig其实是自带文件记录的，可以先看下它的定义： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152def basicConfig(**kwargs): """ Do basic configuration for the logging system. This function does nothing if the root logger already has handlers configured. It is a convenience method intended for use by simple scripts to do one-shot configuration of the logging package. The default behaviour is to create a StreamHandler which writes to sys.stderr, set a formatter using the BASIC_FORMAT format string, and add the handler to the root logger. A number of optional keyword arguments may be specified, which can alter the default behaviour. filename Specifies that a FileHandler be created, using the specified filename, rather than a StreamHandler. filemode Specifies the mode to open the file, if filename is specified (if filemode is unspecified, it defaults to 'a'). format Use the specified format string for the handler. datefmt Use the specified date/time format. style If a format string is specified, use this to specify the type of format string (possible values '%', '&#123;', '$', for %-formatting, :meth:`str.format` and :class:`string.Template` - defaults to '%'). level Set the root logger level to the specified level. stream Use the specified stream to initialize the StreamHandler. Note that this argument is incompatible with 'filename' - if both are present, 'stream' is ignored. handlers If specified, this should be an iterable of already created handlers, which will be added to the root handler. Any handler in the list which does not have a formatter assigned will be assigned the formatter created in this function. Note that you could specify a stream created using open(filename, mode) rather than passing the filename and mode in. However, it should be remembered that StreamHandler does not close its stream (since it may be using sys.stdout or sys.stderr), whereas FileHandler closes its stream when the handler is closed. .. versionchanged:: 3.2 Added the ``style`` parameter. .. versionchanged:: 3.3 Added the ``handlers`` parameter. A ``ValueError`` is now thrown for incompatible arguments (e.g. ``handlers`` specified together with ``filename``/``filemode``, or ``filename``/``filemode`` specified together with ``stream``, or ``handlers`` specified together with ``stream``. """ # Add thread safety in case someone mistakenly calls # basicConfig() from multiple threads 可以看出可以通过在basicConfig()中有如下三个参数： filename：记录日志的文件名 filemode：记录日志的方式(a为追加，w为覆盖) stream：console输出 可以通过配置filename，filemode参数来配置文件输出。但仅是单文件输出而已。如果这两个参数留空，那么默认stream输出，这两种无法直接使用同时配置。 若需要同时有console输出和文件记录那么需要使用另一个参数： handlers：通过先定义handler，并添加到该参数中，即可。 另外，需要注意的是，在自行定义handler时， 基础的三个handler：StreamHandler, FileHandler 和 NullHandler是直接定义在logging模块中的，而其他handler，如按TimedRotatingFileHandler、SocketHandler、SysLogHandler 等则需要通过logging.handlers模块引入。 123456import loggingstreamHandler = logging.StreamHandler()timedRotatingFileHandler = logging.handlers.TimedRotatingFileHandler( filename='log.log', when='midnight' )]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[selenium之IE11环境配置]]></title>
     <url>%2Fselenium%E4%B9%8BIE11%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE.html</url>
     <content type="text"><![CDATA[安装配置 安装Python，当前使用的版本为Python3.7.3 官网下载地址：https://www.python.org/getit/ 安装selenium库，当前下载的selenium版本为selenium3.141 1pip install selenium 下载IEdriver IEdriver的版本与selenium的版本是有对应关系的，上面安装的selenium版本为3.141，故在下面的driver下载页面中找到对应的版本目录进去找到对应的版本下载。 https://selenium-release.storage.googleapis.com/index.html 放置IEdriver IEdriver需放在系统的PATH环境变量中，可以直接调用，否则在后续的运行中会提示找不到driver的报错。 由于python安装好之后是会将python的目录添加到环境变量的(在安装python的时候可选)，所以建议直接把IEdriver直接放到python安装的根目录即可，毕竟这个也只有python会调用。 配置IE11 在新版的selenium要求IE7及以上版本的IE中的保护模式进行配置。不同区域的保护模式配置需保持一致，要么全部启用，要么全部禁用。 配置方法为： IE - Internet选项 - 安全 分别将4个区域的”启用保护模式”选项配置为一致 配置注册表 仅IE11下使用selenium，需要进行配置，方法如下： 在运行中输入regedit打开注册表 找到键： 32位系统：HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BFCACHE 64位系统：HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BFCACHE 其中FEATURE_BFCACHE键可能不存在的，需要自己新建 创建一个DWORD类型的注册表键值对，键名叫iexplore.exe，值为0 配置结束在python代码中引入并运行即可。 扩展 关于IE配置 在上述的安装配置过程中，如果为配置IE的”启用保护模式”，就会引发如下的报错： 12 raise exception_class(message, screen, stacktrace)selenium.common.exceptions.SessionNotCreatedException: Message: Unexpected error launching Internet Explorer. Protected Mode settings are not the same for all zones. Enable Protected Mode must be set to the same value (enabled or disabled) for all zones. 网上有说通过配置如下代码： 12from selenium.webdriver.common.desired_capabilities import DesiredCapabilitiesDesiredCapabilities.INTERNETEXPLORER['ignoreProtectedModeSettings'] = True 但是我测试没有成功，还是按照官方要求，配置IE比较稳妥。 关于注册表配置 根据官网说明，仅IE11需要对注册表进行配置，在未配置注册表的情况下，大部分情况下selenium还是表现正常的，但是有时会有如下报错： 12345678910 File "C:\Program Files\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 841, in get_cookies return self.execute(Command.GET_ALL_COOKIES)['value'] File "C:\Program Files\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute self.error_handler.check_response(response) File "C:\Program Files\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response raise exception_class(message, screen, stacktrace)selenium.common.exceptions.NoSuchWindowException: Message: Unable to get browser 我是在通过driver获取cookies信息时不停的出现这种报错。 1cookies = driver.get_cookies() 修改注册表之后，问题解决。 有问题还是得多看看官网，很多都有说明。 官网地址：https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver]]></content>
@@ -1295,8 +1306,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -1471,8 +1482,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

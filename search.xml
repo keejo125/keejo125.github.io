@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[PPT制作基础]]></title>
+    <url>%2FPPT%E5%88%B6%E4%BD%9C%E5%9F%BA%E7%A1%80.html</url>
+    <content type="text"><![CDATA[该内容为万门大学《征服老板：零基础做出高逼格PPT》学习笔记，主要以思维导图为主 以下为思维导图大纲：]]></content>
+      <categories>
+        <category>PPT</category>
+      </categories>
+      <tags>
+        <tag>PPT</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[python logging的简单应用]]></title>
     <url>%2Fpython-logging%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8.html</url>
     <content type="text"><![CDATA[背景在一些简单场景下，可以使用单python文件实现。这是也可以通过logging模块来记录执行日志。 一般情况通过shell直接运行脚本，建议配置console输出和文件输出log。其中文件输出建议使用按时间分割或者按大小分割，以免日志文件过大，导致后续排查问题困难。 实现简单的场景下，可以直接使用basicConfig来配置： 123456789timedRotatingFileHandler = handlers.TimedRotatingFileHandler( filename='log.log', when='midnight' )streamHandler = logging.StreamHandler()logging.basicConfig(level=logging.INFO,#控制台打印的日志级别 format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s', #日志格式 handlers=[timedRotatingFileHandler, streamHandler] ) 其中： format：配置日志格式。 StreamHandler：即console输出，如使用命令行执行，就会直接在命令行输出信息。 TimedRotatingFileHandler：为按时间分割的log文件。 以上就是一个简单日志配置，实现脚本运行时，日志同步输出到按时间分割的文件和console。 拓展logging模块的basicConfig其实是自带文件记录的，可以先看下它的定义： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152def basicConfig(**kwargs): """ Do basic configuration for the logging system. This function does nothing if the root logger already has handlers configured. It is a convenience method intended for use by simple scripts to do one-shot configuration of the logging package. The default behaviour is to create a StreamHandler which writes to sys.stderr, set a formatter using the BASIC_FORMAT format string, and add the handler to the root logger. A number of optional keyword arguments may be specified, which can alter the default behaviour. filename Specifies that a FileHandler be created, using the specified filename, rather than a StreamHandler. filemode Specifies the mode to open the file, if filename is specified (if filemode is unspecified, it defaults to 'a'). format Use the specified format string for the handler. datefmt Use the specified date/time format. style If a format string is specified, use this to specify the type of format string (possible values '%', '&#123;', '$', for %-formatting, :meth:`str.format` and :class:`string.Template` - defaults to '%'). level Set the root logger level to the specified level. stream Use the specified stream to initialize the StreamHandler. Note that this argument is incompatible with 'filename' - if both are present, 'stream' is ignored. handlers If specified, this should be an iterable of already created handlers, which will be added to the root handler. Any handler in the list which does not have a formatter assigned will be assigned the formatter created in this function. Note that you could specify a stream created using open(filename, mode) rather than passing the filename and mode in. However, it should be remembered that StreamHandler does not close its stream (since it may be using sys.stdout or sys.stderr), whereas FileHandler closes its stream when the handler is closed. .. versionchanged:: 3.2 Added the ``style`` parameter. .. versionchanged:: 3.3 Added the ``handlers`` parameter. A ``ValueError`` is now thrown for incompatible arguments (e.g. ``handlers`` specified together with ``filename``/``filemode``, or ``filename``/``filemode`` specified together with ``stream``, or ``handlers`` specified together with ``stream``. """ # Add thread safety in case someone mistakenly calls # basicConfig() from multiple threads 可以看出可以通过在basicConfig()中有如下三个参数： filename：记录日志的文件名 filemode：记录日志的方式(a为追加，w为覆盖) stream：console输出 可以通过配置filename，filemode参数来配置文件输出。但仅是单文件输出而已。如果这两个参数留空，那么默认stream输出，这两种无法直接使用同时配置。 若需要同时有console输出和文件记录那么需要使用另一个参数： handlers：通过先定义handler，并添加到该参数中，即可。 另外，需要注意的是，在自行定义handler时， 基础的三个handler：StreamHandler, FileHandler 和 NullHandler是直接定义在logging模块中的，而其他handler，如按TimedRotatingFileHandler、SocketHandler、SysLogHandler 等则需要通过logging.handlers模块引入。 123456import loggingstreamHandler = logging.StreamHandler()timedRotatingFileHandler = logging.handlers.TimedRotatingFileHandler( filename='log.log', when='midnight' )]]></content>
@@ -1306,8 +1317,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -1482,8 +1493,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

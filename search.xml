@@ -16,7 +16,7 @@
   <entry>
     <title><![CDATA[PPT制作基础]]></title>
     <url>%2FPPT%E5%88%B6%E4%BD%9C%E5%9F%BA%E7%A1%80.html</url>
-    <content type="text"><![CDATA[该内容为万门大学《征服老板：零基础做出高逼格PPT》学习笔记，主要以思维导图为主 以下为思维导图大纲：]]></content>
+    <content type="text"><![CDATA[该内容为万门大学《征服老板：零基础做出高逼格PPT》学习笔记，主要以思维导图为主 以下为思维导图大纲： PPT文字重要性 精准表达 字体使用陷阱 特效泛滥 传统艺术字 阴影 渐变 字体丢失 文件嵌入到PPT文件 拷贝字体文件 字库不全 审美疲劳 搭配随意 字体的选择 根据场合搭配字体 商务报告 黑体（微软雅黑） 广告宣传 装饰体 发布会 纤细的字体 教学课件 小学以下：卡通、手写、装饰 中学以上：宋体、楷体 印刷阅读 黑体、宋体 字体美化 线框修饰 倒影效果 镂空效果 三维旋转字体效果 形状表现形式 形状可以非常小：星星 形状可以非常大：背景图案效果 形状可以非常复杂：组合画像 形状可以很奇妙：变成字体 神奇功能 合并形状 编辑顶点 用法 绘制图标 分割版面 辅助阅读 图示化强调 配色方法配色陷阱 配色太多 拍脑袋配色 没有重点 配色选择 利用取色器“偷色” 从图片中取色（尤其图片与文字搭配时） 企业对外宣传渠道取色 通用配色 主题色 背景色 文字色 色调变换：HSL模式（0，25，40，70，130，150，200，240） 素材资源网站 图片 pixabay.com bing.com 58pic.com(千图网) 字体 fonts.mobanwang.com （模板王） 图标 iconfont.cn 搜索思维 抽象关键词 人 情绪 事 物 环境 图表美化步骤 增加图表专业度 降低信息量 修饰布局 柱形、条形图（数据对比） 配色 系列重叠 间隙宽度 形状改变 折线图（数据趋势） 配色 数据标记 平滑线 渐变色 饼图（数据占比） 配色 圆环饼图 内径 起始角度 分离程度 与形状结合 图片作用 辅助理解 营造气氛 情景再现 用法 作为背景 划分多种版面 结合形状 图片填充到图片 图标作用 信息可视化，快速获取信息 早呢更加图示化细节，增强细节感 用法 png svg ai 其他效果呼吸感 元素间保持一定的距离，留出“呼吸”的空间 方法 不要让内容超出、接近边框 将类似的元素摆放在一起 控制行间距、字间距 行间距1.5 字间距1.3 建立颜色深浅层次 笔刷 预设的画笔形状素材 方法 辅助文字展示 辅助图片展示 创意展示图片 模仿力这一页的设计亮点在哪能不能用在PPT里能不能用PPT模仿出来表格方法 建立主色调 建立边框线 规律性底纹 排版原则 对齐 使文本的联系边界更明确 使文本更清晰 使边界强硬，内容更连贯 对比 方式 颜色 大小 形状 距离 要求 要么完全一样，要么完全不同 对比中，要有轻重之分 亲密性 彼此相关的项目，应该靠近在一起 重复性 图片重复 字体重复 LOGO重复 色彩重复 页面框架分割 一分为二 图片与文字组合 分裂 一分为多 居中 文字在版面正中 包围 四周为图片边框 对称 两边对称图片边框 杂志 图片与文字混合使用]]></content>
       <categories>
         <category>PPT</category>
       </categories>
@@ -144,8 +144,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -184,8 +184,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -276,8 +276,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1280,8 +1280,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>

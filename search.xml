@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[AD域之Netdom安装]]></title>
+    <url>%2FAD%E5%9F%9F%E4%B9%8BNetdom%E5%AE%89%E8%A3%85.html</url>
+    <content type="text"><![CDATA[NetdomNetdom是可以应用在Windows Server 2003, Windows Server 2008, Windows Server 2003 R2, Windows Server 2008 R2, Windows Server 2012, Windows Server 2003 with SP1, Windows 8上，允许管理员管理AD域及信任关系的命令行工具。 Applies To: Windows Server 2003, Windows Server 2008, Windows Server 2003 R2, Windows Server 2008 R2, Windows Server 2012, Windows Server 2003 with SP1, Windows 8 Enables administrators to manage Active Directory domains and trust relationships from the command prompt. 安装使用它的安装使用有如下几种方式： 服务器 通过直接安装AD角色及对应的功能即可。直接在cmd命令行中就可以直接使用netdom命令了。 Win7、Win10等客户机 在客户机上，有两种方式可以使用netdom命令行工具 安装服务器远程管理工具（RSAT）——官方方法 Netdom是一种远程管理服务器的命令行工具，可以通过在服务器上安装AD服务角色，或者安装服务器远程管理工具（RSAT）来使用。因为Netdom是服务器远程管理工具（RSAT）的一部分。 Netdom is a command-line tool that is built into Windows Server 2008 and Windows Server 2008 R2. It is available if you have the Active Directory Domain Services (AD DS) server role installed. It is also available if you install the Active Directory Domain Services Tools that are part of the Remote Server Administration Tools (RSAT). 不同操作系统版本的下载如下： Windows 10 的远程服务器管理工具RSAT() Windows 8.1 远程服务器管理工具 (RSAT) Windows 8 远程服务器管理工具 (RSAT) Windows 7 sp1 的远程服务器管理工具 (RSAT) Windows Vista 32 位 (x86) 的远程服务器管理工具 (RSAT) Windows Vista 64 位 (x64) 的远程服务器管理工具 (RSAT) 直接下载netdom.ext 在网上有直接的netdom可执行文件下载，将其拷贝到计算机系统目录： 32位：C:\Windows\System32 64位：C:\Windows\SysWOW64 就可以在cmd命令行中执行了。 或者直接将文件拷贝到文件夹后，cmd切换到对应的文件夹也可以。 注意：使用netdom命令时，需在使用管理员权限运行命令提示符（cmd）。 扩展服务器远程管理工具（RSAT）的更多功能可参考： https://support.microsoft.com/zh-cn/help/2693643/remote-server-administration-tools-rsat-for-windows-operating-systems]]></content>
+      <categories>
+        <category>操作系统</category>
+        <category>windows</category>
+      </categories>
+      <tags>
+        <tag>windows</tag>
+        <tag>ad</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[PPT制作技巧]]></title>
     <url>%2FPPT%E5%88%B6%E4%BD%9C%E6%8A%80%E5%B7%A7.html</url>
     <content type="text"><![CDATA[该内容为万门大学《征服老板：零基础做出高逼格PPT》学习笔记，主要以思维导图为主 PPT技巧常见问题没有电脑如何制作PPT 手机软件 web网站 放映时字体缺失 转换成图片 嵌入字体 安装字体文件：字由 电脑突然关机 自动保存 Word转换为PPT 标记等级 发送到PPT 文字太多如何处理 Piti 放映电脑版本太低 转换成全图形PPT 创建视频 PPT VIEWER PPT修改工作计划年终总结客户提案 站在客户角度思考 毕业答辩产品发布会 大图背景打底 注意留白 步骤 寻找素材 logo 图片 页面处理 丰富细节]]></content>
@@ -166,8 +179,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -206,8 +219,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -233,8 +246,8 @@
         <category>windows</category>
       </categories>
       <tags>
-        <tag>操作系统</tag>
         <tag>windows</tag>
+        <tag>操作系统</tag>
       </tags>
   </entry>
   <entry>
@@ -298,8 +311,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1302,8 +1315,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1405,8 +1418,8 @@
         <category>nginx</category>
       </categories>
       <tags>
-        <tag>SuSE</tag>
         <tag>windows</tag>
+        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
@@ -1572,8 +1585,8 @@
         <category>windows</category>
       </categories>
       <tags>
-        <tag>操作系统</tag>
         <tag>windows</tag>
+        <tag>操作系统</tag>
       </tags>
   </entry>
   <entry>

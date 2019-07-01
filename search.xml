@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[树莓派休眠锁屏配置]]></title>
+    <url>%2F%E6%A0%91%E8%8E%93%E6%B4%BE%E4%BC%91%E7%9C%A0%E9%94%81%E5%B1%8F%E9%85%8D%E7%BD%AE.html</url>
+    <content type="text"><![CDATA[背景树莓派作为一个小型瘦终端或者服务器使用，经常用来跑一些程序。默认情况下还是会自动锁屏的，这样就无法实时查看程序运行的情况，尤其是一些UI的自动化项目。那么如何对树莓派的锁屏进行配置呢？ 锁屏配置一般有问题还是得先去官网，看看有没有官方解答。官方给的方案如下： 通过xscreensaver配置、 在桌面版的树莓派系统中，默认没有安装锁屏配置程序，所以需要自行安装一下，命令如下： 12sudo apt-get updatesudo apt-get install screensaver 安装完之后，就会发现在“开始” - “首选项” 中多了一个“屏幕保护程序”（跟所有安装的软件一样，需要先重启之后才可以打开）。 点开之后，界面如下，在“Mode”中选择“Disable Screen Saver”即可。 还有更多配置可以自行摸索，官网也没有更详细的介绍了。 https://www.raspberrypi.org/documentation/configuration/screensaver.md 通过修改配置文件的设置 在论坛上网友提供了一个修改配置文件的方式，方法如下： 1sudo nano /etc/lightdm/lightdm.conf 找到[Seat:*]下的#xserver-command=X 将其修改为： 1xserver-command=X -s 0 dpms 经测试也是可行的。 扩展针对锁屏这个问题，在树莓派的论坛上也有专门的讨论，也给出了各种或简单或复杂的方法。以上两种是相对简单靠谱的。 更多讨论可以参考：https://www.raspberrypi.org/forums/viewtopic.php?f=91&amp;t=57552]]></content>
+      <categories>
+        <category>操作系统</category>
+        <category>树莓派</category>
+      </categories>
+      <tags>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[FlaskForm之placeholder实现]]></title>
     <url>%2FFlaskForm%E4%B9%8Bplaceholder%E5%AE%9E%E7%8E%B0.html</url>
     <content type="text"><![CDATA[背景一个基于FlaskForm的页面，原表格展示如下： 希望在邮箱输入栏中显示一个占位符提示，而非默认输入值。 FlaskForm创建如下： 1234567class AdAdd(FlaskForm): ad = StringField(u'AD账号', validators=[DataRequired()], default='') name = StringField(u'姓名', validators=[DataRequired()]) department = StringField(u'部门', validators=[DataRequired()]) userlevel = SelectField(u'人员类型', choices=[(u'外部资源', u'外部资源'), (u'正式员工', u'正式员工')], default=u'外部资源') email = StringField(u'邮箱') submit = SubmitField(u'创建') 页面引用： 123&lt;div class="col-md-4 col-md-offset-4"&gt; &#123;&#123; wtf.quick_form(form) &#125;&#125;&lt;/div&gt; 思路先看一看FlaskForm的field类有哪些属性可以设置： 12class wtforms.fields.Field __init__(label=None, validators=None, filters=(), description=&apos;&apos;, id=None, default=None, widget=None, render_kw=None, _form=None, _name=None, _prefix=&apos;&apos;, _translations=None, _meta=None) 参数说明如下： label – The label of the field. validators – A sequence of validators to call when validate is called. filters – A sequence of filters which are run on input data by process. description – A description for the field, typically used for help text. id – An id to use for the field. A reasonable default is set by the form, and you shouldn’t need to set this manually. default – The default value to assign to the field, if no form or object input is provided. May be a callable. widget – If provided, overrides the widget used to render the field. render_kw (dict) – If provided, a dictionary which provides default keywords that will be given to the widget at render time. _form – The form holding this field. It is passed by the form itself during construction. You should never pass this value yourself. _name – The name of this field, passed by the enclosing form during its construction. You should never pass this value yourself. _prefix – The prefix to prepend to the form name of this field, passed by the enclosing form during construction. _translations – A translations object providing message translations. Usually passed by the enclosing form during construction. See I18n docs for information on message translations. _meta – If provided, this is the ‘meta’ instance from the form. You usually don’t pass this yourself. 可以发现有一个description参数，那么尝试配置description参数： 1234567class AdAdd(FlaskForm): ad = StringField(u'AD账号', validators=[DataRequired()], default='') name = StringField(u'姓名', validators=[DataRequired()]) department = StringField(u'部门', validators=[DataRequired()]) userlevel = SelectField(u'人员类型', choices=[(u'外部资源', u'外部资源'), (u'正式员工', u'正式员工')], default=u'外部资源') email = StringField(u'邮箱', description=u'一些提醒') submit = SubmitField(u'创建') 结果展示如下： 可见是在表格的下放出现一个提醒文本框，虽然起到一定的作用，但是并非我们想要的效果。 再看render_kw这个参数，它可以在渲染展示的时候传递字典参数进行渲染你，而placeholder是html的一个参数，那么尝试通过render_kw的方式，看看是否可以渲染出来。 代码修改为： 1234567class AdAdd(FlaskForm): ad = StringField(u'AD账号', validators=[DataRequired()], default='') name = StringField(u'姓名', validators=[DataRequired()]) department = StringField(u'部门', validators=[DataRequired()]) userlevel = SelectField(u'人员类型', choices=[(u'外部资源', u'外部资源'), (u'正式员工', u'正式员工')], default=u'外部资源') email = StringField(u'邮箱', render_kw=&#123;'placeholder': u'一些提醒'&#125;) submit = SubmitField(u'创建') 结果展示如下： 效果实现成功。 扩展根据上述实现过程，我们可以发现，通过render_kw基本上我们可以把html中可以个性化的一些参数以dict的形式传递，从而显示更多我们想要的效果。 FlaskForm是基于WTForms，其他更多信息可参考：https://wtforms.readthedocs.io/en/stable/fields.html#the-field-base-class]]></content>
@@ -1378,8 +1390,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -1554,8 +1566,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

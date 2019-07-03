@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[MAC之Terminal输出到文本]]></title>
+    <url>%2FMAC%E4%B9%8BTerminal%E8%BE%93%E5%87%BA%E5%88%B0%E6%96%87%E6%9C%AC.html</url>
+    <content type="text"><![CDATA[背景在使用terminal时，当输出东西较多的时候就需要将结果输出到文件方便查看。在mac下的输出和windows还是略有差别需要记录一下。 stdout与stderr在UNIX/Linux系统下，标准输出分为stdout(1)、stderr(2)两种。 默认在Terminal下两种都会输出，但是当使用重定向&gt;或者管道符|输出到文件时，就默认仅会输出stdout(1)的内容，丢弃报错输出stderr(2)的内容。 比如我们ping一个不存在的地址： Terminal环境下： 12zhengkaideMacBook-Pro:blog zhengk$ ping 1.com -c 2ping: cannot resolve 1.com: Unknown host 使用重定向&gt;输出 1234zhengkaideMacBook-Pro:blog zhengk$ ping 1.com -c 2 &gt; out.txtping: cannot resolve 1.com: Unknown hostzhengkaideMacBook-Pro:blog zhengk$ cat out.txtzhengkaideMacBook-Pro:blog zhengk$ 会发现在Terminal中有输出，指定的输出文件也有生成，但是文本内容为空。 我们再ping一下baidu.com： Terminal环境下： 12345678zhengkaideMacBook-Pro:blog zhengk$ ping baidu.com -c 2PING baidu.com (123.125.114.144): 56 data bytes64 bytes from 123.125.114.144: icmp_seq=0 ttl=51 time=110.056 ms64 bytes from 123.125.114.144: icmp_seq=1 ttl=51 time=288.521 ms--- baidu.com ping statistics ---2 packets transmitted, 2 packets received, 0.0% packet lossround-trip min/avg/max/stddev = 110.056/199.288/288.521/89.232 ms 使用重定向&gt;输出 12345678910zhengkaideMacBook-Pro:blog zhengk$ ping baidu.com -c 2 &gt; out.txtzhengkaideMacBook-Pro:blog zhengk$ cat out.txtPING baidu.com (123.125.114.144): 56 data bytes64 bytes from 123.125.114.144: icmp_seq=0 ttl=51 time=199.219 ms64 bytes from 123.125.114.144: icmp_seq=1 ttl=51 time=502.690 ms--- baidu.com ping statistics ---2 packets transmitted, 2 packets received, 0.0% packet lossround-trip min/avg/max/stddev = 199.219/350.954/502.690/151.736 mszhengkaideMacBook-Pro:blog zhengk$ 会发现，这次Terminal中没有输出，指定输出文本有生成，且存在内容。 结论在用UNIX\Linux系统的Terminal时： 使用重定向&gt;，管道符|输出时，默认仅输出std(1)的内容，丢弃stderr(2)的内容 可以通过指定输出的方式输出全部内容： 使用&amp;&gt;输出全部内容，该符号会将std(1)和stderr(2)的内容全部输出 1ping 1.com -c 1 &amp;&gt; out.txt 使用&gt;输出时，指定将stderr(2)重定向到std(1) 1ping 1.com -c 1 &gt; out.txt 2&gt;&amp;1 注意：有些命令的默认都输出到stderr(2)，比如nc命令： 123zhengkaideMacBook-Pro:~ zhengk$ nc -u -z 220.181.38.148 1 &gt; out.txtConnection to 220.181.38.148 port 1 [udp/tcpmux] succeeded!zhengkaideMacBook-Pro:~ zhengk$ cat out.txt 根据上面输出可以发现，明明成功的但是并没有输出到文件，就需要改为全部输出： 1234zhengkaideMacBook-Pro:~ zhengk$ nc -u -z 220.181.38.148 1 &amp;&gt; out.txtzhengkaideMacBook-Pro:~ zhengk$ cat out.txtConnection to 220.181.38.148 port 1 [udp/tcpmux] succeeded!zhengkaideMacBook-Pro:~ zhengk$]]></content>
+      <categories>
+        <category>操作系统</category>
+        <category>mac</category>
+      </categories>
+      <tags>
+        <tag>mac</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[网络端口检测实战]]></title>
     <url>%2F%E7%BD%91%E7%BB%9C%E7%AB%AF%E5%8F%A3%E6%A3%80%E6%B5%8B%E5%AE%9E%E6%88%98.html</url>
     <content type="text"><![CDATA[背景一般在进行网络访问不通的时候需要进行端口测试，在windows环境下，可以使用telnet命令进行检测： 1telnet www.baidu.com 443 telnet检测仅适用于tcp协议的端口检测，对于udp协议的则毫无办法。 在Liunx和macOS环境下，默认是没有安装的telnet的，但是有nc这工具。试用了一下发现检测效果更佳。 NC网络检测实战 tcp检测 1234567891011zhengkaideMacBook-Pro:~ zhengk$ nc -z -v 220.181.38.148 80found 0 associationsfound 1 connections: 1: flags=82&lt;CONNECTED,PREFERRED&gt; outif en0 src 192.168.31.68 port 64654 dst 220.181.38.148 port 80 rank info not available TCP aux info availableConnection to 220.181.38.148 port 80 [tcp/http] succeeded! udp检测 12345678910zhengkaideMacBook-Pro:~ zhengk$ nc -u -z -v 220.181.38.148 80found 0 associationsfound 1 connections: 1: flags=82&lt;CONNECTED,PREFERRED&gt; outif (null) src 192.168.31.68 port 60536 dst 220.181.38.148 port 80 rank info not availableConnection to 220.181.38.148 port 80 [udp/http] succeeded! 范围端口检测 12345678910111213141516zhengkaideMacBook-Pro:~ zhengk$ nc -z -v -G 2 220.181.38.148 75-80 nc: connectx to 220.181.38.148 port 75 (tcp) failed: Operation timed out nc: connectx to 220.181.38.148 port 76 (tcp) failed: Operation timed out nc: connectx to 220.181.38.148 port 77 (tcp) failed: Operation timed out nc: connectx to 220.181.38.148 port 78 (tcp) failed: Operation timed out nc: connectx to 220.181.38.148 port 79 (tcp) failed: Operation timed out found 0 associations found 1 connections: 1: flags=82&lt;CONNECTED,PREFERRED&gt; outif en0 src 192.168.31.68 port 64689 dst 220.181.38.148 port 80 rank info not available TCP aux info available Connection to 220.181.38.148 port 80 [tcp/http] succeeded! 扩展在macOS的环境下，nc命令的使用参数与linux环境下的参数代表的并不一样，这需要特别注意，常用的几个参数如下： -G：用来指定判断超时的时间，比如-G 2就指2秒就算超时。注意：在linux中，使用-w参数来指定超时 -v:用于输出交互过程。 -z:在端口扫描的情况下使用，否则不会自动退出结束。 更多的参数配置可以使用-h来获取帮助： 123456789101112131415161718192021222324252627282930313233343536373839404142434445zhengkaideMacBook-Pro:~ zhengk$ nc -husage: nc [-46AacCDdEFhklMnOortUuvz] [-K tc] [-b boundif] [-i interval] [-p source_port] [--apple-delegate-pid pid] [--apple-delegate-uuid uuid] [-s source_ip_address] [-w timeout] [-X proxy_version] [-x proxy_address[:port]] [hostname] [port[s]] Command Summary: -4 Use IPv4 -6 Use IPv6 -A Set SO_RECV_ANYIF on socket -a Set SO_AWDL_UNRESTRICTED on socket -b ifbound Bind socket to interface -c Send CRLF as line-ending -C Don't use cellular connection -D Enable the debug socket option -d Detach from stdin -E Don't use expensive interfaces -F Do not use flow advisory (flow adv enabled by default) -G conntimo Connection timeout in seconds -h This help text -H keepidle Initial idle timeout in seconds -I keepintvl Interval for repeating idle timeouts in seconds -i secs Delay interval for lines sent, ports scanned -J keepcnt Number of times to repeat idle timeout -k Keep inbound sockets open for multiple connects -K tclass Specify traffic class -l Listen mode, for inbound connects -L num_probes Number of probes to send before generating a read timeout event -m Set SO_INTCOPROC_ALLOW on socket -n Suppress name/port resolutions -M Use MULTIPATH domain socket -N num_probes Number of probes to send before generating a write timeout event -O Use old-style connect instead of connectx -p port Specify local port for remote connects (cannot use with -l) -r Randomize remote ports -s addr Local source address -t Answer TELNET negotiation -U Use UNIX domain socket -u UDP mode -v Verbose -w secs Timeout for connects and final net reads -X proto Proxy protocol: "4", "5" (SOCKS) or "connect" -x addr[:port] Specify proxy address and port -z Zero-I/O mode [used for scanning] -o Issue socket options after connect/bind --apple-delegate-pid pid Set socket as delegate using pid Port numbers can be individual or ranges: lo-hi [inclusive]]]></content>
@@ -1401,8 +1413,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -1577,8 +1589,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

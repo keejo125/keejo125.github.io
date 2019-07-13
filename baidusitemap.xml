@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://keejo.coding.me/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E5%8A%A8%E6%80%81%E6%96%B0%E9%97%BB%E6%A0%87%E9%A2%98%E7%83%AD%E7%82%B9%E6%8C%96%E6%8E%98.html</loc>
+    <lastmod>2019-07-13T08:43:44.514Z</lastmod>
+  </url>  <url>
+    <loc>http://keejo.coding.me/%E4%BD%BF%E7%94%A8wordcloud%E7%BB%98%E5%88%B6%E8%AF%8D%E4%BA%91.html</loc>
+    <lastmod>2019-07-13T08:43:08.622Z</lastmod>
+  </url>  <url>
+    <loc>http://keejo.coding.me/%E8%8E%B7%E5%8F%96%E7%88%B1%E5%A5%87%E8%89%BA%E7%94%A8%E6%88%B7%E8%AF%84%E8%AE%BA%E5%88%86%E6%9E%90%E6%88%91%E6%98%AF%E5%94%B1%E4%BD%9C%E4%BA%BA%E5%88%B0%E5%BA%95%E8%B0%81%E6%9C%80%E7%81%AB.html</loc>
+    <lastmod>2019-07-13T08:42:19.741Z</lastmod>
+  </url>  <url>
+    <loc>http://keejo.coding.me/%E7%A7%91%E5%AD%A6%E5%88%86%E6%9E%90%E4%B9%A0%E8%BF%91%E5%B9%B3%E4%B8%AD%E5%9B%BD%E7%89%B9%E8%89%B2%E7%A4%BE%E4%BC%9A%E4%B8%BB%E4%B9%89%E6%80%9D%E6%83%B3%E4%B8%89%E5%8D%81%E8%AE%B2%E4%B8%BB%E8%A6%81%E8%AF%B4%E4%BB%80%E4%B9%88.html</loc>
+    <lastmod>2019-07-13T08:41:48.872Z</lastmod>
+  </url>  <url>
     <loc>http://keejo.coding.me/sqlalchemy%E4%B9%8Bin%E5%AD%90%E6%9F%A5%E8%AF%A2%E9%97%AE%E9%A2%98.html</loc>
     <lastmod>2019-07-12T07:19:48.521Z</lastmod>
   </url>  <url>
@@ -103,9 +115,6 @@
     <loc>http://keejo.coding.me/%E7%8C%AB%E7%9C%BC%E7%94%B5%E5%BD%B1%E8%AF%84%E8%AE%BA%E7%88%AC%E5%8F%96%E5%BC%82%E5%B8%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E6%9E%90.html</loc>
     <lastmod>2019-05-15T12:02:02.700Z</lastmod>
   </url>  <url>
-    <loc>http://keejo.coding.me/%E8%8E%B7%E5%8F%96%E7%88%B1%E5%A5%87%E8%89%BA%E7%94%A8%E6%88%B7%E8%AF%84%E8%AE%BA%E5%88%86%E6%9E%90%E6%88%91%E6%98%AF%E5%94%B1%E4%BD%9C%E4%BA%BA%E5%88%B0%E5%BA%95%E8%B0%81%E6%9C%80%E7%81%AB.html</loc>
-    <lastmod>2019-05-12T14:34:31.307Z</lastmod>
-  </url>  <url>
     <loc>http://keejo.coding.me/Mac%E4%B8%8Bcsv%E6%96%87%E4%BB%B6%E5%9C%A8excel%E4%B8%AD%E6%89%93%E5%BC%80%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98.html</loc>
     <lastmod>2019-05-12T08:00:17.536Z</lastmod>
   </url>  <url>
@@ -120,9 +129,6 @@
   </url>  <url>
     <loc>http://keejo.coding.me/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8%E4%B9%8B%E6%B3%A2%E5%A3%AB%E9%A1%BF%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B.html</loc>
     <lastmod>2019-05-10T04:24:41.624Z</lastmod>
-  </url>  <url>
-    <loc>http://keejo.coding.me/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E5%8A%A8%E6%80%81%E6%96%B0%E9%97%BB%E6%A0%87%E9%A2%98%E7%83%AD%E7%82%B9%E6%8C%96%E6%8E%98.html</loc>
-    <lastmod>2019-05-10T04:24:40.033Z</lastmod>
   </url>  <url>
     <loc>http://keejo.coding.me/chromedriver%E4%B9%8B%E7%89%88%E6%9C%AC%E9%80%89%E6%8B%A9.html</loc>
     <lastmod>2019-05-09T15:38:43.999Z</lastmod>
@@ -303,9 +309,6 @@
   </url>  <url>
     <loc>http://keejo.coding.me/Mac%E4%B8%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E8%8E%B7%E5%BE%97%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84.html</loc>
     <lastmod>2019-02-19T01:47:07.227Z</lastmod>
-  </url>  <url>
-    <loc>http://keejo.coding.me/%E4%BD%BF%E7%94%A8wordcloud%E7%BB%98%E5%88%B6%E8%AF%8D%E4%BA%91.html</loc>
-    <lastmod>2019-02-17T16:25:12.142Z</lastmod>
   </url>  <url>
     <loc>http://keejo.coding.me/%E4%BD%BF%E7%94%A8WMIC%E8%8E%B7%E5%8F%96%E7%B3%BB%E7%BB%9F%E7%A1%AC%E4%BB%B6%E4%BF%A1%E6%81%AF.html</loc>
     <lastmod>2019-02-15T03:26:50.162Z</lastmod>

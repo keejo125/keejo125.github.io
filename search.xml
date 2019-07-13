@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[科学分析习近平中国特色社会主义思想三十讲主要说什么]]></title>
+    <url>%2F%E7%A7%91%E5%AD%A6%E5%88%86%E6%9E%90%E4%B9%A0%E8%BF%91%E5%B9%B3%E4%B8%AD%E5%9B%BD%E7%89%B9%E8%89%B2%E7%A4%BE%E4%BC%9A%E4%B8%BB%E4%B9%89%E6%80%9D%E6%83%B3%E4%B8%89%E5%8D%81%E8%AE%B2%E4%B8%BB%E8%A6%81%E8%AF%B4%E4%BB%80%E4%B9%88.html</url>
+    <content type="text"><![CDATA[背景近期对于习大大的《中国特色社会主义思想三十讲》的学习如火如荼。书还挺厚的，那么我们用科学的方法来分析一下这本书到底主要说的是什么。 分析 获取原料 首先要获取原材料，也就是《中国特色社会主义思想三十讲》的原文。这个可以在网上下载到。我们将整本书保存为txt格式，并读取进行分析。 1content = open('./materials/习近平新时代中国特色社会主义思想三十讲.txt','rb').read() 关键词提取 文章关键词提取还是使用的jieba分词这个第三方库，可以直接调用jieba分词的关键词提取函数——jieba.analyse.extract_tags()。 123tags = jieba.analyse.extract_tags(content, topK=100, withWeight=True) for tag in tags: print("tag: %s\t\t weight: %f" % (tag[0], tag[1])) 对于党建方面的文章，普通的分词其实并不是特别适用，我们看下直接输出的话结果是什么： 12345678910tag: 发展 weight: 0.093145tag: 习近平 weight: 0.082980tag: 特色 weight: 0.069125tag: 中国 weight: 0.061122tag: 建设 weight: 0.051764tag: 时代 weight: 0.048980tag: 社会 weight: 0.040907tag: 总书记 weight: 0.038929tag: 政治 weight: 0.036789tag: 思想 weight: 0.035790 发现这个词基本上都是名词，而且都不代表什么特殊含义。党建还是有很多专用词汇的，所以需要我们自己添加一些字典库，设置一些停止词。 字典库添加：中国特色社会主义，中国特色社会主义政治、中国特色社会主义思想、新时代等 停止词添加：中国、我国、国家、总书记等。 在分析前配置我们的字典库和停止词： 12jieba.load_userdict('myDict/myDict.txt')jieba.analyse.set_stop_words("myDict/stopwords.txt") 再次分析，结果如下： 12345678910tag: 发展 weight: 0.098607tag: 习近平 weight: 0.087846tag: 新时代 weight: 0.085403tag: 中国特色社会主义 weight: 0.078552tag: 建设 weight: 0.054799tag: 政治 weight: 0.037376tag: 推进 weight: 0.035288tag: 制度 weight: 0.032766tag: 中华民族 weight: 0.032722tag: 中国特色社会主义思想 weight: 0.031512 这次的结果就相对比较好一点。 绘制词云 最后进行一下可视化，找一个党徽的图，使用wordcloud库进行绘制 123456789101112131415161718192021def draw_word_cloud(word_dict): d = os.path.dirname(__file__) img = Image.open(os.path.join(d, "./pics/党徽.jpg")) width = img.width / 80 height = img.height / 80 alice_coloring = np.array(img) my_wordcloud = WordCloud(background_color="white", max_words=500, mask=alice_coloring, max_font_size=200, random_state=42, font_path=(os.path.join(d, "./font/PingFang.ttc"))) my_wordcloud = my_wordcloud.generate_from_frequencies(word_dict) image_colors = ImageColorGenerator(alice_coloring) plt.figure(figsize=(width, height)) plt.imshow(my_wordcloud.recolor(color_func=image_colors)) plt.imshow(my_wordcloud) plt.axis("off") # 通过设置subplots_adjust来控制画面外边框 plt.subplots_adjust(bottom=.01, top=.99, left=.01, right=.99) plt.savefig("out.png") plt.show() 需要注意中文字体的设置，以及图片必须为白底才行。 最终结果如下： 扩展 结巴分词的关键词提取 这是基于TFIDF算法，默认返回权重最高的20个词，可以通过参数来设置返回的词的数量和是否输出权重。 关于算法的介绍可参考：https://baike.baidu.com/item/tf-idf/8816134?fr=aladdin 关于分词和词云的绘制，可参考以前写文章使用wordcloud绘制词云]]></content>
+      <categories>
+        <category>python</category>
+        <category>网络爬虫与数据分析</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>nlp</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[sqlalchemy之in子查询问题]]></title>
     <url>%2Fsqlalchemy%E4%B9%8Bin%E5%AD%90%E6%9F%A5%E8%AF%A2%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景表模型如下： Post表： 1234class Post(db.Model): __tablename__ = 'posts' id = db.Column(db.Integer, primary_key=True) body = db.Column(db.Text) Solutions表： 123456789class Solutions(db.Model): __tablename__ = 'solutions' id = db.Column(db.Integer, primary_key=True) label = db.Column(db.String(1000)) weight = db.Column(db.Integer, default=0) timestamp = db.Column(db.DateTime(), default=datetime.now) title = db.Column(db.String(1000)) solutionId = db.Column(db.String(1000)) description = db.Column(db.Text) Solutions表通过SolutionId与Post表中的id相联系。 目前需求是通过模糊查询Post表，获取涉及的id，再找到对应的Solutions表中的项目，sql语句如下： 1select * from solutions where solutionId in(select id from posts where body like '%问题%' ) order by weight desc sqlalchemy方法 先进行Post表查询： 1ids_raw = Post.query.with_entities(Post.id).filter(Post.body.like(u'%问题%')).all() 使用模型（Post）进行查询，默认返回的是整个模型，如果仅需要返回某一列，那么就需要使用.with_entities()方法。该方法会替换sql语句中的select部分。 https://docs.sqlalchemy.org/en/13/orm/query.html#sqlalchemy.orm.query.Query.with_entities 对查询出来的ids_raw进行处理 使用了with_entities(Post.id)之后，返回的是一个列表，每个值的类型为&lt;class &#39;sqlalchemy.util._collections.result&#39;&gt; 1234&gt;&gt;&gt; type(ids_raw)&lt;type 'list'&gt;&gt;&gt;&gt; type(ids_raw[1])&lt;class 'sqlalchemy.util._collections.result'&gt; 直接使用的话，sqlalchemy无法识别，最后回返回空列表，需要把转换为普通的List类型或者元组类型。 先看下sqlalchemy.util._collections.result类型输出的具体内容： 123456&gt;&gt;&gt; dir(ids_raw[1])['__add__', '__class__', '__contains__', '__delattr__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getnewargs__', '__getslice__', '__gt__', '__hash__', '__init__', '__iter__', '__le__', '__len__', '__lt__', '__module__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__rmul__', '__setattr__', '__sizeof__', '__slots__', '__str__', '__subclasshook__', '_asdict', '_fields', '_real_fields', 'count', 'id', 'index', 'keys']&gt;&gt;&gt; ids_raw[1].id19L 可以看出每个元素都有一个属性名为自身的值，这才是我们需要的值 获取列表 123456&gt;&gt;&gt; ids = []&gt;&gt;&gt; for id in ids_raw:... ids.append(id.id)...&gt;&gt;&gt; ids[18L, 19L, 21L, 31L, 32L, 33L, 35L, 42L, 44L, 88L] 实现in子查询 12345&gt;&gt;&gt; res =Solutions.query.filter(Solutions.solutionId.in_(ids)).all()&gt;&gt;&gt; res[&lt;app.models.Solutions object at 0x04FDB650&gt;, &lt;app.models.Solutions object at 0x04FDB210&gt;, &lt;app.models.Solutions object at 0x04FDB1F0&gt;, &lt;app.models.Solutions object at 0x04FDB6D0&gt;, &lt;app.models.Solutions object at 0x04FDB050&gt;, &lt;app.models.Solutions object at 0x04FDB0D0&gt;, &lt;app.models.Solutions object at 0x04FDB070&gt;, &lt;app.models.Solutions object at 0x04FDB290&gt;, &lt;app.models.Solutions object at 0x04FDB2D0&gt;] 在sqlalchemy中，in子句是通过.in_()实现的。 https://docs.sqlalchemy.org/en/13/orm/internals.html?highlight=in_#sqlalchemy.orm.properties.ColumnProperty.Comparator.in_ 拓展 with_entities()是用于将替换数据库查询是select的具体内容，但其实返回的也是一个模型，而非是具体数值。 所以其实如果不用的话，效果也一样的。只不过返回的为原生模型，数据量更多一点而已。替换成如下语句，后续对ids_raw进行处理，提取所有的id生成python原生的列表或元组类型即可。 1ids_raw = Post.query.filter(Post.body.like(u'%问题%')).all() 上面的第二第三步可以通过map()来简化为一步： 12345&gt;&gt;&gt; res =Solutions.query.filter(Solutions.solutionId.in_(map(lambda x:x.id, ids_raw))).all()&gt;&gt;&gt; res[&lt;app.models.Solutions object at 0x04FDB650&gt;, &lt;app.models.Solutions object at 0x04FDB210&gt;, &lt;app.models.Solutions object at 0x04FDB1F0&gt;, &lt;app.models.Solutions object at 0x04FDB6D0&gt;, &lt;app.models.Solutions object at 0x04FDB050&gt;, &lt;app.models.Solutions object at 0x04FDB0D0&gt;, &lt;app.models.Solutions object at 0x04FDB070&gt;, &lt;app.models.Solutions object at 0x04FDB290&gt;, &lt;app.models.Solutions object at 0x04FDB2D0&gt;] 尤其要注意利用模型或者db.session的输出类型为sqlalchemy.util._collections.result，这种类型虽然直接输出看起来和python的基础类型一旦，但是不可直接用在sqlalchemy的查询里当参数，会导致输出为空。]]></content>
@@ -252,8 +265,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -292,8 +305,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -384,8 +397,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -424,6 +437,7 @@
       <tags>
         <tag>python</tag>
         <tag>爬虫</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>
@@ -470,6 +484,7 @@
       </categories>
       <tags>
         <tag>python</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>
@@ -1174,8 +1189,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>pandas</tag>
         <tag>nlp</tag>
+        <tag>pandas</tag>
       </tags>
   </entry>
   <entry>
@@ -1212,6 +1227,7 @@
       </categories>
       <tags>
         <tag>python</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>
@@ -1388,8 +1404,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[IBM Lotus Notes之批量注册]]></title>
+    <url>%2FIBM-Lotus-Notes%E4%B9%8B%E6%89%B9%E9%87%8F%E6%B3%A8%E5%86%8C.html</url>
+    <content type="text"><![CDATA[背景IBM Lotus Notes邮箱系统在入职注册时，需要填写较多内容，当有大批员工入职的时候使用批量文本注册就方便一些。 批量方法Lotus Notes在用户注册页面有“导入文本文件”的按钮，通过该方式可以提前将用户的大部分内容天填充（注意：只是大部分内容），仍需要对其他一部分必要的配置进行手工配置。 填写导入文件 Lotus Notes可识别的txt文本，一个人员一行，信息通过;分割。可通过导入的信息，按列顺序说明如下： | 顺序 | 参数名 | 对应注册页面tab页名 || ——– | ——————- | ———————————————————— || 1 | 姓 | 基本 || 2 | 名 | The first name of the user. || 3 | 中间名 | 基本 || 4 | 组织单元 | 其他 || 5 | 密码 | 基本 || 6 | ID文件目录 | 标识信息 || 7 | ID文件名 | 标识信息 || 8 | 邮箱服务器名称 | 邮件 || 9 | 邮箱文件路径 | 邮件 || 10 | 邮箱文件名 | 邮件 || 11 | 位置 | 其他 || 12 | 注释 | 其他 || 13 | 路由地址 | 地址 || 14 | 配置文件 | 其他 || 15 | 本地管理员 | 其他 || 16 | 互联网地址 | 地址 || 17 | 简称 | 基本 || 18 | 备用名 | 其他 || 19 | 备用组织单元 | 其他 || 20 | 邮件模板文件 | 邮件 | 批量修改必要配置 在注册页面导入准备好的文档文件之后，先全部选中之后，可批量修改一些必要配置。 注意：不可批量修改的配置会在批量选中之后灰显。 注册 确认信息正确后点击“全部注册”即可。 扩展不得不说IBM Lotus Notes系统的交互性和易用性还是很差的，在导入文本的时候，不支持csv格式，必须使用;分割。相对方便一点的做法就是在excel里用csv格式保存好后，再用txt文本打开，批量替换,为;。 另外批量导入不可实现全部配置信息的配置，导入之后还要手工修改一些配置这个也很难用。 更完整的介绍可以参考IBM官网的说明： https://www.ibm.com/support/knowledgecenter/SSKTMJ_8.5.3/com.ibm.help.domino.admin85.doc/H_ID_INFORMATION.html]]></content>
+      <categories>
+        <category>Lotus Notes</category>
+      </categories>
+      <tags>
+        <tag>IBM</tag>
+        <tag>Notes</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[科学分析习近平中国特色社会主义思想三十讲主要说什么]]></title>
     <url>%2F%E7%A7%91%E5%AD%A6%E5%88%86%E6%9E%90%E4%B9%A0%E8%BF%91%E5%B9%B3%E4%B8%AD%E5%9B%BD%E7%89%B9%E8%89%B2%E7%A4%BE%E4%BC%9A%E4%B8%BB%E4%B9%89%E6%80%9D%E6%83%B3%E4%B8%89%E5%8D%81%E8%AE%B2%E4%B8%BB%E8%A6%81%E8%AF%B4%E4%BB%80%E4%B9%88.html</url>
     <content type="text"><![CDATA[背景近期对于习大大的《中国特色社会主义思想三十讲》的学习如火如荼。书还挺厚的，那么我们用科学的方法来分析一下这本书到底主要说的是什么。 分析 获取原料 首先要获取原材料，也就是《中国特色社会主义思想三十讲》的原文。这个可以在网上下载到。我们将整本书保存为txt格式，并读取进行分析。 1content = open('./materials/习近平新时代中国特色社会主义思想三十讲.txt','rb').read() 关键词提取 文章关键词提取还是使用的jieba分词这个第三方库，可以直接调用jieba分词的关键词提取函数——jieba.analyse.extract_tags()。 123tags = jieba.analyse.extract_tags(content, topK=100, withWeight=True) for tag in tags: print("tag: %s\t\t weight: %f" % (tag[0], tag[1])) 对于党建方面的文章，普通的分词其实并不是特别适用，我们看下直接输出的话结果是什么： 12345678910tag: 发展 weight: 0.093145tag: 习近平 weight: 0.082980tag: 特色 weight: 0.069125tag: 中国 weight: 0.061122tag: 建设 weight: 0.051764tag: 时代 weight: 0.048980tag: 社会 weight: 0.040907tag: 总书记 weight: 0.038929tag: 政治 weight: 0.036789tag: 思想 weight: 0.035790 发现这个词基本上都是名词，而且都不代表什么特殊含义。党建还是有很多专用词汇的，所以需要我们自己添加一些字典库，设置一些停止词。 字典库添加：中国特色社会主义，中国特色社会主义政治、中国特色社会主义思想、新时代等 停止词添加：中国、我国、国家、总书记等。 在分析前配置我们的字典库和停止词： 12jieba.load_userdict('myDict/myDict.txt')jieba.analyse.set_stop_words("myDict/stopwords.txt") 再次分析，结果如下： 12345678910tag: 发展 weight: 0.098607tag: 习近平 weight: 0.087846tag: 新时代 weight: 0.085403tag: 中国特色社会主义 weight: 0.078552tag: 建设 weight: 0.054799tag: 政治 weight: 0.037376tag: 推进 weight: 0.035288tag: 制度 weight: 0.032766tag: 中华民族 weight: 0.032722tag: 中国特色社会主义思想 weight: 0.031512 这次的结果就相对比较好一点。 绘制词云 最后进行一下可视化，找一个党徽的图，使用wordcloud库进行绘制 123456789101112131415161718192021def draw_word_cloud(word_dict): d = os.path.dirname(__file__) img = Image.open(os.path.join(d, "./pics/党徽.jpg")) width = img.width / 80 height = img.height / 80 alice_coloring = np.array(img) my_wordcloud = WordCloud(background_color="white", max_words=500, mask=alice_coloring, max_font_size=200, random_state=42, font_path=(os.path.join(d, "./font/PingFang.ttc"))) my_wordcloud = my_wordcloud.generate_from_frequencies(word_dict) image_colors = ImageColorGenerator(alice_coloring) plt.figure(figsize=(width, height)) plt.imshow(my_wordcloud.recolor(color_func=image_colors)) plt.imshow(my_wordcloud) plt.axis("off") # 通过设置subplots_adjust来控制画面外边框 plt.subplots_adjust(bottom=.01, top=.99, left=.01, right=.99) plt.savefig("out.png") plt.show() 需要注意中文字体的设置，以及图片必须为白底才行。 最终结果如下： 扩展 结巴分词的关键词提取 这是基于TFIDF算法，默认返回权重最高的20个词，可以通过参数来设置返回的词的数量和是否输出权重。 关于算法的介绍可参考：https://baike.baidu.com/item/tf-idf/8816134?fr=aladdin 关于分词和词云的绘制，可参考以前写文章使用wordcloud绘制词云]]></content>
@@ -1189,8 +1201,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>nlp</tag>
         <tag>pandas</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>

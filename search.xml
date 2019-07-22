@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[wireshark抓包分析之info信息筛选]]></title>
+    <url>%2Fwireshark%E6%8A%93%E5%8C%85%E5%88%86%E6%9E%90%E4%B9%8Binfo%E4%BF%A1%E6%81%AF%E7%AD%9B%E9%80%89.html</url>
+    <content type="text"><![CDATA[背景在进行网络抓包分析时，wireshark是最常用的工具，在抓包分析界面，info列显示了很多直接可进行初步判断的信息。 但info列是没有filter选项的，info列是wireshark根据内容网络包内容生成的概要信息。 那么怎么能在众多包中迅速找到自己需要的信息呢？ 方法一：ctrl+f直接用搜索，要注意的是得在前面搜索类型中修改为string。 方法二：tsharktshark是wireshark的一个命令行工具，可以进行抓包和分析，配合命令行的管道符功能就可以实现对info列进行筛选的需求了。 1zhengkaideMacBook-Pro:wireshark zhengk$ tshark -r w.pcapng -T fields -e frame.number -e ip.addr -e udp -e _ws.col.Info | grep "BAIDU" 其中参数说明如下： -r：读取的抓包pcapng文件 -r Read packet data from infile, can be any supported capture file format (including gzipped files). It is possible to use named pipes or stdin (-) here but only with certain (not compressed) capture file formats (in particular: those that can be read without seeking backwards). -T：设置输出文件的格式 -T ek|fields|json|jsonraw|pdml|ps|psml|tabs|text Set the format of the output when viewing decoded packet data. The options are one of: -e：设置输出的列内容 -e Add a field to the list of fields to display if -T ek|fields|json|pdml is selected. This option can be used multiple times on the command line. At least one field must be provided if the -T fields option is selected. Column names may be used prefixed with “_ws.col.” Example: tshark -e frame.number -e ip.addr -e udp -e _ws.col.Info Giving a protocol rather than a single field will print multiple items of data about the protocol as a single field. Fields are separated by tab characters by default. -E controls the format of the printed fields. 扩展tshark：https://www.wireshark.org/docs/man-pages/tshark.html wireshark的筛选说明：https://wiki.wireshark.org/DisplayFilters]]></content>
+      <categories>
+        <category>网络</category>
+      </categories>
+      <tags>
+        <tag>网络</tag>
+        <tag>wireshark</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[主流跨平台远程控制工具比较]]></title>
     <url>%2F%E4%B8%BB%E6%B5%81%E8%B7%A8%E5%B9%B3%E5%8F%B0%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6%E5%B7%A5%E5%85%B7%E6%AF%94%E8%BE%83.html</url>
     <content type="text"><![CDATA[主流跨平台远程控制工具TeamViewer有免费的个人版和收费的企业版，企业版可以提供15天的试用。 远程控制的双方均需安装客户端，名字都为TeamViewer。其中Windows、Mac、Linux版本既有服务端功能又有客户端功能，其他系统版本如Chrome OS、Android、iOS、Windows App、BlackBerry仅提供客户端功能。 下载地址：https://www.teamviewer.cn/cn/download/ NoMachine有免费版和收费的企业版，企业版提供30天的评估试用。 远程控制的双方均需安装客户端，名字都为NoMachine。其中Windows、Mac、Linux版本既有服务端功能又有客户端功能，其他版本如iOS、Android、Raspberry Pi、ARM仅提供客户端功能。 下载地址：https://www.nomachine.com/download ERAL VNC有个人版和企业版，但均为收费版本，提供30天的评估试用。 分为服务器版（VNC Server）和客户端版（VNC Viewer），其中VNC Server支持WIndows、Mac、Liunx、Raspberry Pi，VNC Viewer支持windows、Mac、Linux、Raspberry Pi、iOS、Android。 下载地址:https://www.realvnc.com/en/connect/docs/supported-platforms.html#supported-platforms Tight VNC免费开源版本，也提供商用收费版本。 分为服务器版和客户端版。其中服务器版支持Windows，Unix/Liunx，客户端版为Java版本，Java为跨平台软件，支持Java的客户端即可。 同时提供Tight VNC的SDK，目前只有 .Net Viewer SDK。 下载地址：https://www.tightvnc.com/download.php crossloop目前已停止提供产品。 http://www.crossloop.com 参考文章：https://www.cnblogs.com/itech/archive/2010/01/18/1650943.html]]></content>
@@ -1479,8 +1491,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -1655,8 +1667,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

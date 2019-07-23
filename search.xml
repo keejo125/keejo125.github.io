@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[html表单重置设置]]></title>
+    <url>%2Fhtml%E8%A1%A8%E5%8D%95%E9%87%8D%E7%BD%AE%E8%AE%BE%E7%BD%AE.html</url>
+    <content type="text"><![CDATA[背景在表单设置中，一般会有一个重置按钮。可以通过以下两种方式实现，不过在使用上还是一定的区别。 通过type=&quot;reset&quot;实现实现代码： 1234567&lt;form id="searchForm" name="searchForm" action="/firewall/search" method="post" role="form"&gt; ... &lt;input type="text" class="form-control form-item" id="input" name="input" value=""/&gt; ... &lt;button type="submit" class="btn btn-default"&gt;搜索&lt;/button&gt; &lt;button type="reset" class="btn btn-danger"&gt;重置&lt;/button&gt;&lt;/form&gt; 注意：通过此方式仅能恢复到表单默认初始状态。若某个表单内容初始状态并非空值，那么重置后也不是空值。 通过onclick实现实现代码： 12345678910111213141516&lt;form id="searchForm" name="searchForm" action="/firewall/search" method="post" role="form"&gt; ... &lt;input type="text" class="form-control form-item" id="input" name="input" value=""/&gt; ... &lt;button type="submit" class="btn btn-default"&gt;搜索&lt;/button&gt; &lt;button type="button" class="btn btn-danger" onclick="formReset()"&gt;重置&lt;/button&gt;&lt;/form&gt;...&lt;script&gt;function formReset() &#123; document.getElementById('input').value = '' ...&#125;&lt;/script&gt; 通过该方式重置，可以对参数进行更多的配置，而非仅仅还原为初始状态。 如果同时配置reset和onclick呢？通过设置type=&quot;reset&quot;即可实现，如果设置了reset的type类型后，又设置了onclick。如： 123456789101112131415&lt;form id="searchForm" name="searchForm" action="/firewall/search" method="post" role="form"&gt; ... &lt;input type="text" class="form-control form-item" id="input" name="input" value=""/&gt; ... &lt;button type="submit" class="btn btn-default"&gt;搜索&lt;/button&gt; &lt;button type="reset" class="btn btn-danger" onclick="formReset()"&gt;重置&lt;/button&gt;&lt;/form&gt;&lt;script&gt;function formReset() &#123; document.getElementById('input').value = '' ...&#125;&lt;/script&gt; 那么会先执行onclick的内容，然后再进行reset，所以其实相当于仅仅进行了reset。 特殊场景一般当一些搜索表单提交，提交后，后台会将表单参数返回保留在表单中，便于修改。 这样在提交后自动刷新的页面的初始表单参数并非全为空值。那么就建议通过使用onclick的方式进行重置。使用reset来设置的话，就会回到上次提交参数。 拓展reset type介绍：http://www.w3school.com.cn/tags/att_button_type.asp]]></content>
+      <categories>
+        <category>html</category>
+      </categories>
+      <tags>
+        <tag>html</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[wireshark抓包分析之info信息筛选]]></title>
     <url>%2Fwireshark%E6%8A%93%E5%8C%85%E5%88%86%E6%9E%90%E4%B9%8Binfo%E4%BF%A1%E6%81%AF%E7%AD%9B%E9%80%89.html</url>
     <content type="text"><![CDATA[背景在进行网络抓包分析时，wireshark是最常用的工具，在抓包分析界面，info列显示了很多直接可进行初步判断的信息。 但info列是没有filter选项的，info列是wireshark根据内容网络包内容生成的概要信息。 那么怎么能在众多包中迅速找到自己需要的信息呢？ 方法一：ctrl+f直接用搜索，要注意的是得在前面搜索类型中修改为string。 方法二：tsharktshark是wireshark的一个命令行工具，可以进行抓包和分析，配合命令行的管道符功能就可以实现对info列进行筛选的需求了。 1zhengkaideMacBook-Pro:wireshark zhengk$ tshark -r w.pcapng -T fields -e frame.number -e ip.addr -e udp -e _ws.col.Info | grep "BAIDU" 其中参数说明如下： -r：读取的抓包pcapng文件 -r Read packet data from infile, can be any supported capture file format (including gzipped files). It is possible to use named pipes or stdin (-) here but only with certain (not compressed) capture file formats (in particular: those that can be read without seeking backwards). -T：设置输出文件的格式 -T ek|fields|json|jsonraw|pdml|ps|psml|tabs|text Set the format of the output when viewing decoded packet data. The options are one of: -e：设置输出的列内容 -e Add a field to the list of fields to display if -T ek|fields|json|pdml is selected. This option can be used multiple times on the command line. At least one field must be provided if the -T fields option is selected. Column names may be used prefixed with “_ws.col.” Example: tshark -e frame.number -e ip.addr -e udp -e _ws.col.Info Giving a protocol rather than a single field will print multiple items of data about the protocol as a single field. Fields are separated by tab characters by default. -E controls the format of the printed fields. 扩展tshark：https://www.wireshark.org/docs/man-pages/tshark.html wireshark的筛选说明：https://wiki.wireshark.org/DisplayFilters]]></content>
@@ -302,8 +313,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -342,8 +353,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -434,8 +445,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1441,8 +1452,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>

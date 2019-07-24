@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Oracle之SQL拼接常见错误]]></title>
+    <url>%2FOracle%E4%B9%8BSQL%E6%8B%BC%E6%8E%A5%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF.html</url>
+    <content type="text"><![CDATA[背景编程语言：Python2.7.9 数据库：Oracle 数据库连接库：cx_Oracle ORA-00911：无效字符直接在plsql中运行的sql，通过拼接后python中执行报错。 最后检查发现是由于sql语句的末尾加了一个分号：; 去掉分号就好了。 ORA-01722：无效数字这是由于拼接的时候漏了&#39;导致的。 比如，原sql如下： 1select * from table_1 where id = '1' 拼接代码如下： 12id = '1'sql = "select * from table_1 where id = " + id 这样就会报错了，正确的写法应该是： 12id = '1'sql = "select * from table_1 where id = '" + id + "'" ORA-01747: user.table.column, table.column 或列说明无效这也是出现在一次拼接错误中，错误语句如下： 1234567sql = ''' update table_1 set name = 'zheng', age = 27, where id = 1 ''' 这里的age = 27后面对了一个,。 总结在开发中涉及sql语句拼接的时候，还是要多注意一点，尤其是&#39;，;，以及参数等问题，报错的时候，先打印sql语句直接测试一下。]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>oracle</category>
+      </categories>
+      <tags>
+        <tag>oracle</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[html表单重置设置]]></title>
     <url>%2Fhtml%E8%A1%A8%E5%8D%95%E9%87%8D%E7%BD%AE%E8%AE%BE%E7%BD%AE.html</url>
     <content type="text"><![CDATA[背景在表单设置中，一般会有一个重置按钮。可以通过以下两种方式实现，不过在使用上还是一定的区别。 通过type=&quot;reset&quot;实现实现代码： 1234567&lt;form id="searchForm" name="searchForm" action="/firewall/search" method="post" role="form"&gt; ... &lt;input type="text" class="form-control form-item" id="input" name="input" value=""/&gt; ... &lt;button type="submit" class="btn btn-default"&gt;搜索&lt;/button&gt; &lt;button type="reset" class="btn btn-danger"&gt;重置&lt;/button&gt;&lt;/form&gt; 注意：通过此方式仅能恢复到表单默认初始状态。若某个表单内容初始状态并非空值，那么重置后也不是空值。 通过onclick实现实现代码： 12345678910111213141516&lt;form id="searchForm" name="searchForm" action="/firewall/search" method="post" role="form"&gt; ... &lt;input type="text" class="form-control form-item" id="input" name="input" value=""/&gt; ... &lt;button type="submit" class="btn btn-default"&gt;搜索&lt;/button&gt; &lt;button type="button" class="btn btn-danger" onclick="formReset()"&gt;重置&lt;/button&gt;&lt;/form&gt;...&lt;script&gt;function formReset() &#123; document.getElementById('input').value = '' ...&#125;&lt;/script&gt; 通过该方式重置，可以对参数进行更多的配置，而非仅仅还原为初始状态。 如果同时配置reset和onclick呢？通过设置type=&quot;reset&quot;即可实现，如果设置了reset的type类型后，又设置了onclick。如： 123456789101112131415&lt;form id="searchForm" name="searchForm" action="/firewall/search" method="post" role="form"&gt; ... &lt;input type="text" class="form-control form-item" id="input" name="input" value=""/&gt; ... &lt;button type="submit" class="btn btn-default"&gt;搜索&lt;/button&gt; &lt;button type="reset" class="btn btn-danger" onclick="formReset()"&gt;重置&lt;/button&gt;&lt;/form&gt;&lt;script&gt;function formReset() &#123; document.getElementById('input').value = '' ...&#125;&lt;/script&gt; 那么会先执行onclick的内容，然后再进行reset，所以其实相当于仅仅进行了reset。 特殊场景一般当一些搜索表单提交，提交后，后台会将表单参数返回保留在表单中，便于修改。 这样在提交后自动刷新的页面的初始表单参数并非全为空值。那么就建议通过使用onclick的方式进行重置。使用reset来设置的话，就会回到上次提交参数。 拓展reset type介绍：http://www.w3school.com.cn/tags/att_button_type.asp]]></content>

@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[MySql之结构数据同步]]></title>
+    <url>%2FMySql%E4%B9%8B%E7%BB%93%E6%9E%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5.html</url>
+    <content type="text"><![CDATA[背景一般应用数据库都会有生产数据库、测试数据库、开发数据库。当系统运行一段时间之后，可以将部分生产数据库的数据同步到测试数据库或者开发数据库中进行分析。这时候就需要对两个数据库进行数据的同步。 Navicat就提供了很方便的同步工具，可以进行两个数据库之间结构同步和数据同步。 结构同步在菜单栏 - 工具 - 结构同步 选择好源数据库和目标数据库后点击”对比”按钮 选择需要同步修改的部分，点击“应用”即可。 数据同步在菜单栏 - 工具 -数据同步 选择好源数据库和目标数据库后点击”下一步”按钮即可 选择需要同步的表数据，点击“下一步” 随后会进行数据库比对，并显示比对结果，勾选需要同步的表，点击“应用”即可 拓展mysql还有通过dump文件同步的方式，不过Navicat比较直观可感，推荐。]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Oracle之SQL拼接常见错误]]></title>
     <url>%2FOracle%E4%B9%8BSQL%E6%8B%BC%E6%8E%A5%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF.html</url>
     <content type="text"><![CDATA[背景编程语言：Python2.7.9 数据库：Oracle 数据库连接库：cx_Oracle ORA-00911：无效字符直接在plsql中运行的sql，通过拼接后python中执行报错。 最后检查发现是由于sql语句的末尾加了一个分号：; 去掉分号就好了。 ORA-01722：无效数字这是由于拼接的时候漏了&#39;导致的。 比如，原sql如下： 1select * from table_1 where id = '1' 拼接代码如下： 12id = '1'sql = "select * from table_1 where id = " + id 这样就会报错了，正确的写法应该是： 12id = '1'sql = "select * from table_1 where id = '" + id + "'" ORA-01747: user.table.column, table.column 或列说明无效这也是出现在一次拼接错误中，错误语句如下： 1234567sql = ''' update table_1 set name = 'zheng', age = 27, where id = 1 ''' 这里的age = 27后面对了一个,。 总结在开发中涉及sql语句拼接的时候，还是要多注意一点，尤其是&#39;，;，以及参数等问题，报错的时候，先打印sql语句直接测试一下。]]></content>
@@ -326,8 +339,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -366,8 +379,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -458,8 +471,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1250,8 +1263,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>nlp</tag>
         <tag>pandas</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>
@@ -1465,8 +1478,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1515,8 +1528,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -1691,8 +1704,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[sqlalchemy之获取自增ID]]></title>
+    <url>%2Fsqlalchemy%E4%B9%8B%E8%8E%B7%E5%8F%96%E8%87%AA%E5%A2%9EID.html</url>
+    <content type="text"><![CDATA[背景在flask项目中，引入sqlalchemy进行数据库交互。 数据库模型定义如下： 12345678class QARecords(db.Model): __tablename__ = 'qa_records' id = db.Column(db.Integer, primary_key=True) question = db.Column(db.Text) answer = db.Column(db.String(1000)) feedback = db.Column(db.String(1000)) timestamp = db.Column(db.DateTime(), default=datetime.now) description = db.Column(db.Text) 这里的id是自增的，无需自己定义。 创建对象： 1qa = QARecords(question=question) 那么怎么获取这个对象的ID呢？ 解决办法在模型数据库这种方式中，直接定义数据库模型对象后，并不会生成具体id的 123&gt;&gt;&gt; qa = QARecords(question='something')&gt;&gt;&gt; print(qa.id)None 由上可见，此时的对象的id为空。 id是由数据库自增生成的，所以需要在数据库中提交变更之后，才会生成具体的对象。 代码修改如下： 12345&gt;&gt;&gt; qa = QARecords(question='something')&gt;&gt;&gt; db.session.add(qa)&gt;&gt;&gt; db.session.commit()&gt;&gt;&gt; print(qa.id)1 通过提交一次数据库，通过sqlalchemy与数据库进行了一次交互，此时该对象才完整了。]]></content>
+      <categories>
+        <category>python</category>
+        <category>flask</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>flask</tag>
+        <tag>sqlachemy</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[MySql之结构数据同步]]></title>
     <url>%2FMySql%E4%B9%8B%E7%BB%93%E6%9E%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5.html</url>
     <content type="text"><![CDATA[背景一般应用数据库都会有生产数据库、测试数据库、开发数据库。当系统运行一段时间之后，可以将部分生产数据库的数据同步到测试数据库或者开发数据库中进行分析。这时候就需要对两个数据库进行数据的同步。 Navicat就提供了很方便的同步工具，可以进行两个数据库之间结构同步和数据同步。 结构同步在菜单栏 - 工具 - 结构同步 选择好源数据库和目标数据库后点击”对比”按钮 选择需要同步修改的部分，点击“应用”即可。 数据同步在菜单栏 - 工具 -数据同步 选择好源数据库和目标数据库后点击”下一步”按钮即可 选择需要同步的表数据，点击“下一步” 随后会进行数据库比对，并显示比对结果，勾选需要同步的表，点击“应用”即可 拓展mysql还有通过dump文件同步的方式，不过Navicat比较直观可感，推荐。]]></content>
@@ -1528,8 +1542,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -1704,8 +1718,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[python之比较对象是否相同]]></title>
+    <url>%2Fpython%E4%B9%8B%E6%AF%94%E8%BE%83%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E7%9B%B8%E5%90%8C.html</url>
+    <content type="text"><![CDATA[背景在python中，可以使用==判断两边的内容是否相同（即判断两边的内存地址是否相同）。 那么在两个对象（class）中如何比较呢？ ==和is在正常情况下，可通过==和is进行判断内容是否相同，而is是判断两边的id（内存地址）是否相同。 在普通类型变量中，可以直接使用==判断是否相同，比如： 123456&gt;&gt;&gt; a = 1&gt;&gt;&gt; b = 1&gt;&gt;&gt; a == bTrue&gt;&gt;&gt; a is bTrue 我们分别看下上述例子中的a、b的id（即内存地址）： 1234&gt;&gt;&gt; id(a)140467631053320&gt;&gt;&gt; id(b)140467631053320 a、b完全相同，所有结果为True 那么在对象中的情况呢： 我们新建一个cat类对象，在创建两个对象进行比较： 123456&gt;&gt;&gt; class cat():... name = &apos;cat&apos;&gt;&gt;&gt; cat_a = cat()&gt;&gt;&gt; cat_b = cat()&gt;&gt;&gt; cat_a == cat_bFalse 可以发现cat_a，cat_b内容虽然一样，但是结果为False，我们检查下他们的id： 1234&gt;&gt;&gt; id(cat_a)4540139208&gt;&gt;&gt; id(cat_b)4540139424 可以发现id不同，及在新建对象的时候，会自动分配一个新的内存地址，创建新的对象。 对象的相同判断但我们希望获得的结果必然是cat_a，cat_b是相同的。这时候我们需要做的是，通过重载对象的__eq__函数，来告诉python如何判断对象是否相同。 1234567891011121314151617&gt;&gt;&gt; class cat:... def __init__(self, name):... self.name = name... def __eq__(self, other):... return self.name == other.name&gt;&gt;&gt; class cat:... def __init__(self, name):... self.name = name... def __eq__(self, other):... return self.name == other.name...&gt;&gt;&gt; cat_c = cat('a')&gt;&gt;&gt; cat_d = cat('a')&gt;&gt;&gt; cat_c == cat_dTrue&gt;&gt;&gt; cat_c is cat_dFalse 我们在看此时的cat_c，和cat_d的id情况： 1234&gt;&gt;&gt; id(cat_c)4540139496&gt;&gt;&gt; id(cat_d)4540139424 虽然两者的id不同，但是我们通过重载__eq__函数，修改了对象判断是否相同的方法，从而获取了我们想要的答案，但是id（内存地址）不会变，所以is判断还是为False。 结论在基本类型的判断中，==和is差别不大，但是在对象类型中差异就显现出来了，==判断可以通过重载__eq__函数来修改，而is不行。 通过重载函数，可以按实际情况实现更多情况的比较判断。]]></content>
+      <categories>
+        <category>python</category>
+        <category>异常处理</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[sqlalchemy之获取自增ID]]></title>
     <url>%2Fsqlalchemy%E4%B9%8B%E8%8E%B7%E5%8F%96%E8%87%AA%E5%A2%9EID.html</url>
     <content type="text"><![CDATA[背景在flask项目中，引入sqlalchemy进行数据库交互。 数据库模型定义如下： 12345678class QARecords(db.Model): __tablename__ = 'qa_records' id = db.Column(db.Integer, primary_key=True) question = db.Column(db.Text) answer = db.Column(db.String(1000)) feedback = db.Column(db.String(1000)) timestamp = db.Column(db.DateTime(), default=datetime.now) description = db.Column(db.Text) 这里的id是自增的，无需自己定义。 创建对象： 1qa = QARecords(question=question) 那么怎么获取这个对象的ID呢？ 解决办法在模型数据库这种方式中，直接定义数据库模型对象后，并不会生成具体id的 123&gt;&gt;&gt; qa = QARecords(question='something')&gt;&gt;&gt; print(qa.id)None 由上可见，此时的对象的id为空。 id是由数据库自增生成的，所以需要在数据库中提交变更之后，才会生成具体的对象。 代码修改如下： 12345&gt;&gt;&gt; qa = QARecords(question='something')&gt;&gt;&gt; db.session.add(qa)&gt;&gt;&gt; db.session.commit()&gt;&gt;&gt; print(qa.id)1 通过提交一次数据库，通过sqlalchemy与数据库进行了一次交互，此时该对象才完整了。]]></content>
@@ -1277,8 +1289,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>pandas</tag>
         <tag>nlp</tag>
+        <tag>pandas</tag>
       </tags>
   </entry>
   <entry>
@@ -1542,8 +1554,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -1718,8 +1730,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

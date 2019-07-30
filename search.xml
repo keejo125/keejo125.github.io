@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[mysql之正则查找]]></title>
+    <url>%2Fmysql%E4%B9%8B%E6%AD%A3%E5%88%99%E6%9F%A5%E6%89%BE.html</url>
+    <content type="text"><![CDATA[背景通常在数据库模糊查询的时候，可以使用like &#39;%string%&#39;的方式查找，那么当有多个条件模糊查询的是，如果采用多个子查询然后union的方式会显的比较繁琐。 这时候就需要用到正则来查询。 正则查询例如我们需要查询Posts表中，body字段存在aa或者bb的所有信息。 在mysql中，正则查询可以通过rlike或者regexp两个关键字来实现： 1select * from posts where body rlike 'aa|bb' 或者 1select * from posts where body regexp 'aa|bb' sqlalchemy的正则查询如果用的是alchemy，比如新建了Post模型，那么方法如下： 12regpattern = 'aa|bb'Post.query.filter(Post.body.op('regexp')(regpattern)).all() 扩展sqlalchemy关于mysql的正则表达式说明：https://docs.sqlalchemy.org/en/13/dialects/mysql.html?highlight=regexp#mysql-sql-extensions]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[python之比较对象是否相同]]></title>
     <url>%2Fpython%E4%B9%8B%E6%AF%94%E8%BE%83%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E7%9B%B8%E5%90%8C.html</url>
     <content type="text"><![CDATA[背景在python中，可以使用==判断两边的内容是否相同（即判断两边的内存地址是否相同）。 那么在两个对象（class）中如何比较呢？ ==和is在正常情况下，可通过==和is进行判断内容是否相同，而is是判断两边的id（内存地址）是否相同。 在普通类型变量中，可以直接使用==判断是否相同，比如： 123456&gt;&gt;&gt; a = 1&gt;&gt;&gt; b = 1&gt;&gt;&gt; a == bTrue&gt;&gt;&gt; a is bTrue 我们分别看下上述例子中的a、b的id（即内存地址）： 1234&gt;&gt;&gt; id(a)140467631053320&gt;&gt;&gt; id(b)140467631053320 a、b完全相同，所有结果为True 那么在对象中的情况呢： 我们新建一个cat类对象，在创建两个对象进行比较： 123456&gt;&gt;&gt; class cat():... name = &apos;cat&apos;&gt;&gt;&gt; cat_a = cat()&gt;&gt;&gt; cat_b = cat()&gt;&gt;&gt; cat_a == cat_bFalse 可以发现cat_a，cat_b内容虽然一样，但是结果为False，我们检查下他们的id： 1234&gt;&gt;&gt; id(cat_a)4540139208&gt;&gt;&gt; id(cat_b)4540139424 可以发现id不同，及在新建对象的时候，会自动分配一个新的内存地址，创建新的对象。 对象的相同判断但我们希望获得的结果必然是cat_a，cat_b是相同的。这时候我们需要做的是，通过重载对象的__eq__函数，来告诉python如何判断对象是否相同。 1234567891011121314151617&gt;&gt;&gt; class cat:... def __init__(self, name):... self.name = name... def __eq__(self, other):... return self.name == other.name&gt;&gt;&gt; class cat:... def __init__(self, name):... self.name = name... def __eq__(self, other):... return self.name == other.name...&gt;&gt;&gt; cat_c = cat('a')&gt;&gt;&gt; cat_d = cat('a')&gt;&gt;&gt; cat_c == cat_dTrue&gt;&gt;&gt; cat_c is cat_dFalse 我们在看此时的cat_c，和cat_d的id情况： 1234&gt;&gt;&gt; id(cat_c)4540139496&gt;&gt;&gt; id(cat_d)4540139424 虽然两者的id不同，但是我们通过重载__eq__函数，修改了对象判断是否相同的方法，从而获取了我们想要的答案，但是id（内存地址）不会变，所以is判断还是为False。 结论在基本类型的判断中，==和is差别不大，但是在对象类型中差异就显现出来了，==判断可以通过重载__eq__函数来修改，而is不行。 通过重载函数，可以按实际情况实现更多情况的比较判断。]]></content>

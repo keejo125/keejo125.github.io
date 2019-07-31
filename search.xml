@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[mysql之排序问题]]></title>
+    <url>%2Fmysql%E4%B9%8B%E6%8E%92%E5%BA%8F%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景模型： 123456789class Solutions(db.Model): __tablename__ = 'solutions' id = db.Column(db.Integer, primary_key=True) label = db.Column(db.String(1000)) weight = db.Column(db.Integer, default=0) timestamp = db.Column(db.DateTime(), default=datetime.now) title = db.Column(db.String(1000)) solutionId = db.Column(db.String(1000)) description = db.Column(db.Text) 按照weight排序输出： 1out = Solutions.query.order_by(Solutions.weight.desc()).limit(10) 结果排序 12345678910111213&gt;&gt;&gt; for item in out:... print(item.weight)...979298679787276666 根据结果看，排序异常了。 排查观察排序输出，可以发现其实是按照字符串顺序排列的。 检查一下数据库中的表结构： 果然，weight这列的类型初始化成了varchar2(1000)。 解决方法可以采用两种方法解决： 在排序的是对varchar类型进行转换，利用to_number()函数。 修改表结构，将weight列的类型修改为int。 这里采用第二种方法，比较彻底。由于原表是有数据的，所以不能直接修改表格的类型，否则会产生死锁。 创建一个新列 12ALTER TABLE `solutions`ADD COLUMN `weight_int` int NOT NULL AFTER `label`; 将原列的字符串转换为数值，填充到新列中 1update solutions set weight_int = cast(weight as UNSIGNED INTEGER) 删除原列 12ALTER TABLE `solutions`DROP COLUMN `weight`; 将新列的名词修改为旧列的名词 12ALTER TABLE `solutions`CHANGE COLUMN `weight_int` `weight` int(11) NULL DEFAULT NULL AFTER `label`; 扩展根据网上经验，在不修改表结构（即保持表数据为varchar类型）的情况下，可以采用如下方法实现我们想要的排序： 1out1 = Solutions.query.order_by('-weight').limit(10) 验证结果： 12345678910111213&gt;&gt;&gt; for item in out1:... print(item.weight)...2291661341181069792867978 这种方法虽然是可行的，但是在sqlalchemy的官网上并没有找到对应的说明，建议还是按常规办法来，修改列类型。]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[mysql之正则查找]]></title>
     <url>%2Fmysql%E4%B9%8B%E6%AD%A3%E5%88%99%E6%9F%A5%E6%89%BE.html</url>
     <content type="text"><![CDATA[背景通常在数据库模糊查询的时候，可以使用like &#39;%string%&#39;的方式查找，那么当有多个条件模糊查询的是，如果采用多个子查询然后union的方式会显的比较繁琐。 这时候就需要用到正则来查询。 正则查询例如我们需要查询Posts表中，body字段存在aa或者bb的所有信息。 在mysql中，正则查询可以通过rlike或者regexp两个关键字来实现： 1select * from posts where body rlike 'aa|bb' 或者 1select * from posts where body regexp 'aa|bb' sqlalchemy的正则查询如果用的是alchemy，比如新建了Post模型，那么方法如下： 12regpattern = 'aa|bb'Post.query.filter(Post.body.op('regexp')(regpattern)).all() 扩展sqlalchemy关于mysql的正则表达式说明：https://docs.sqlalchemy.org/en/13/dialects/mysql.html?highlight=regexp#mysql-sql-extensions]]></content>

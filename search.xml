@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[mysql之表锁定问题]]></title>
+    <url>%2Fmysql%E4%B9%8B%E8%A1%A8%E9%94%81%E5%AE%9A%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景今天在mysql数据库中执行了一个错误的语句，导致mysql执行窗口直接宕了，毫无反应。但该数据的其他表操作都是正常的。 因此判断是这张表被锁定了。 排查与解决可以先查看当前的所有进程： 1SHOW PROCESSLIST 发现有一个进程一直在查询，删除进程： 1234KILL 568受影响的行: 0时间: 0.005s 删除之后，再次运行对该表的操作，发现仍然卡死状态。 但此时再次查看进程，已经没有了。 通过搜索，若存在未提交的事务也会导致表被锁死。 切换到mysql的root用户，查看是否有未提交事务： 12345678910111213141516171819202122select * from information_schema.innodb_trx;+-----------------+-----------+---------------------+-----------------------+------------------+------------+---------------------+-----------+---------------------+-------------------+-------------------+------------------+-----------------------+-----------------+-------------------+-------------------------+---------------------+-------------------+------------------------+----------------------------+---------------------------+---------------------------+------------------+----------------------------+| trx_id | trx_state | trx_started | trx_requested_lock_id | trx_wait_started | trx_weight | trx_mysql_thread_id | trx_query | trx_operation_state | trx_tables_in_use | trx_tables_locked | trx_lock_structs | trx_lock_memory_bytes | trx_rows_locked | trx_rows_modified | trx_concurrency_tickets | trx_isolation_level | trx_unique_checks | trx_foreign_key_checks | trx_last_foreign_key_error | trx_adaptive_hash_latched | trx_adaptive_hash_timeout | trx_is_read_only | trx_autocommit_non_locking |+-----------------+-----------+---------------------+-----------------------+------------------+------------+---------------------+-----------+---------------------+-------------------+-------------------+------------------+-----------------------+-----------------+-------------------+-------------------------+---------------------+-------------------+------------------------+----------------------------+---------------------------+---------------------------+------------------+----------------------------+| 281475149994912 | RUNNING | 2019-07-31 13:59:08 | NULL | NULL | 0 | 407 | NULL | NULL | 0 | 0 | 0 | 1136 | 0 | 0 | 0 | REPEATABLE READ | 1 | 1 | NULL | 0 | 0 | 0 | 0 |+-----------------+-----------+---------------------+-----------------------+------------------+------------+---------------------+-----------+---------------------+-------------------+-------------------+------------------+-----------------------+-----------------+-------------------+-------------------------+---------------------+-------------------+------------------------+----------------------------+---------------------------+---------------------------+------------------+----------------------------+1 row in set (0.00 sec) 发现有一个未提交事务，进程id为407。 删除该进程： 12mysql&gt; kill 407;Query OK, 0 rows affected (0.00 sec) 在查询一次未提交事务： 12mysql&gt; select * from information_schema.innodb_trx;Empty set (0.00 sec) 此时再对该表进行操作，恢复正常了。 总结当数据库某张表出现卡死等待的异常时，可以参考如下两步排查： 检查是否有卡死的进程，有的话，结束进程。 1SHOW PROCESSLIST 检查是否有未提交的事务，有的话，结束进程。 1select * from information_schema.innodb_trx;]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[mysql之排序问题]]></title>
     <url>%2Fmysql%E4%B9%8B%E6%8E%92%E5%BA%8F%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景模型： 123456789class Solutions(db.Model): __tablename__ = 'solutions' id = db.Column(db.Integer, primary_key=True) label = db.Column(db.String(1000)) weight = db.Column(db.Integer, default=0) timestamp = db.Column(db.DateTime(), default=datetime.now) title = db.Column(db.String(1000)) solutionId = db.Column(db.String(1000)) description = db.Column(db.Text) 按照weight排序输出： 1out = Solutions.query.order_by(Solutions.weight.desc()).limit(10) 结果排序 12345678910111213&gt;&gt;&gt; for item in out:... print(item.weight)...979298679787276666 根据结果看，排序异常了。 排查观察排序输出，可以发现其实是按照字符串顺序排列的。 检查一下数据库中的表结构： 果然，weight这列的类型初始化成了varchar2(1000)。 解决方法可以采用两种方法解决： 在排序的是对varchar类型进行转换，利用to_number()函数。 修改表结构，将weight列的类型修改为int。 这里采用第二种方法，比较彻底。由于原表是有数据的，所以不能直接修改表格的类型，否则会产生死锁。 创建一个新列 12ALTER TABLE `solutions`ADD COLUMN `weight_int` int NOT NULL AFTER `label`; 将原列的字符串转换为数值，填充到新列中 1update solutions set weight_int = cast(weight as UNSIGNED INTEGER) 删除原列 12ALTER TABLE `solutions`DROP COLUMN `weight`; 将新列的名词修改为旧列的名词 12ALTER TABLE `solutions`CHANGE COLUMN `weight_int` `weight` int(11) NULL DEFAULT NULL AFTER `label`; 扩展根据网上经验，在不修改表结构（即保持表数据为varchar类型）的情况下，可以采用如下方法实现我们想要的排序： 1out1 = Solutions.query.order_by('-weight').limit(10) 验证结果： 12345678910111213&gt;&gt;&gt; for item in out1:... print(item.weight)...2291661341181069792867978 这种方法虽然是可行的，但是在sqlalchemy的官网上并没有找到对应的说明，建议还是按常规办法来，修改列类型。]]></content>
@@ -1580,8 +1593,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -1756,8 +1769,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

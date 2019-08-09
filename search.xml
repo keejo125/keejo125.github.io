@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[oracle之分页查询]]></title>
+    <url>%2Foracle%E4%B9%8B%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2.html</url>
+    <content type="text"><![CDATA[背景oracle数据库中没有limit关键词，相对来说oracle的分页就会比较麻烦一点。 需要用到ROWNUM来计算了。 分页方法由于在oracle查询中涉及到条件，所以需要多重的where查询。主要思路如下： 使用普通条件筛选出全量的所需的结果集A 对结果A进行查询，增加ROWNUM字段，生成结果集B 对结果集B，通过ROWNUM进行where子查询 实现如下： 12345678910select * from ( select ROWNUM NO, A.* from ( select * from table_x where ... ) A )Bwhere NO &gt; startnum and NO &lt; endnum 优化针对上面的查询，可以在第二步子查询的时候，先增加NO &lt; endnum条件，缩小结果集B的范围。 结果如下： 1234567891011select * from ( select ROWNUM NO, A.* from ( select * from table_x where ... ) A where ROWNUM &lt; endnum )Bwhere NO &gt; startnum 扩展相对的mysql就比较简单，直接用limit即可： 1select * from table_x limit startnum, endnum]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>oracle</category>
+      </categories>
+      <tags>
+        <tag>oracle</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[redis之启停及密码配置]]></title>
     <url>%2Fredis%E4%B9%8B%E5%90%AF%E5%81%9C%E5%8F%8A%E5%AF%86%E7%A0%81%E9%85%8D%E7%BD%AE.html</url>
     <content type="text"><![CDATA[redis源码安装下载redis： http://redis.io/download 通过源码安装： 123tar xzf redis-5.0.5.tar.gzcd redis-5.0.5make redis启动切换到redis目录 默认启动： 1./src/redis-server 配置文件启动: 1./src/redis-server redis.conf 注：redis.conf就在redis默认目录 redis客户端连接切换到redis目录 1./src/redis-cli 远程redis客户端连接： 1./redis-cli -h 127.0.0.1 -p 6379 redis停止使用redis客户端 1./redis-cli -h 127.0.0.1 -p 6379 shutdown redis连接密码配置redis默认不配置密码，但可以通过conf文件配置密码。 打开conf文件，然后找到： 1# requirepass foobared 在下面新增一行配置： 1requirepass xxxx 配置密码后，客户端仍然可以无密码连接，不会报错，但是产生交互的时候就会有认证提示： 1(error)NOAUTH Authentication required. 如果手工使用redis客户端连接访问，方法如下： 123./redis-cli -h 127.0.0.1 -p 6379127.0.0.1:6379&gt; auth xxxxok 如果redis用作broker，其他中间件，比如celery连接，那么配置文件需要修改为： 1BROKER_url='redis://:xxxx@127.0.0.1:6379']]></content>
@@ -1340,8 +1353,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>nlp</tag>
         <tag>pandas</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>
@@ -1605,8 +1618,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -1781,8 +1794,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

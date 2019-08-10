@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[docker之mac安装配置]]></title>
+    <url>%2Fdocker%E4%B9%8Bmac%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE.html</url>
+    <content type="text"><![CDATA[背景在mac本机安装docker方法比较多，有点混乱，记录一下。 官网安装docker的官网如下：https://www.docker.com/get-started 但下载docker的网站在：https://hub.docker.com 注册登陆之后，就会看到很大的下载按钮了： 点击之后： 下载之后会有一个dmg文件，然后按照普通的安装就好了，双击拖拽即可。 安装完之后，双击打开，会提示一个要求输入密码： 打开之后，窗口最上方会有个docker的标志，就可以看到运行状态了。 打开控制台，运行如下命令： 1docker info 即可看到docker的运行状况。 brew安装命令如下： 123456789101112$ brew cask install docker==&gt; Creating Caskroom at /usr/local/Caskroom==&gt; We'll set permissions properly so we won't need sudo in the futurePassword: # 输入 macOS 密码==&gt; Satisfying dependencies==&gt; Downloading https://download.docker.com/mac/stable/21090/Docker.dmg######################################################################## 100.0%==&gt; Verifying checksum for Cask docker==&gt; Installing Cask docker==&gt; Moving App 'Docker.app' to '/Applications/Docker.app'.&amp;#x1f37a; docker was successfully installed! 不过，我运行的时候很卡，而且最后报错了。还是跟网络有很大的关系。 链接下载https://download.docker.com/mac/stable/Docker.dmg 开始直接浏览器下载报错了，建议还是直接通过迅雷下载靠谱一点。]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[oracle之分页查询]]></title>
     <url>%2Foracle%E4%B9%8B%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2.html</url>
     <content type="text"><![CDATA[背景oracle数据库中没有limit关键词，相对来说oracle的分页就会比较麻烦一点。 需要用到ROWNUM来计算了。 分页方法由于在oracle查询中涉及到条件，所以需要多重的where查询。主要思路如下： 使用普通条件筛选出全量的所需的结果集A 对结果A进行查询，增加ROWNUM字段，生成结果集B 对结果集B，通过ROWNUM进行where子查询 实现如下： 12345678910select * from ( select ROWNUM NO, A.* from ( select * from table_x where ... ) A )Bwhere NO &gt; startnum and NO &lt; endnum 优化针对上面的查询，可以在第二步子查询的时候，先增加NO &lt; endnum条件，缩小结果集B的范围。 结果如下： 1234567891011select * from ( select ROWNUM NO, A.* from ( select * from table_x where ... ) A where ROWNUM &lt; endnum )Bwhere NO &gt; startnum 扩展相对的mysql就比较简单，直接用limit即可： 1select * from table_x limit startnum, endnum]]></content>
@@ -1353,8 +1364,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>pandas</tag>
         <tag>nlp</tag>
+        <tag>pandas</tag>
       </tags>
   </entry>
   <entry>

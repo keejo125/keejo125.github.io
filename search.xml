@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[oracle之在结果集中插入数据]]></title>
+    <url>%2Foracle%E4%B9%8B%E5%9C%A8%E7%BB%93%E6%9E%9C%E9%9B%86%E4%B8%AD%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE.html</url>
+    <content type="text"><![CDATA[背景在做一个项目时，有这样一个需求。通过选择父选项如（办公楼层），对应的子选项（工位）会自动生成选项。 只需要在父下拉框变动时，触发一次数据库查询，并将结果组合成选项赋予给子选项即可。 但是由于子选项（工位）是变动的，存在新增的情况，所以需要子选项有一个固定的选择项（新增）。 不考虑前台实现，那么就需要数据库在查询时，增加一个固定数据后再返回。 实现其实理清了思路，实现还是比较简单的，使用union关键词。 例如原子选项数据集为： 1select sl.seat_no as seat from seat_list sl where sl.building = i_building 选择项为1项，那么固定选项为： 1select ‘新增’ as seat from dual 合并两个集合： 1234select ‘新增’ as seat from dual union(select sl.seat_no as seat from seat_list sl where sl.building = i_building )order by seat desc 这里由于固定选项为汉字，其他选项为数字，为了保持在第一个，所以直接使用order by seat desc即可。 扩展这样即可选择又可新增的前台展示，一般通过前台控件实现。后台实现的话那么上述方法也可参考。]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>oracle</category>
+      </categories>
+      <tags>
+        <tag>oracle</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[docker之mac安装配置]]></title>
     <url>%2Fdocker%E4%B9%8Bmac%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE.html</url>
     <content type="text"><![CDATA[背景在mac本机安装docker方法比较多，有点混乱，记录一下。 官网安装docker的官网如下：https://www.docker.com/get-started 但下载docker的网站在：https://hub.docker.com 注册登陆之后，就会看到很大的下载按钮了： 点击之后： 下载之后会有一个dmg文件，然后按照普通的安装就好了，双击拖拽即可。 安装完之后，双击打开，会提示一个要求输入密码： 打开之后，窗口最上方会有个docker的标志，就可以看到运行状态了。 打开控制台，运行如下命令： 1docker info 即可看到docker的运行状况。 brew安装命令如下： 123456789101112$ brew cask install docker==&gt; Creating Caskroom at /usr/local/Caskroom==&gt; We'll set permissions properly so we won't need sudo in the futurePassword: # 输入 macOS 密码==&gt; Satisfying dependencies==&gt; Downloading https://download.docker.com/mac/stable/21090/Docker.dmg######################################################################## 100.0%==&gt; Verifying checksum for Cask docker==&gt; Installing Cask docker==&gt; Moving App 'Docker.app' to '/Applications/Docker.app'.&amp;#x1f37a; docker was successfully installed! 不过，我运行的时候很卡，而且最后报错了。还是跟网络有很大的关系。 链接下载https://download.docker.com/mac/stable/Docker.dmg 开始直接浏览器下载报错了，建议还是直接通过迅雷下载靠谱一点。]]></content>
@@ -440,8 +453,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -480,8 +493,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -572,8 +585,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1364,8 +1377,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>nlp</tag>
         <tag>pandas</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>
@@ -1579,8 +1592,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1629,8 +1642,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -1805,8 +1818,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

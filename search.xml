@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[docker之镜像删除]]></title>
     <url>%2Fdocker%E4%B9%8B%E9%95%9C%E5%83%8F%E5%88%A0%E9%99%A4.html</url>
-    <content type="text"><![CDATA[背景初用docker，pull下来一个没有用的镜像，还挺大的，为了节省空间要把删除。还是有好几步，也进一步理解一下docker。 删除过程 先查看当前镜像 1234zhengkaideMacBook-Pro:~ zhengk$ docker imagesREPOSITORY TAG IMAGE ID CREATED SIZEhub.baidubce.com/paddlepaddle/paddle latest d6410dc2c2a2 11 days ago 1.46GBhub.baidubce.com/paddlepaddle/paddle latest-dev 8b4039144315 2 weeks ago 8.02GB 删除镜像 12zhengkaideMacBook-Pro:~ zhengk$ docker rmi d6410dc2c2a2Error response from daemon: conflict: unable to delete d6410dc2c2a2 (must be forced) - image is being used by stopped container 5bfa8ac6cbaa 直接删除镜像就会有一个错误提示，说有一个未运行的容器正在使用，并给出了容器的id。 查看当前的容器 123456789zhengkaideMacBook-Pro:~ zhengk$ docker ps -a -q321364929b404b39bcd23d5ecf7d62e89e2c4ce996304e81543f353e36a653614038cf8b6af4e803c1df5bfa8ac6cbaa 这里需要加上-a的参数才行，否则只会显示运行中的容器。 删除容器 12zhengkaideMacBook-Pro:~ zhengk$ docker stop 5bfa8ac6cbaa5bfa8ac6cbaa 再次删除镜像 1234567891011zhengkaideMacBook-Pro:~ zhengk$ docker rmi d6410dc2c2a2Untagged: hub.baidubce.com/paddlepaddle/paddle:latestUntagged: hub.baidubce.com/paddlepaddle/paddle@sha256:86ee075613bed3984dea9d745c14d7dd65d8f85d08a7d831560ef30d53f17a62Deleted: sha256:d6410dc2c2a22d9bc2b8bd24341268f3f837ad3d1f79f71460f4055b7ec93e78Deleted: sha256:52783f218170a2311fc3be53c0997fc14e10883d707d1a7f6d35a851ec3e878cDeleted: sha256:315b57727c8dd33893082600afa70befc938aaf2da0eac606973f531f2b4f8dbDeleted: sha256:17ca841bc55eeb759914983629afe7ca099b0c2d88e0c569c7aa9d2d64d5bc21Deleted: sha256:59a6856f439d187f3ce3381d0a6b0816db99cc3d8468bcf8c9d1c39d2071dcffDeleted: sha256:82997a16a0d57ac7d8b416c0d83f5841193b6a56a7844b486ab6324730867fe0Deleted: sha256:5c6983f277f26021b5e38501fdf06fa29f7158a93641f3f10aedbdc9869121d0Deleted: sha256:aa54c2bc12290df2851a94b8834cae75e4627219d2b423d4d3db8b0a497e79a2 删除成功 总结docker在运行镜像时，会生成容器。删除镜像时，需要先删除容器。 所以需要先删除镜像对应的所有容器，再删除镜像。 正常删除思路如下： 通过docker ps -a可以查看所有容器和镜像的对应管理， 然后grep提取涉及需要删除镜像的条目， 再使用awk提去容器id， 传给docker rm执行操作。 简化一下命令： 1docker rm $(docker ps -a |grep 镜像名 | awk '&#123;print $1&#125;')]]></content>
+    <content type="text"><![CDATA[背景初用docker，pull下来一个没有用的镜像，还挺大的，为了节省空间要把删除。还是有好几步，也进一步理解一下docker。 删除过程 先查看当前镜像 1234zhengkaideMacBook-Pro:~ zhengk$ docker imagesREPOSITORY TAG IMAGE ID CREATED SIZEhub.baidubce.com/paddlepaddle/paddle latest d6410dc2c2a2 11 days ago 1.46GBhub.baidubce.com/paddlepaddle/paddle latest-dev 8b4039144315 2 weeks ago 8.02GB 删除镜像 12zhengkaideMacBook-Pro:~ zhengk$ docker rmi d6410dc2c2a2Error response from daemon: conflict: unable to delete d6410dc2c2a2 (must be forced) - image is being used by stopped container 5bfa8ac6cbaa 直接删除镜像就会有一个错误提示，说有一个未运行的容器正在使用，并给出了容器的id。 查看当前的容器 123456789zhengkaideMacBook-Pro:~ zhengk$ docker ps -a -q321364929b404b39bcd23d5ecf7d62e89e2c4ce996304e81543f353e36a653614038cf8b6af4e803c1df5bfa8ac6cbaa 这里需要加上-a的参数才行，否则只会显示运行中的容器。 删除容器 12zhengkaideMacBook-Pro:~ zhengk$ docker stop 5bfa8ac6cbaa5bfa8ac6cbaa 再次删除镜像 1234567891011zhengkaideMacBook-Pro:~ zhengk$ docker rmi d6410dc2c2a2Untagged: hub.baidubce.com/paddlepaddle/paddle:latestUntagged: hub.baidubce.com/paddlepaddle/paddle@sha256:86ee075613bed3984dea9d745c14d7dd65d8f85d08a7d831560ef30d53f17a62Deleted: sha256:d6410dc2c2a22d9bc2b8bd24341268f3f837ad3d1f79f71460f4055b7ec93e78Deleted: sha256:52783f218170a2311fc3be53c0997fc14e10883d707d1a7f6d35a851ec3e878cDeleted: sha256:315b57727c8dd33893082600afa70befc938aaf2da0eac606973f531f2b4f8dbDeleted: sha256:17ca841bc55eeb759914983629afe7ca099b0c2d88e0c569c7aa9d2d64d5bc21Deleted: sha256:59a6856f439d187f3ce3381d0a6b0816db99cc3d8468bcf8c9d1c39d2071dcffDeleted: sha256:82997a16a0d57ac7d8b416c0d83f5841193b6a56a7844b486ab6324730867fe0Deleted: sha256:5c6983f277f26021b5e38501fdf06fa29f7158a93641f3f10aedbdc9869121d0Deleted: sha256:aa54c2bc12290df2851a94b8834cae75e4627219d2b423d4d3db8b0a497e79a2 删除成功 总结docker在运行镜像时，会生成容器。删除镜像时，需要先删除容器。 所以需要先删除镜像对应的所有容器，再删除镜像。 正常删除思路如下： 通过docker ps -a可以查看所有容器和镜像的对应管理， 然后grep提取涉及需要删除镜像的条目， 再使用awk提去容器id， 传给docker rm执行操作。 简化一下命令： 删除容器： 1docker rm $(docker ps -a |grep 镜像名 | awk '&#123;print $1&#125;') 删除镜像 1docker rmi 镜像ID]]></content>
       <categories>
         <category>docker</category>
       </categories>
@@ -1388,8 +1388,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>pandas</tag>
         <tag>nlp</tag>
+        <tag>pandas</tag>
       </tags>
   </entry>
   <entry>
@@ -1653,8 +1653,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -1829,8 +1829,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

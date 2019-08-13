@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[docker之镜像删除]]></title>
+    <url>%2Fdocker%E4%B9%8B%E9%95%9C%E5%83%8F%E5%88%A0%E9%99%A4.html</url>
+    <content type="text"><![CDATA[背景初用docker，pull下来一个没有用的镜像，还挺大的，为了节省空间要把删除。还是有好几步，也进一步理解一下docker。 删除过程 先查看当前镜像 1234zhengkaideMacBook-Pro:~ zhengk$ docker imagesREPOSITORY TAG IMAGE ID CREATED SIZEhub.baidubce.com/paddlepaddle/paddle latest d6410dc2c2a2 11 days ago 1.46GBhub.baidubce.com/paddlepaddle/paddle latest-dev 8b4039144315 2 weeks ago 8.02GB 删除镜像 12zhengkaideMacBook-Pro:~ zhengk$ docker rmi d6410dc2c2a2Error response from daemon: conflict: unable to delete d6410dc2c2a2 (must be forced) - image is being used by stopped container 5bfa8ac6cbaa 直接删除镜像就会有一个错误提示，说有一个未运行的容器正在使用，并给出了容器的id。 查看当前的容器 123456789zhengkaideMacBook-Pro:~ zhengk$ docker ps -a -q321364929b404b39bcd23d5ecf7d62e89e2c4ce996304e81543f353e36a653614038cf8b6af4e803c1df5bfa8ac6cbaa 这里需要加上-a的参数才行，否则只会显示运行中的容器。 删除容器 12zhengkaideMacBook-Pro:~ zhengk$ docker stop 5bfa8ac6cbaa5bfa8ac6cbaa 再次删除镜像 1234567891011zhengkaideMacBook-Pro:~ zhengk$ docker rmi d6410dc2c2a2Untagged: hub.baidubce.com/paddlepaddle/paddle:latestUntagged: hub.baidubce.com/paddlepaddle/paddle@sha256:86ee075613bed3984dea9d745c14d7dd65d8f85d08a7d831560ef30d53f17a62Deleted: sha256:d6410dc2c2a22d9bc2b8bd24341268f3f837ad3d1f79f71460f4055b7ec93e78Deleted: sha256:52783f218170a2311fc3be53c0997fc14e10883d707d1a7f6d35a851ec3e878cDeleted: sha256:315b57727c8dd33893082600afa70befc938aaf2da0eac606973f531f2b4f8dbDeleted: sha256:17ca841bc55eeb759914983629afe7ca099b0c2d88e0c569c7aa9d2d64d5bc21Deleted: sha256:59a6856f439d187f3ce3381d0a6b0816db99cc3d8468bcf8c9d1c39d2071dcffDeleted: sha256:82997a16a0d57ac7d8b416c0d83f5841193b6a56a7844b486ab6324730867fe0Deleted: sha256:5c6983f277f26021b5e38501fdf06fa29f7158a93641f3f10aedbdc9869121d0Deleted: sha256:aa54c2bc12290df2851a94b8834cae75e4627219d2b423d4d3db8b0a497e79a2 删除成功 总结docker在运行镜像时，会生成容器。删除镜像时，需要先删除容器。 所以需要先删除镜像对应的所有容器，再删除镜像。 正常删除思路如下： 通过docker ps -a可以查看所有容器和镜像的对应管理， 然后grep提取涉及需要删除镜像的条目， 再使用awk提去容器id， 传给docker rm执行操作。 简化一下命令： 1docker rm $(docker ps -a |grep 镜像名 | awk '&#123;print $1&#125;')]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[oracle之在结果集中插入数据]]></title>
     <url>%2Foracle%E4%B9%8B%E5%9C%A8%E7%BB%93%E6%9E%9C%E9%9B%86%E4%B8%AD%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE.html</url>
     <content type="text"><![CDATA[背景在做一个项目时，有这样一个需求。通过选择父选项如（办公楼层），对应的子选项（工位）会自动生成选项。 只需要在父下拉框变动时，触发一次数据库查询，并将结果组合成选项赋予给子选项即可。 但是由于子选项（工位）是变动的，存在新增的情况，所以需要子选项有一个固定的选择项（新增）。 不考虑前台实现，那么就需要数据库在查询时，增加一个固定数据后再返回。 实现其实理清了思路，实现还是比较简单的，使用union关键词。 例如原子选项数据集为： 1select sl.seat_no as seat from seat_list sl where sl.building = i_building 选择项为1项，那么固定选项为： 1select ‘新增’ as seat from dual 合并两个集合： 1234select ‘新增’ as seat from dual union(select sl.seat_no as seat from seat_list sl where sl.building = i_building )order by seat desc 这里由于固定选项为汉字，其他选项为数字，为了保持在第一个，所以直接使用order by seat desc即可。 扩展这样即可选择又可新增的前台展示，一般通过前台控件实现。后台实现的话那么上述方法也可参考。]]></content>
@@ -453,8 +464,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -493,8 +504,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -585,8 +596,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1592,8 +1603,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>

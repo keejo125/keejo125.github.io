@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[git之fatal: The remote end hung up unexpectedly]]></title>
+    <url>%2Fgit%E4%B9%8Bfatal-The-remote-end-hung-up-unexpectedly.html</url>
+    <content type="text"><![CDATA[背景最近在用git clone源码的时候时不时就出现如下问题： 1234error: RPC failed; curl 18 transfer closed with outstanding read data remainingfatal: The remote end hung up unexpectedlyfatal: early EOFfatal: index-pack failed 12error: RPC failed; curl 56 LibreSSL SSL_read: SSL_ERROR_SYSCALL, errno 54fatal: The remote end hung up unexpectedly 然后就导致clone中断报错了 解决办法经查询，基本上是在clone大项目的时候会遇到这个问题，由于git默认的缓存不足导致。可以在clone前配置下缓存： 12git config http.postBuffer 524288000git config https.postBuffer 524288000 如果想全局配置的话，可以加global参数: 12git config --global http.postBuffer 1048576000git config --global https.postBuffer 1048576000 配置之后，偶尔还是会出现这个错误，但情况会少很多。估计跟clone的是外网情况也有关系了，毕竟速度很低，要多试试了]]></content>
+      <categories>
+        <category>git</category>
+      </categories>
+      <tags>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[docker之镜像删除]]></title>
     <url>%2Fdocker%E4%B9%8B%E9%95%9C%E5%83%8F%E5%88%A0%E9%99%A4.html</url>
     <content type="text"><![CDATA[背景初用docker，pull下来一个没有用的镜像，还挺大的，为了节省空间要把删除。还是有好几步，也进一步理解一下docker。 删除过程 先查看当前镜像 1234zhengkaideMacBook-Pro:~ zhengk$ docker imagesREPOSITORY TAG IMAGE ID CREATED SIZEhub.baidubce.com/paddlepaddle/paddle latest d6410dc2c2a2 11 days ago 1.46GBhub.baidubce.com/paddlepaddle/paddle latest-dev 8b4039144315 2 weeks ago 8.02GB 删除镜像 12zhengkaideMacBook-Pro:~ zhengk$ docker rmi d6410dc2c2a2Error response from daemon: conflict: unable to delete d6410dc2c2a2 (must be forced) - image is being used by stopped container 5bfa8ac6cbaa 直接删除镜像就会有一个错误提示，说有一个未运行的容器正在使用，并给出了容器的id。 查看当前的容器 123456789zhengkaideMacBook-Pro:~ zhengk$ docker ps -a -q321364929b404b39bcd23d5ecf7d62e89e2c4ce996304e81543f353e36a653614038cf8b6af4e803c1df5bfa8ac6cbaa 这里需要加上-a的参数才行，否则只会显示运行中的容器。 删除容器 12zhengkaideMacBook-Pro:~ zhengk$ docker stop 5bfa8ac6cbaa5bfa8ac6cbaa 再次删除镜像 1234567891011zhengkaideMacBook-Pro:~ zhengk$ docker rmi d6410dc2c2a2Untagged: hub.baidubce.com/paddlepaddle/paddle:latestUntagged: hub.baidubce.com/paddlepaddle/paddle@sha256:86ee075613bed3984dea9d745c14d7dd65d8f85d08a7d831560ef30d53f17a62Deleted: sha256:d6410dc2c2a22d9bc2b8bd24341268f3f837ad3d1f79f71460f4055b7ec93e78Deleted: sha256:52783f218170a2311fc3be53c0997fc14e10883d707d1a7f6d35a851ec3e878cDeleted: sha256:315b57727c8dd33893082600afa70befc938aaf2da0eac606973f531f2b4f8dbDeleted: sha256:17ca841bc55eeb759914983629afe7ca099b0c2d88e0c569c7aa9d2d64d5bc21Deleted: sha256:59a6856f439d187f3ce3381d0a6b0816db99cc3d8468bcf8c9d1c39d2071dcffDeleted: sha256:82997a16a0d57ac7d8b416c0d83f5841193b6a56a7844b486ab6324730867fe0Deleted: sha256:5c6983f277f26021b5e38501fdf06fa29f7158a93641f3f10aedbdc9869121d0Deleted: sha256:aa54c2bc12290df2851a94b8834cae75e4627219d2b423d4d3db8b0a497e79a2 删除成功 总结docker在运行镜像时，会生成容器。删除镜像时，需要先删除容器。 所以需要先删除镜像对应的所有容器，再删除镜像。 正常删除思路如下： 通过docker ps -a可以查看所有容器和镜像的对应管理， 然后grep提取涉及需要删除镜像的条目， 再使用awk提去容器id， 传给docker rm执行操作。 简化一下命令： 删除容器： 1docker rm $(docker ps -a |grep 镜像名 | awk '&#123;print $1&#125;') 删除镜像 1docker rmi 镜像ID]]></content>
@@ -190,7 +201,7 @@
   <entry>
     <title><![CDATA[IBM Lotus Notes之批量注册]]></title>
     <url>%2FIBM-Lotus-Notes%E4%B9%8B%E6%89%B9%E9%87%8F%E6%B3%A8%E5%86%8C.html</url>
-    <content type="text"><![CDATA[背景IBM Lotus Notes邮箱系统在入职注册时，需要填写较多内容，当有大批员工入职的时候使用批量文本注册就方便一些。 批量方法Lotus Notes在用户注册页面有“导入文本文件”的按钮，通过该方式可以提前将用户的大部分内容天填充（注意：只是大部分内容），仍需要对其他一部分必要的配置进行手工配置。 填写导入文件 Lotus Notes可识别的txt文本，一个人员一行，信息通过;分割。可通过导入的信息，按列顺序说明如下： 顺序 参数名 对应注册页面tab页名 1 姓 基本 2 名 The first name of the user. 3 中间名 基本 4 组织单元 其他 5 密码 基本 6 ID文件目录 标识信息 7 ID文件名 标识信息 8 邮箱服务器名称 邮件 9 邮箱文件路径 邮件 10 邮箱文件名 邮件 11 位置 其他 12 注释 其他 13 路由地址 地址 14 配置文件 其他 15 本地管理员 其他 16 互联网地址 地址 17 简称 基本 18 备用名 其他 19 备用组织单元 其他 20 邮件模板文件 邮件 批量修改必要配置 在注册页面导入准备好的文档文件之后，先全部选中之后，可批量修改一些必要配置。 注意：不可批量修改的配置会在批量选中之后灰显。 注册 确认信息正确后点击“全部注册”即可。 扩展不得不说IBM Lotus Notes系统的交互性和易用性还是很差的，在导入文本的时候，不支持csv格式，必须使用;分割。相对方便一点的做法就是在excel里用csv格式保存好后，再用txt文本打开，批量替换,为;。 另外批量导入不可实现全部配置信息的配置，导入之后还要手工修改一些配置这个也很难用。 更完整的介绍可以参考IBM官网的说明： https://www.ibm.com/support/knowledgecenter/SSKTMJ_8.5.3/com.ibm.help.domino.admin85.doc/H_ID_INFORMATION.html]]></content>
+    <content type="text"><![CDATA[背景IBM Lotus Notes邮箱系统在入职注册时，需要填写较多内容，当有大批员工入职的时候使用批量文本注册就方便一些。 批量方法Lotus Notes在用户注册页面有“导入文本文件”的按钮，通过该方式可以提前将用户的大部分内容天填充（注意：只是大部分内容），仍需要对其他一部分必要的配置进行手工配置。 填写导入文件 Lotus Notes可识别的txt文本，一个人员一行，信息通过;分割。可通过导入的信息，按列顺序说明如下： 顺序 参数名 对应注册页面tab页名 1 姓 基本 2 名 基本 3 中间名 基本 4 组织单元 其他 5 密码 基本 6 ID文件目录 标识信息 7 ID文件名 标识信息 8 邮箱服务器名称 邮件 9 邮箱文件路径 邮件 10 邮箱文件名 邮件 11 位置 其他 12 注释 其他 13 路由地址 地址 14 配置文件 其他 15 本地管理员 其他 16 互联网地址 地址 17 简称 基本 18 备用名 其他 19 备用组织单元 其他 20 邮件模板文件 邮件 批量修改必要配置 在注册页面导入准备好的文档文件之后，先全部选中之后，可批量修改一些必要配置。 注意：不可批量修改的配置会在批量选中之后灰显。 注册 确认信息正确后点击“全部注册”即可。 扩展不得不说IBM Lotus Notes系统的交互性和易用性还是很差的，在导入文本的时候，不支持csv格式，必须使用;分割。相对方便一点的做法就是在excel里用csv格式保存好后，再用txt文本打开，批量替换,为;。 另外批量导入不可实现全部配置信息的配置，导入之后还要手工修改一些配置这个也很难用。 更完整的介绍可以参考IBM官网的说明： https://www.ibm.com/support/knowledgecenter/SSKTMJ_8.5.3/com.ibm.help.domino.admin85.doc/H_ID_INFORMATION.html]]></content>
       <categories>
         <category>Lotus Notes</category>
       </categories>
@@ -464,8 +475,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -504,8 +515,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -596,8 +607,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1603,8 +1614,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>

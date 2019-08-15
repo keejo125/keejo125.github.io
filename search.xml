@@ -190,7 +190,7 @@
   <entry>
     <title><![CDATA[IBM Lotus Notes之批量注册]]></title>
     <url>%2FIBM-Lotus-Notes%E4%B9%8B%E6%89%B9%E9%87%8F%E6%B3%A8%E5%86%8C.html</url>
-    <content type="text"><![CDATA[背景IBM Lotus Notes邮箱系统在入职注册时，需要填写较多内容，当有大批员工入职的时候使用批量文本注册就方便一些。 批量方法Lotus Notes在用户注册页面有“导入文本文件”的按钮，通过该方式可以提前将用户的大部分内容天填充（注意：只是大部分内容），仍需要对其他一部分必要的配置进行手工配置。 填写导入文件 Lotus Notes可识别的txt文本，一个人员一行，信息通过;分割。可通过导入的信息，按列顺序说明如下： | 顺序 | 参数名 | 对应注册页面tab页名 || ——– | ——————- | ———————————————————— || 1 | 姓 | 基本 || 2 | 名 | The first name of the user. || 3 | 中间名 | 基本 || 4 | 组织单元 | 其他 || 5 | 密码 | 基本 || 6 | ID文件目录 | 标识信息 || 7 | ID文件名 | 标识信息 || 8 | 邮箱服务器名称 | 邮件 || 9 | 邮箱文件路径 | 邮件 || 10 | 邮箱文件名 | 邮件 || 11 | 位置 | 其他 || 12 | 注释 | 其他 || 13 | 路由地址 | 地址 || 14 | 配置文件 | 其他 || 15 | 本地管理员 | 其他 || 16 | 互联网地址 | 地址 || 17 | 简称 | 基本 || 18 | 备用名 | 其他 || 19 | 备用组织单元 | 其他 || 20 | 邮件模板文件 | 邮件 | 批量修改必要配置 在注册页面导入准备好的文档文件之后，先全部选中之后，可批量修改一些必要配置。 注意：不可批量修改的配置会在批量选中之后灰显。 注册 确认信息正确后点击“全部注册”即可。 扩展不得不说IBM Lotus Notes系统的交互性和易用性还是很差的，在导入文本的时候，不支持csv格式，必须使用;分割。相对方便一点的做法就是在excel里用csv格式保存好后，再用txt文本打开，批量替换,为;。 另外批量导入不可实现全部配置信息的配置，导入之后还要手工修改一些配置这个也很难用。 更完整的介绍可以参考IBM官网的说明： https://www.ibm.com/support/knowledgecenter/SSKTMJ_8.5.3/com.ibm.help.domino.admin85.doc/H_ID_INFORMATION.html]]></content>
+    <content type="text"><![CDATA[背景IBM Lotus Notes邮箱系统在入职注册时，需要填写较多内容，当有大批员工入职的时候使用批量文本注册就方便一些。 批量方法Lotus Notes在用户注册页面有“导入文本文件”的按钮，通过该方式可以提前将用户的大部分内容天填充（注意：只是大部分内容），仍需要对其他一部分必要的配置进行手工配置。 填写导入文件 Lotus Notes可识别的txt文本，一个人员一行，信息通过;分割。可通过导入的信息，按列顺序说明如下： 顺序 参数名 对应注册页面tab页名 1 姓 基本 2 名 The first name of the user. 3 中间名 基本 4 组织单元 其他 5 密码 基本 6 ID文件目录 标识信息 7 ID文件名 标识信息 8 邮箱服务器名称 邮件 9 邮箱文件路径 邮件 10 邮箱文件名 邮件 11 位置 其他 12 注释 其他 13 路由地址 地址 14 配置文件 其他 15 本地管理员 其他 16 互联网地址 地址 17 简称 基本 18 备用名 其他 19 备用组织单元 其他 20 邮件模板文件 邮件 批量修改必要配置 在注册页面导入准备好的文档文件之后，先全部选中之后，可批量修改一些必要配置。 注意：不可批量修改的配置会在批量选中之后灰显。 注册 确认信息正确后点击“全部注册”即可。 扩展不得不说IBM Lotus Notes系统的交互性和易用性还是很差的，在导入文本的时候，不支持csv格式，必须使用;分割。相对方便一点的做法就是在excel里用csv格式保存好后，再用txt文本打开，批量替换,为;。 另外批量导入不可实现全部配置信息的配置，导入之后还要手工修改一些配置这个也很难用。 更完整的介绍可以参考IBM官网的说明： https://www.ibm.com/support/knowledgecenter/SSKTMJ_8.5.3/com.ibm.help.domino.admin85.doc/H_ID_INFORMATION.html]]></content>
       <categories>
         <category>Lotus Notes</category>
       </categories>
@@ -464,8 +464,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -504,8 +504,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -596,8 +596,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1388,8 +1388,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>nlp</tag>
         <tag>pandas</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>
@@ -1603,8 +1603,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>

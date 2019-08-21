@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[AnyQ之编译安装]]></title>
+    <url>%2FAnyQ%E4%B9%8B%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85.html</url>
+    <content type="text"><![CDATA[背景百度开源了自己的智能客服系统AnyQ，也是最近才发现。在安装的过程中也是遇到很多问题。在github上它的安装md文件写的相当简单，特此记录一下。 基本硬件要求如果编译安装，内存至少需要6G！ 编译完之后运行，内存不需要这么多。 安装过程根据官方说明，采用docker方式安装，拉取paddle 12# paddle国内镜像docker pull hub.baidubce.com/paddlepaddle/paddle:latest-dev 注：这里的paddle是百度开源的深度学习平台，而非完整的AnyQ系统，该docker是一个安装好一些基础环境的Ubuntu环境。 打开docker镜像： 1docker run -t -i hub.baidubce.com/paddlepaddle/paddle:latest-dev /bin/bash 拉取AnyQ代码： 1git clone https://github.com/keejo125/AnyQ.git 注：这里没有使用原版代码了，因为原版代码的cmake中xgboost部分未指定版本，会导致后面编译出错。 如果拉取了原版git，那么需要进行如下修改： 12345# 安装vimapt-get install vim# 修改xgboost.cmakecd AnyQ/cmake/externalvim xgboost.cmake 修改部分为： 1DOWNLOAD_COMMAND git clone --recursive https://github.com/dmlc/xgboost.git &amp;&amp; cd xgboost &amp;&amp; git checkout v0.81 创建并进入build目录 1mkdir build &amp;&amp; cd build cmake 1cmake .. 编译 1make 这个过程会clone很多第三方项目，所以很慢，也要确保科学上网，可参考后面的说明 安装jdk1.8 123456789101112cd /tmptar -zxvf jdk-8u111-linux-x64.tar.gz mv /tmp/jdk1.8.0_221 /home/jdk1.8.0_221vim /etc/profile#增加：#set java envexport JAVA_HOME=/home/jdk1.8.0_221export JRE_HOME=$&#123;JAVA_HOME&#125;/jreexport CLASSPATH=.:$&#123;JAVA_HOME&#125;/lib:$&#123;JRE_HOME&#125;/libexport PATH=$&#123;JAVA_HOME&#125;/bin:$PATH 注：jdk文件需自行下载 配置 1234567# 获取anyq定制solr，anyq示例配置cp ../tools/anyq_deps.sh .sh anyq_deps.sh# 启动solr, 依赖python-json, jdk&gt;=1.8cp ../tools/solr -rp solr_scriptsh solr_script/anyq_solr.sh solr_script/sample_docs 启动 1./run_server 编译过程中可能出现的问题 问题1： 123456789c++: internal compiler error: Killed (program cc1plus)Please submit a full bug report,with preprocessed source if appropriate.See &lt;file:///usr/share/doc/gcc-4.8/README.Bugs&gt; for instructions.paddle/fluid/operators/math/CMakeFiles/context_project.dir/build.make:62: recipe for target 'paddle/fluid/operators/math/CMakeFiles/context_project.dir/context_project.cc.o' failedmake[5]: *** [paddle/fluid/operators/math/CMakeFiles/context_project.dir/context_project.cc.o] Error 4CMakeFiles/Makefile2:19906: recipe for target 'paddle/fluid/operators/math/CMakeFiles/context_project.dir/all' failedmake[4]: *** [paddle/fluid/operators/math/CMakeFiles/context_project.dir/all] Error 2make[4]: *** Waiting for unfinished jobs.... 解决办法： 增加docker容器的内存，也就是前面说的必须保证6G及以上，增加方法可参考： http://keejo.coding.me/docker之动态扩容.html 问题2： 123456789[ 28%] Built target context_projectMakefile:105: recipe for target &apos;all&apos; failedmake[3]: *** [all] Error 2CMakeFiles/extern_paddle.dir/build.make:111: recipe for target &apos;third_party/paddle/src/extern_paddle-stamp/extern_paddle-build&apos; failedmake[2]: *** [third_party/paddle/src/extern_paddle-stamp/extern_paddle-build] Error 2CMakeFiles/Makefile2:511: recipe for target &apos;CMakeFiles/extern_paddle.dir/all&apos; failedmake[1]: *** [CMakeFiles/extern_paddle.dir/all] Error 2Makefile:83: recipe for target &apos;all&apos; failedmake: *** [all] Error 2 解决办法： 多试几次 问题3： 123456789101112131415[ 32%] Performing build step for 'extern_lac'-- CXX compiler: /usr/bin/c++, version: GNU 4.8.5-- C compiler: /usr/bin/cc, version: GNU 4.8.5CMake Error at CMakeLists.txt:12 (message): A gcc compiler with a version &gt;= 4.8.2 is needed.-- Configuring incomplete, errors occurred!See also "/home/AnyQ/build/third_party/lac/src/lac/CMakeFiles/CMakeOutput.log".CMakeFiles/extern_lac.dir/build.make:111: recipe for target 'third_party/lac/src/extern_lac-stamp/extern_lac-build' failedmake[2]: *** [third_party/lac/src/extern_lac-stamp/extern_lac-build] Error 1CMakeFiles/Makefile2:585: recipe for target 'CMakeFiles/extern_lac.dir/all' failedmake[1]: *** [CMakeFiles/extern_lac.dir/all] Error 2Makefile:83: recipe for target 'all' failedmake: *** [all] Error 2 解决办法： 修改CmakeLists.txt文件： 12cd /home/AnyQ/build/third_party/lac/src/lac/vim CMakeLists.txt 将11行修改为: 1if (GCC_VERSION VERSION_LESS 4.8) 参考说明：https://github.com/baidu/lac/issues/5]]></content>
+      <categories>
+        <category>智能客服</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[docker之动态扩容]]></title>
     <url>%2Fdocker%E4%B9%8B%E5%8A%A8%E6%80%81%E6%89%A9%E5%AE%B9.html</url>
     <content type="text"><![CDATA[背景在用docker进行项目编译的时候，出现性能不足的情况， 12345678910111213zhengkaideMacBook-Pro:blog zhengk$ docker stats b9e5ebd23a78CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDSb9e5ebd23a78 wizardly_meninsky 2.65% 1.752GiB / 1.952GiB 89.74% 965MB / 23.1MB 282GB / 7.76GB 85CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDSb9e5ebd23a78 wizardly_meninsky 2.65% 1.752GiB / 1.952GiB 89.74% 965MB / 23.1MB 282GB / 7.76GB 85CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDSb9e5ebd23a78 wizardly_meninsky -- -- / -- -- -- -- --CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDSb9e5ebd23a78 wizardly_meninsky -- -- / -- -- -- -- --CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDSb9e5ebd23a78 wizardly_meninsky -- -- / -- -- -- -- --CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDSb9e5ebd23a78 wizardly_meninsky -- -- / -- -- -- -- -- 通过命令都无法显示性能情况。 不过可见，最大内存限制在1.952GiB。 动态扩容 先找到docker容器的id 123zhengkaideMacBook-Pro:blog zhengk$ docker ps -aCONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMESb9e5ebd23a78 hub.baidubce.com/paddlepaddle/paddle:latest-dev "/bin/bash" 4 days ago Up 2 days 22/tcp wizardly_meninsky 进行扩容 12zhengkaideMacBook-Pro:blog zhengk$ docker update -m 3072m b9e5ebd23a78Error response from daemon: Cannot update container b9e5ebd23a78843361c3f92dbdb7b07dcf01a85087c4c7b14670dc5cc440433c: Memory limit should be smaller than already set memoryswap limit, update the memoryswap at the same time 注：这里有一个错误提示，说要同步扩大memoryswap。 命令修改如下： 12zhengkaideMacBook-Pro:blog zhengk$ docker update -m 3072m --memory-swap -1 b9e5ebd23a78b9e5ebd23a78 再次查看 123zhengkaideMacBook-Pro:blog zhengk$ docker stats b9e5ebd23a78CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDSb9e5ebd23a78 wizardly_meninsky 2.65% 1.752GiB / 1.952GiB 89.74% 965MB / 23.1MB 282GB / 7.76GB 85 发现没有什么变化，限制还是1.952GiB。 这是由于docker在MacDesktop环境下默认限制了上限为2G。 Advanced settings are: CPUs: By default, Docker Desktop for Mac is set to use half the number of processors available on the host machine. To increase processing power, set this to a higher number; to decrease, lower the number. Memory: By default, Docker Desktop for Mac is set to use 2 GB runtime memory, allocated from the total available memory on your Mac. To increase RAM, set this to a higher number; to decrease it, lower the number. Swap: Configure swap file size as needed. The default is 1 GB. 修改Docker Desktop For Mac 重启容器并查看 12345678910111213zhengkaideMacBook-Pro:blog zhengk$ docker stop b9e5ebd23a78 b9e5ebd23a78 zhengkaideMacBook-Pro:blog zhengk$ docker start b9e5ebd23a78 b9e5ebd23a78 zhengkaideMacBook-Pro:blog zhengk$ docker stats b9e5ebd23a78 CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDS b9e5ebd23a78 wizardly_meninsky 0.00% 3.102MiB / 3GiB 0.10% 1.16kB / 0B 11.5MB / 0B 1 CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDS b9e5ebd23a78 wizardly_meninsky 0.00% 3.055MiB / 3GiB 0.10% 1.16kB / 0B 11.5MB / 0B 1 CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDS b9e5ebd23a78 wizardly_meninsky 0.00% 3.055MiB / 3GiB 0.10% 1.16kB / 0B 11.5MB / 0B 1 CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDS b9e5ebd23a78 wizardly_meninsky 0.00% 3.055MiB / 3GiB 0.10% 1.16kB / 0B 11.5MB / 0B 1 扩展对于桌面版的docker，还是要关注一下系统的配置，开始找了好久死活都没办法扩容。 对于常规的扩容，可参考帮助： 1234567891011121314151617181920212223zhengkaideMacBook-Pro:blog zhengk$ docker update --helpUsage: docker update [OPTIONS] CONTAINER [CONTAINER...]Update configuration of one or more containersOptions: --blkio-weight uint16 Block IO (relative weight), between 10 and 1000, or 0 to disable (default 0) --cpu-period int Limit CPU CFS (Completely Fair Scheduler) period --cpu-quota int Limit CPU CFS (Completely Fair Scheduler) quota --cpu-rt-period int Limit the CPU real-time period in microseconds --cpu-rt-runtime int Limit the CPU real-time runtime in microseconds -c, --cpu-shares int CPU shares (relative weight) --cpus decimal Number of CPUs --cpuset-cpus string CPUs in which to allow execution (0-3, 0,1) --cpuset-mems string MEMs in which to allow execution (0-3, 0,1) --kernel-memory bytes Kernel memory limit -m, --memory bytes Memory limit --memory-reservation bytes Memory soft limit --memory-swap bytes Swap limit equal to memory plus swap: '-1' to enable unlimited swap --pids-limit int Tune container pids limit (set -1 for unlimited) --restart string Restart policy to apply when a container exitszhengkaideMacBook-Pro:blog zhengk$ 使用命令动态修改之后，如果没重启的话 1234567zhengkaideMacBook-Pro:blog zhengk$ docker stats b9e5ebd23a78CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDSb9e5ebd23a78 wizardly_meninsky 0.00% 0B / 0B 0.00% 0B / 0B 0B / 0B 0CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDSb9e5ebd23a78 wizardly_meninsky 0.00% 0B / 0B 0.00% 0B / 0B 0B / 0B 0CONTAINER ID NAME CPU % MEM USAGE / LIMIT MEM % NET I/O BLOCK I/O PIDSb9e5ebd23a78 wizardly_meninsky 0.00% 0B / 0B 0.00% 0B / 0B 0B / 0B 0 无法直观的看到有没有生效，所以建议还是重启一次。]]></content>
@@ -486,8 +497,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -526,8 +537,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -618,8 +629,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1410,8 +1421,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>pandas</tag>
         <tag>nlp</tag>
+        <tag>pandas</tag>
       </tags>
   </entry>
   <entry>
@@ -1625,8 +1636,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>

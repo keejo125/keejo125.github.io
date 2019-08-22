@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[docker之java环境安装]]></title>
+    <url>%2Fdocker%E4%B9%8Bjava%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85.html</url>
+    <content type="text"><![CDATA[背景docker基本镜像环境：Ubuntu 目标安装java环境 jdk下载docker环境下只有命令行环境，所以无法通过登录oracle官方网站下载安装介质。 由于现在oracle现在下载安装介质必须先注册登录，所以导致无法通过wget下载，还需要在docker外先下载jdk介质，然后拷贝至docker内: 1docker cp /Users/zhengk/Downloads/jdk-8u221-linux-x64.tar.gz b9e5ebd23a78:/tmp 安装jdk解压jdk 12cd /tmptar -zxvf jdk-8u111-linux-x64.tar.gz 确定jdk路径 1mv /tmp/jdk1.8.0_221 /home/jdk1.8.0_221 配置环境变量 1vim /etc/profile 增加以下内容： 12345#set java envexport JAVA_HOME=/home/jdk1.8.0_221export JRE_HOME=$&#123;JAVA_HOME&#125;/jreexport CLASSPATH=.:$&#123;JAVA_HOME&#125;/lib:$&#123;JRE_HOME&#125;/libexport PATH=$&#123;JAVA_HOME&#125;/bin:$PATH 配置启动文件由于docker镜像启动后，会丢失环境变量。可采取两种方式规避： 运行镜像时配置环境变量参数 在启动文件中配置环境变量 这里采取第二种方式： 在根目录创建run.sh文件： 1vim /home/run.sh 增加如下内容： 12345678910#!/bin/bash# 配置环境变量source /etc/profile# 其他内容。。。# 进入目录# cd /home/AnyQ/build# 启动solr# sh solr_script/anyq_solr.sh solr_script/sample_docs# 启动AnyQ# ./run_server 该启动文件中可增加其他启动内容，后续可直接用于启动镜像内容。 提交镜像1docker commit 50f6af712d06 keejo/anyq:1.0 docker启动1docker run -t -i -p 8999:8999 keejo/anyq:1.0 /home/run.sh 启动后，就已经加载了java的环境变量了。 扩展关于Ubuntu的jdk安装，网上很多推荐使用apt-get的方式： 12345apt-get upgradeapt-get install software-properties-common python-software-propertiesadd-apt-repository ppa:webupd8team/javaapt-get upgradeapt-get install oracle-java8-installer 但该方法目前已经失效了。]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[AnyQ之编译安装]]></title>
     <url>%2FAnyQ%E4%B9%8B%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85.html</url>
-    <content type="text"><![CDATA[背景百度开源了自己的智能客服系统AnyQ，也是最近才发现。在安装的过程中也是遇到很多问题。在github上它的安装md文件写的相当简单，特此记录一下。 基本硬件要求如果编译安装，内存至少需要6G！ 编译完之后运行，内存不需要这么多。 安装过程根据官方说明，采用docker方式安装，拉取paddle 12# paddle国内镜像docker pull hub.baidubce.com/paddlepaddle/paddle:latest-dev 注：这里的paddle是百度开源的深度学习平台，而非完整的AnyQ系统，该docker是一个安装好一些基础环境的Ubuntu环境。 打开docker镜像： 1docker run -t -i hub.baidubce.com/paddlepaddle/paddle:latest-dev /bin/bash 拉取AnyQ代码： 1git clone https://github.com/keejo125/AnyQ.git 注：这里没有使用原版代码了，因为原版代码的cmake中xgboost部分未指定版本，会导致后面编译出错。 如果拉取了原版git，那么需要进行如下修改： 12345# 安装vimapt-get install vim# 修改xgboost.cmakecd AnyQ/cmake/externalvim xgboost.cmake 修改部分为： 1DOWNLOAD_COMMAND git clone --recursive https://github.com/dmlc/xgboost.git &amp;&amp; cd xgboost &amp;&amp; git checkout v0.81 创建并进入build目录 1mkdir build &amp;&amp; cd build cmake 1cmake .. 编译 1make 这个过程会clone很多第三方项目，所以很慢，也要确保科学上网，可参考后面的说明 安装jdk1.8 123456789101112cd /tmptar -zxvf jdk-8u111-linux-x64.tar.gz mv /tmp/jdk1.8.0_221 /home/jdk1.8.0_221vim /etc/profile#增加：#set java envexport JAVA_HOME=/home/jdk1.8.0_221export JRE_HOME=$&#123;JAVA_HOME&#125;/jreexport CLASSPATH=.:$&#123;JAVA_HOME&#125;/lib:$&#123;JRE_HOME&#125;/libexport PATH=$&#123;JAVA_HOME&#125;/bin:$PATH 注：jdk文件需自行下载 配置 1234567# 获取anyq定制solr，anyq示例配置cp ../tools/anyq_deps.sh .sh anyq_deps.sh# 启动solr, 依赖python-json, jdk&gt;=1.8cp ../tools/solr -rp solr_scriptsh solr_script/anyq_solr.sh solr_script/sample_docs 启动 1./run_server 编译过程中可能出现的问题 问题1： 123456789c++: internal compiler error: Killed (program cc1plus)Please submit a full bug report,with preprocessed source if appropriate.See &lt;file:///usr/share/doc/gcc-4.8/README.Bugs&gt; for instructions.paddle/fluid/operators/math/CMakeFiles/context_project.dir/build.make:62: recipe for target 'paddle/fluid/operators/math/CMakeFiles/context_project.dir/context_project.cc.o' failedmake[5]: *** [paddle/fluid/operators/math/CMakeFiles/context_project.dir/context_project.cc.o] Error 4CMakeFiles/Makefile2:19906: recipe for target 'paddle/fluid/operators/math/CMakeFiles/context_project.dir/all' failedmake[4]: *** [paddle/fluid/operators/math/CMakeFiles/context_project.dir/all] Error 2make[4]: *** Waiting for unfinished jobs.... 解决办法： 增加docker容器的内存，也就是前面说的必须保证6G及以上，增加方法可参考： http://keejo.coding.me/docker之动态扩容.html 问题2： 123456789[ 28%] Built target context_projectMakefile:105: recipe for target &apos;all&apos; failedmake[3]: *** [all] Error 2CMakeFiles/extern_paddle.dir/build.make:111: recipe for target &apos;third_party/paddle/src/extern_paddle-stamp/extern_paddle-build&apos; failedmake[2]: *** [third_party/paddle/src/extern_paddle-stamp/extern_paddle-build] Error 2CMakeFiles/Makefile2:511: recipe for target &apos;CMakeFiles/extern_paddle.dir/all&apos; failedmake[1]: *** [CMakeFiles/extern_paddle.dir/all] Error 2Makefile:83: recipe for target &apos;all&apos; failedmake: *** [all] Error 2 解决办法： 多试几次 问题3： 123456789101112131415[ 32%] Performing build step for 'extern_lac'-- CXX compiler: /usr/bin/c++, version: GNU 4.8.5-- C compiler: /usr/bin/cc, version: GNU 4.8.5CMake Error at CMakeLists.txt:12 (message): A gcc compiler with a version &gt;= 4.8.2 is needed.-- Configuring incomplete, errors occurred!See also "/home/AnyQ/build/third_party/lac/src/lac/CMakeFiles/CMakeOutput.log".CMakeFiles/extern_lac.dir/build.make:111: recipe for target 'third_party/lac/src/extern_lac-stamp/extern_lac-build' failedmake[2]: *** [third_party/lac/src/extern_lac-stamp/extern_lac-build] Error 1CMakeFiles/Makefile2:585: recipe for target 'CMakeFiles/extern_lac.dir/all' failedmake[1]: *** [CMakeFiles/extern_lac.dir/all] Error 2Makefile:83: recipe for target 'all' failedmake: *** [all] Error 2 解决办法： 修改CmakeLists.txt文件： 12cd /home/AnyQ/build/third_party/lac/src/lac/vim CMakeLists.txt 将11行修改为: 1if (GCC_VERSION VERSION_LESS 4.8) 参考说明：https://github.com/baidu/lac/issues/5]]></content>
+    <content type="text"><![CDATA[背景百度开源了自己的智能客服系统AnyQ，也是最近才发现。在安装的过程中也是遇到很多问题。在github上它的安装md文件写的相当简单，特此记录一下。 已经编译好的镜像，也推送到docerhub了，可直接使用： 1docker pull keejo/anyq 基本硬件要求如果编译安装，内存至少需要6G！ 编译完之后运行，内存不需要这么多。 安装过程根据官方说明，采用docker方式安装，拉取paddle 12# paddle国内镜像docker pull hub.baidubce.com/paddlepaddle/paddle:latest-dev 注：这里的paddle是百度开源的深度学习平台，而非完整的AnyQ系统，该docker是一个安装好一些基础环境的Ubuntu环境。 打开docker镜像： 1docker run -t -i hub.baidubce.com/paddlepaddle/paddle:latest-dev /bin/bash 拉取AnyQ代码： 1git clone https://github.com/keejo125/AnyQ.git 注：这里没有使用原版代码了，因为原版代码的cmake中xgboost部分未指定版本，会导致后面编译出错。 如果拉取了原版git，那么需要进行如下修改： 12345# 安装vimapt-get install vim# 修改xgboost.cmakecd AnyQ/cmake/externalvim xgboost.cmake 修改部分为： 1DOWNLOAD_COMMAND git clone --recursive https://github.com/dmlc/xgboost.git &amp;&amp; cd xgboost &amp;&amp; git checkout v0.81 创建并进入build目录 1mkdir build &amp;&amp; cd build cmake 1cmake .. 编译 1make 这个过程会clone很多第三方项目，所以很慢，也要确保科学上网，可参考后面的说明 安装jdk1.8 123456789101112cd /tmptar -zxvf jdk-8u111-linux-x64.tar.gz mv /tmp/jdk1.8.0_221 /home/jdk1.8.0_221vim /etc/profile#增加：#set java envexport JAVA_HOME=/home/jdk1.8.0_221export JRE_HOME=$&#123;JAVA_HOME&#125;/jreexport CLASSPATH=.:$&#123;JAVA_HOME&#125;/lib:$&#123;JRE_HOME&#125;/libexport PATH=$&#123;JAVA_HOME&#125;/bin:$PATH 注：jdk文件需自行下载 配置 1234567# 获取anyq定制solr，anyq示例配置cp ../tools/anyq_deps.sh .sh anyq_deps.sh# 启动solr, 依赖python-json, jdk&gt;=1.8cp ../tools/solr -rp solr_scriptsh solr_script/anyq_solr.sh solr_script/sample_docs 启动 1./run_server 浏览器访问 1http://localhost:8999/anyq?question=付费 编译过程中可能出现的问题 问题1： 123456789c++: internal compiler error: Killed (program cc1plus)Please submit a full bug report,with preprocessed source if appropriate.See &lt;file:///usr/share/doc/gcc-4.8/README.Bugs&gt; for instructions.paddle/fluid/operators/math/CMakeFiles/context_project.dir/build.make:62: recipe for target 'paddle/fluid/operators/math/CMakeFiles/context_project.dir/context_project.cc.o' failedmake[5]: *** [paddle/fluid/operators/math/CMakeFiles/context_project.dir/context_project.cc.o] Error 4CMakeFiles/Makefile2:19906: recipe for target 'paddle/fluid/operators/math/CMakeFiles/context_project.dir/all' failedmake[4]: *** [paddle/fluid/operators/math/CMakeFiles/context_project.dir/all] Error 2make[4]: *** Waiting for unfinished jobs.... 解决办法： 增加docker容器的内存，也就是前面说的必须保证6G及以上，增加方法可参考： http://keejo.coding.me/docker之动态扩容.html 问题2： 123456789[ 28%] Built target context_projectMakefile:105: recipe for target &apos;all&apos; failedmake[3]: *** [all] Error 2CMakeFiles/extern_paddle.dir/build.make:111: recipe for target &apos;third_party/paddle/src/extern_paddle-stamp/extern_paddle-build&apos; failedmake[2]: *** [third_party/paddle/src/extern_paddle-stamp/extern_paddle-build] Error 2CMakeFiles/Makefile2:511: recipe for target &apos;CMakeFiles/extern_paddle.dir/all&apos; failedmake[1]: *** [CMakeFiles/extern_paddle.dir/all] Error 2Makefile:83: recipe for target &apos;all&apos; failedmake: *** [all] Error 2 解决办法： 多试几次 问题3： 123456789101112131415[ 32%] Performing build step for 'extern_lac'-- CXX compiler: /usr/bin/c++, version: GNU 4.8.5-- C compiler: /usr/bin/cc, version: GNU 4.8.5CMake Error at CMakeLists.txt:12 (message): A gcc compiler with a version &gt;= 4.8.2 is needed.-- Configuring incomplete, errors occurred!See also "/home/AnyQ/build/third_party/lac/src/lac/CMakeFiles/CMakeOutput.log".CMakeFiles/extern_lac.dir/build.make:111: recipe for target 'third_party/lac/src/extern_lac-stamp/extern_lac-build' failedmake[2]: *** [third_party/lac/src/extern_lac-stamp/extern_lac-build] Error 1CMakeFiles/Makefile2:585: recipe for target 'CMakeFiles/extern_lac.dir/all' failedmake[1]: *** [CMakeFiles/extern_lac.dir/all] Error 2Makefile:83: recipe for target 'all' failedmake: *** [all] Error 2 解决办法： 修改CmakeLists.txt文件： 12cd /home/AnyQ/build/third_party/lac/src/lac/vim CMakeLists.txt 将11行修改为: 1if (GCC_VERSION VERSION_LESS 4.8) 参考说明：https://github.com/baidu/lac/issues/5]]></content>
       <categories>
         <category>智能客服</category>
       </categories>
@@ -36,7 +47,7 @@
   <entry>
     <title><![CDATA[docker之镜像删除]]></title>
     <url>%2Fdocker%E4%B9%8B%E9%95%9C%E5%83%8F%E5%88%A0%E9%99%A4.html</url>
-    <content type="text"><![CDATA[背景初用docker，pull下来一个没有用的镜像，还挺大的，为了节省空间要把删除。还是有好几步，也进一步理解一下docker。 删除过程 先查看当前镜像 1234zhengkaideMacBook-Pro:~ zhengk$ docker imagesREPOSITORY TAG IMAGE ID CREATED SIZEhub.baidubce.com/paddlepaddle/paddle latest d6410dc2c2a2 11 days ago 1.46GBhub.baidubce.com/paddlepaddle/paddle latest-dev 8b4039144315 2 weeks ago 8.02GB 删除镜像 12zhengkaideMacBook-Pro:~ zhengk$ docker rmi d6410dc2c2a2Error response from daemon: conflict: unable to delete d6410dc2c2a2 (must be forced) - image is being used by stopped container 5bfa8ac6cbaa 直接删除镜像就会有一个错误提示，说有一个未运行的容器正在使用，并给出了容器的id。 查看当前的容器 123456789zhengkaideMacBook-Pro:~ zhengk$ docker ps -a -q321364929b404b39bcd23d5ecf7d62e89e2c4ce996304e81543f353e36a653614038cf8b6af4e803c1df5bfa8ac6cbaa 这里需要加上-a的参数才行，否则只会显示运行中的容器。 删除容器 12zhengkaideMacBook-Pro:~ zhengk$ docker stop 5bfa8ac6cbaa5bfa8ac6cbaa 再次删除镜像 1234567891011zhengkaideMacBook-Pro:~ zhengk$ docker rmi d6410dc2c2a2Untagged: hub.baidubce.com/paddlepaddle/paddle:latestUntagged: hub.baidubce.com/paddlepaddle/paddle@sha256:86ee075613bed3984dea9d745c14d7dd65d8f85d08a7d831560ef30d53f17a62Deleted: sha256:d6410dc2c2a22d9bc2b8bd24341268f3f837ad3d1f79f71460f4055b7ec93e78Deleted: sha256:52783f218170a2311fc3be53c0997fc14e10883d707d1a7f6d35a851ec3e878cDeleted: sha256:315b57727c8dd33893082600afa70befc938aaf2da0eac606973f531f2b4f8dbDeleted: sha256:17ca841bc55eeb759914983629afe7ca099b0c2d88e0c569c7aa9d2d64d5bc21Deleted: sha256:59a6856f439d187f3ce3381d0a6b0816db99cc3d8468bcf8c9d1c39d2071dcffDeleted: sha256:82997a16a0d57ac7d8b416c0d83f5841193b6a56a7844b486ab6324730867fe0Deleted: sha256:5c6983f277f26021b5e38501fdf06fa29f7158a93641f3f10aedbdc9869121d0Deleted: sha256:aa54c2bc12290df2851a94b8834cae75e4627219d2b423d4d3db8b0a497e79a2 删除成功 总结docker在运行镜像时，会生成容器。删除镜像时，需要先删除容器。 所以需要先删除镜像对应的所有容器，再删除镜像。 正常删除思路如下： 通过docker ps -a可以查看所有容器和镜像的对应管理， 然后grep提取涉及需要删除镜像的条目， 再使用awk提去容器id， 传给docker rm执行操作。 简化一下命令： 删除容器： 1docker rm $(docker ps -a |grep 镜像名 | awk '&#123;print $1&#125;') 删除镜像 1docker rmi 镜像ID]]></content>
+    <content type="text"><![CDATA[背景初用docker，pull下来一个没有用的镜像，还挺大的，为了节省空间要把删除。还是有好几步，也进一步理解一下docker。 删除过程 先查看当前镜像 1234zhengkaideMacBook-Pro:~ zhengk$ docker imagesREPOSITORY TAG IMAGE ID CREATED SIZEhub.baidubce.com/paddlepaddle/paddle latest d6410dc2c2a2 11 days ago 1.46GBhub.baidubce.com/paddlepaddle/paddle latest-dev 8b4039144315 2 weeks ago 8.02GB 删镜像 12zhengkaideMacBook-Pro:~ zhengk$ docker rmi d6410dc2c2a2Error response from daemon: conflict: unable to delete d6410dc2c2a2 (must be forced) - image is being used by stopped container 5bfa8ac6cbaa 直接删除镜像就会有一个错误提示，说有一个未运行的容器正在使用，并给出了容器的id。 查看当前的容器 123456789zhengkaideMacBook-Pro:~ zhengk$ docker ps -a -q321364929b404b39bcd23d5ecf7d62e89e2c4ce996304e81543f353e36a653614038cf8b6af4e803c1df5bfa8ac6cbaa 这里需要加上-a的参数才行，否则只会显示运行中的容器。 停止容器 12zhengkaideMacBook-Pro:~ zhengk$ docker stop 5bfa8ac6cbaa5bfa8ac6cbaa 删除容器 12zhengkaideMacBook-Pro:~ zhengk$ docker rm 5bfa8ac6cbaa5bfa8ac6cbaa 再次删除镜像 1234567891011zhengkaideMacBook-Pro:~ zhengk$ docker rmi d6410dc2c2a2Untagged: hub.baidubce.com/paddlepaddle/paddle:latestUntagged: hub.baidubce.com/paddlepaddle/paddle@sha256:86ee075613bed3984dea9d745c14d7dd65d8f85d08a7d831560ef30d53f17a62Deleted: sha256:d6410dc2c2a22d9bc2b8bd24341268f3f837ad3d1f79f71460f4055b7ec93e78Deleted: sha256:52783f218170a2311fc3be53c0997fc14e10883d707d1a7f6d35a851ec3e878cDeleted: sha256:315b57727c8dd33893082600afa70befc938aaf2da0eac606973f531f2b4f8dbDeleted: sha256:17ca841bc55eeb759914983629afe7ca099b0c2d88e0c569c7aa9d2d64d5bc21Deleted: sha256:59a6856f439d187f3ce3381d0a6b0816db99cc3d8468bcf8c9d1c39d2071dcffDeleted: sha256:82997a16a0d57ac7d8b416c0d83f5841193b6a56a7844b486ab6324730867fe0Deleted: sha256:5c6983f277f26021b5e38501fdf06fa29f7158a93641f3f10aedbdc9869121d0Deleted: sha256:aa54c2bc12290df2851a94b8834cae75e4627219d2b423d4d3db8b0a497e79a2 删除成功 总结docker在运行镜像时，会生成容器。删除镜像时，需要先删除容器。 所以需要先删除镜像对应的所有容器，再删除镜像。 正常删除思路如下： 通过docker ps -a可以查看所有容器和镜像的对应管理， 然后grep提取涉及需要删除镜像的条目， 再使用awk提去容器id， 传给docker rm执行操作。 简化一下命令： 删除容器： 1docker rm $(docker ps -a |grep 镜像名 | awk '&#123;print $1&#125;') 删除镜像 1docker rmi 镜像ID]]></content>
       <categories>
         <category>docker</category>
       </categories>
@@ -497,8 +508,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -537,8 +548,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -629,8 +640,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1636,8 +1647,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1740,11 +1751,11 @@
       </categories>
       <tags>
         <tag>windows</tag>
-        <tag>SuSE</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
         <tag>Nginx</tag>
         <tag>tsung</tag>
+        <tag>SuSE</tag>
       </tags>
   </entry>
   <entry>

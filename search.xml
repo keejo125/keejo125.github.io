@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[oracle之select into多变量]]></title>
+    <url>%2Foracle%E4%B9%8Bselect-into%E5%A4%9A%E5%8F%98%E9%87%8F.html</url>
+    <content type="text"><![CDATA[背景在oracle写存储过程时，一般可通过如下方式获取传递变量 1select xx into v_xx from table1 但当需要获取多个变量时，就不可通过多个into来实现。 实现在有多个变量可通过一个select语句获取时，获取变量的方式如下： 1select x_1, x_2 into v_1, v_2 from table1 记得再使用变量v_1，v_2前要先声明。]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>oracle</category>
+      </categories>
+      <tags>
+        <tag>oracle</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[docker之java环境安装]]></title>
     <url>%2Fdocker%E4%B9%8Bjava%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85.html</url>
     <content type="text"><![CDATA[背景docker基本镜像环境：Ubuntu 目标安装java环境 jdk下载docker环境下只有命令行环境，所以无法通过登录oracle官方网站下载安装介质。 由于现在oracle现在下载安装介质必须先注册登录，所以导致无法通过wget下载，还需要在docker外先下载jdk介质，然后拷贝至docker内: 1docker cp /Users/zhengk/Downloads/jdk-8u221-linux-x64.tar.gz b9e5ebd23a78:/tmp 安装jdk解压jdk 12cd /tmptar -zxvf jdk-8u111-linux-x64.tar.gz 确定jdk路径 1mv /tmp/jdk1.8.0_221 /home/jdk1.8.0_221 配置环境变量 1vim /etc/profile 增加以下内容： 12345#set java envexport JAVA_HOME=/home/jdk1.8.0_221export JRE_HOME=$&#123;JAVA_HOME&#125;/jreexport CLASSPATH=.:$&#123;JAVA_HOME&#125;/lib:$&#123;JRE_HOME&#125;/libexport PATH=$&#123;JAVA_HOME&#125;/bin:$PATH 配置启动文件由于docker镜像启动后，会丢失环境变量。可采取两种方式规避： 运行镜像时配置环境变量参数 在启动文件中配置环境变量 这里采取第二种方式： 在根目录创建run.sh文件： 1vim /home/run.sh 增加如下内容： 12345678910#!/bin/bash# 配置环境变量source /etc/profile# 其他内容。。。# 进入目录# cd /home/AnyQ/build# 启动solr# sh solr_script/anyq_solr.sh solr_script/sample_docs# 启动AnyQ# ./run_server 该启动文件中可增加其他启动内容，后续可直接用于启动镜像内容。 提交镜像1docker commit 50f6af712d06 keejo/anyq:1.0 docker启动1docker run -t -i -p 8999:8999 keejo/anyq:1.0 /home/run.sh 启动后，就已经加载了java的环境变量了。 扩展关于Ubuntu的jdk安装，网上很多推荐使用apt-get的方式： 12345apt-get upgradeapt-get install software-properties-common python-software-propertiesadd-apt-repository ppa:webupd8team/javaapt-get upgradeapt-get install oracle-java8-installer 但该方法目前已经失效了。]]></content>
@@ -508,8 +521,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -548,8 +561,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -640,8 +653,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1647,8 +1660,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>

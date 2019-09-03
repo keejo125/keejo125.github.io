@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[FlashFXP之本地路径和远程路径切换]]></title>
+    <url>%2FFlashFXP%E4%B9%8B%E6%9C%AC%E5%9C%B0%E8%B7%AF%E5%BE%84%E5%92%8C%E8%BF%9C%E7%A8%8B%E8%B7%AF%E5%BE%84%E5%88%87%E6%8D%A2.html</url>
+    <content type="text"><![CDATA[背景今天在使用FlashFXP进行FTP传输的时候，突然软件两边都变成远端服务器了。找了好久才找到切换回本地目录的按钮。 本地远程切换看如下界面标红框的部分，当现实为房子图标时，是本地路径。 点击后会变成浏览器图标，则为远程路径。 扩展这次使用FlashFXP主要是为了弥补totalcommand的不足。TotalCommand对SFTP的支持不大好。所以在使用中遇到了如下情况： 使用TotalCommand进行ftp，root用户登录，只可以访问到/root路径下的文件，无法上一层访问到/根目录。 但使用FlashFXP进行sftp，root用户登录，就可以访问到全目录了。 这里主要原因还是服务器设置ftp和sftp时权限不一，以及TotalCommand对sftp支持的不足。]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>ftp</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[maven之'JAVA_HOME is set to an invalid directory'问题]]></title>
     <url>%2Fmaven%E4%B9%8B-JAVA-HOME-is-set-to-an-invalid-directory-%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景在配置maven的时候，测试maven时有了一个报错： 1Error: JAVA_HOME is set to an invalid directory. JAVA_HOME = “C:\Program Files\java\jdk1.8.0_181” Please set the JAVA_HOME variable in your environment to match the location of your Java installation. 解决过程根据网上搜索，主要有两个可能性： JAVA_HOME路径异常，比如后面多加了个;等情况 JAVA_HOME路径中有了空格 经测试，环境变量中没有多加;这种异常情况，于是考虑将jdk文件夹放到了根目录。 然后重新配置JAVA_HOME为：C:\jdk1.8.0_181，然后成功了。 但奇怪的是，再次将JAVA_HOME修改回：C:\Program Files\java\jdk1.8.0_181。还是成功的。这就很奇怪了。 扩展win10配置JAVA环境变量： https://www.runoob.com/w3cnote/windows10-java-setup.html maven配置： https://www.runoob.com/maven/maven-setup.html]]></content>

@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[plsql之根据表名查找涉及的存储过程]]></title>
+    <url>%2Fplsql%E4%B9%8B%E6%A0%B9%E6%8D%AE%E8%A1%A8%E5%90%8D%E6%9F%A5%E6%89%BE%E6%B6%89%E5%8F%8A%E7%9A%84%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B.html</url>
+    <content type="text"><![CDATA[背景最近再改一个老项目，主要逻辑是通过存储过程写的。在修改表时，不确定该表涉及到哪些存储过程，那么要怎么通过表名来查找哪些存储过程使用到了呢？ 比如查找events_list这张表涉及的存储过程 方法一使用sql语句： 1select * from user_source where text like '%events_list%' 输出结果如下： 这样就找到了那个存储过程使用到了这张表，还可以看到是在哪一行。 方法二使用plsql的查找功能： 在工具 - 查找数据库对象 然后进行搜索，结果如下： 既可以搜出来表，又可以搜出来对应的存储过程。]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>oracle</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>oracle</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[git之回退远端版本库]]></title>
     <url>%2Fgit%E4%B9%8B%E5%9B%9E%E9%80%80%E8%BF%9C%E7%AB%AF%E7%89%88%E6%9C%AC%E5%BA%93.html</url>
     <content type="text"><![CDATA[背景在多分支的情况下，不小心推送到了错误的分支上。这时就需要会对远端版本库。 退回方法其实回退思路还是比较清晰的： 本地回退到上一提交 将当前状态再次提交到远程仓库 具体实现如下： 查看当前所有的提交记录： 1git log 找到我们需要回退到提交位置的id：xxxx 本地回退 1git reset --hard xxxx 再次推送 1git push -f 由于这里推送之后，会出现要推送的版本早于远程版本的情况，所以必须使用-f参数。 扩展本次在恢复后再推送时，报了个错： 这是由于我在git仓库对master分支进行了protected。取消掉之后就可以了。]]></content>
@@ -567,8 +581,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -607,8 +621,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -699,8 +713,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1706,8 +1720,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>

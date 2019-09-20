@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Oracle之数据库密码过期问题]]></title>
+    <url>%2FOracle%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%86%E7%A0%81%E8%BF%87%E6%9C%9F%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景今天系统突然访问异常，排查了下发现是由于oracle数据库用户名密码过期导致。 使用plsql登陆数据库，会发现如下提示： 解决办法可通过如下命令查看当前oracle数据库是否存在密码时效： 1select * from dba_profiles where profile= 'DEFAULT' and resource_name = 'PASSWORD_LIFE_TIME'; 结果如下： 可见密码有效期为180天，到期后必须修改密码，否则就会导致数据库不可用的问题。 通过如下命令，将密码设置为永久： 1alter profile default limit password_life_time unlimited; 再次查看密码情况：]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>oracle</category>
+      </categories>
+      <tags>
+        <tag>oracle</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[plsql之根据表名查找涉及的存储过程]]></title>
     <url>%2Fplsql%E4%B9%8B%E6%A0%B9%E6%8D%AE%E8%A1%A8%E5%90%8D%E6%9F%A5%E6%89%BE%E6%B6%89%E5%8F%8A%E7%9A%84%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B.html</url>
     <content type="text"><![CDATA[背景最近再改一个老项目，主要逻辑是通过存储过程写的。在修改表时，不确定该表涉及到哪些存储过程，那么要怎么通过表名来查找哪些存储过程使用到了呢？ 比如查找events_list这张表涉及的存储过程 方法一使用sql语句： 1select * from user_source where text like '%events_list%' 输出结果如下： 这样就找到了那个存储过程使用到了这张表，还可以看到是在哪一行。 方法二使用plsql的查找功能： 在工具 - 查找数据库对象 然后进行搜索，结果如下： 既可以搜出来表，又可以搜出来对应的存储过程。]]></content>
@@ -1505,8 +1518,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>pandas</tag>
         <tag>nlp</tag>
+        <tag>pandas</tag>
       </tags>
   </entry>
   <entry>

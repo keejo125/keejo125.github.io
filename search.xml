@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[阿里云Nginx部署SSL证书]]></title>
+    <url>%2F%E9%98%BF%E9%87%8C%E4%BA%91Nginx%E9%83%A8%E7%BD%B2SSL%E8%AF%81%E4%B9%A6.html</url>
+    <content type="text"><![CDATA[背景要是自己的域名可以通过https来访问，需要部署ssl证书，目前阿里云是有免费证书可以购买的，每次购买之后有效期为1年。到期需重新购买，并部署。 部署方法 登陆阿里云 SSL证书管理控制台， 先购买证书，带审核通过后，在已签发中会看到购买的证书。 点击右侧的“下载”按钮 然后在左侧选择“Nginx”， 会下载一个压缩包，解压后有两个证书文件，后缀分别为：.key，.pem。 上传证书 登陆阿里云服务器，找到Nginx安装目录，创建cert目录，并将这两个文件上传。参考路径如下： 1/usr/local/nginx/cert 确认Nginx配置 确认Nginx中关于ssl的配置正确，在Nginx的conf文件中确认存在如下部分配置： 1234567891011# HTTPS server server &#123; listen 443 ssl; server_name localhost; ssl_certificate /usr/local/nginx/cert/xxx.pem; ssl_certificate_key /usr/local/nginx/cert/xxx.key; .... &#125; 重启Nginx即可。]]></content>
+      <categories>
+        <category>中间件</category>
+        <category>nginx</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+        <tag>阿里云</tag>
+        <tag>SSL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[windows cmd统计文件数]]></title>
     <url>%2Fwindows-cmd%E7%BB%9F%E8%AE%A1%E6%96%87%E4%BB%B6%E6%95%B0.html</url>
     <content type="text"><![CDATA[背景在需要统计某个文件夹下一共有多少个文件时，可以直接使用cmd命令来获取。 解决办法 打开cmd，并切换到需要统计的目录下 输入如下命令： 12&gt; dir /b /s /a:-D | find /v /c ""54 扩展find参数说明： 12345678910111213141516&gt;find /?在文件中搜索字符串。FIND [/V] [/C] [/N] [/I] [/OFF[LINE]] "string" [[drive:][path]filename[ ...]] /V 显示所有未包含指定字符串的行。 /C 仅显示包含字符串的行数。 /N 显示行号。 /I 搜索字符串时忽略大小写。 /OFF[LINE] 不要跳过具有脱机属性集的文件。 "string" 指定要搜索的文本字符串。 [drive:][path]filename 指定要搜索的文件。如果没有指定路径，FIND 将搜索在提示符处键入的文本或者由另一命令产生的文本。 dir参数说明： 12345678910111213141516171819202122232425262728293031323334353637383940&gt;dir /?显示目录中的文件和子目录列表。DIR [drive:][path][filename] [/A[[:]attributes]] [/B] [/C] [/D] [/L] [/N] [/O[[:]sortorder]] [/P] [/Q] [/R] [/S] [/T[[:]timefield]] [/W] [/X] [/4] [drive:][path][filename] 指定要列出的驱动器、目录和/或文件。 /A 显示具有指定属性的文件。 属性 D 目录 R 只读文件 H 隐藏文件 A 准备存档的文件 S 系统文件 I 无内容索引文件 L 解析点 - 表示“否”的前缀 /B 使用空格式(没有标题信息或摘要)。 /C 在文件大小中显示千位数分隔符。这是默认值。用 /-C 来 禁用分隔符显示。 /D 跟宽式相同，但文件是按栏分类列出的。 /L 用小写。 /N 新的长列表格式，其中文件名在最右边。 /O 用分类顺序列出文件。 排列顺序 N 按名称(字母顺序) S 按大小(从小到大) E 按扩展名(字母顺序) D 按日期/时间(从先到后) G 组目录优先 - 反转顺序的前缀 /P 在每个信息屏幕后暂停。 /Q 显示文件所有者。 /R 显示文件的备用数据流。 /S 显示指定目录和所有子目录中的文件。 /T 控制显示或用来分类的时间字符域。 时间段 C 创建时间 A 上次访问时间 W 上次写入的时间 /W 用宽列表格式。 /X 显示为非 8.3 文件名产生的短名称。格式是 /N 的格式， 短名称插在长名称前面。如果没有短名称，在其位置则 显示空白。 /4 用四位数字显示年可以在 DIRCMD 环境变量中预先设定开关。通过添加前缀 - (破折号)来替代预先设定的开关。例如，/-W。]]></content>
@@ -1873,9 +1887,9 @@
       <tags>
         <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>Nginx</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
-        <tag>Nginx</tag>
         <tag>tsung</tag>
       </tags>
   </entry>

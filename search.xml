@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[PowerMock之Mock单例对象]]></title>
+    <url>%2FPowerMock%E4%B9%8BMock%E5%8D%95%E4%BE%8B%E5%AF%B9%E8%B1%A1.html</url>
+    <content type="text"><![CDATA[背景在使用PowerMock进行Mock对象来简化单元测试时，遇到单例的情况可能会出现空指针异常。情况如下： 原代码： 123456import SingletonApublic class Demo &#123; public int doTest() &#123; return SingletonA.getInstance().incr(1); &#125;&#125; 测试代码： 123456789101112@RunWith(PowerMockRunner.class)@PrepareForTest(&#123;SingletonA.class&#125;)public class demoTest &#123; private Demo demo; public void testDoTest() &#123; PowerMockito.mockStatic(SingletonA.class); PowerMockito.when(SingletonA.getInstance().incr(Mockito.any())).thenReturn(1); Assert.assertEquals(1, demo.doTest()); &#125;&#125; 结果就运行异常，在 PowerMockito.when(SingletonA.getInstance().incr(Mockito.any())).thenReturn(1); 这句提示NullPointException。 解决办法这里是由于Mock的是一个单例，获取之后其实是一个空的对象，那么自然没办法调用其方法（.incr()）。 解决办法是先mock一个单例对象并返回，再对这个对象的方法进行模拟。 代码如下： 12345678910111213141516@RunWith(PowerMockRunner.class)@PrepareForTest(&#123;SingletonA.class&#125;)public class demoTest &#123; private Demo demo; @Mock private SingletonA singletonA; public void testDoTest() &#123; PowerMockito.mockStatic(SingletonA.class); PowerMockito.when(SingletonA.getInstance()).thenReturn(singletonA); PowerMockito.when(singletonA.incr(Mockito.any())).thenReturn(1); Assert.assertEquals(1, demo.doTest()); &#125;&#125;]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>PowerMock</tag>
+        <tag>单元测试</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[阿里云Nginx部署SSL证书]]></title>
     <url>%2F%E9%98%BF%E9%87%8C%E4%BA%91Nginx%E9%83%A8%E7%BD%B2SSL%E8%AF%81%E4%B9%A6.html</url>
     <content type="text"><![CDATA[背景要是自己的域名可以通过https来访问，需要部署ssl证书，目前阿里云是有免费证书可以购买的，每次购买之后有效期为1年。到期需重新购买，并部署。 部署方法 登陆阿里云 SSL证书管理控制台， 先购买证书，带审核通过后，在已签发中会看到购买的证书。 点击右侧的“下载”按钮 然后在左侧选择“Nginx”， 会下载一个压缩包，解压后有两个证书文件，后缀分别为：.key，.pem。 上传证书 登陆阿里云服务器，找到Nginx安装目录，创建cert目录，并将这两个文件上传。参考路径如下： 1/usr/local/nginx/cert 确认Nginx配置 确认Nginx中关于ssl的配置正确，在Nginx的conf文件中确认存在如下部分配置： 1234567891011# HTTPS server server &#123; listen 443 ssl; server_name localhost; ssl_certificate /usr/local/nginx/cert/xxx.pem; ssl_certificate_key /usr/local/nginx/cert/xxx.key; .... &#125; 重启Nginx即可。]]></content>
@@ -643,8 +656,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -683,8 +696,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -775,8 +788,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1782,8 +1795,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>

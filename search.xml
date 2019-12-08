@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Mac重置mysqlroot密码及Navicat登陆]]></title>
+    <url>%2FMac%E9%87%8D%E7%BD%AEmysqlroot%E5%AF%86%E7%A0%81%E5%8F%8ANavicat%E7%99%BB%E9%99%86.html</url>
+    <content type="text"><![CDATA[背景以前装的mysql数据库忘记了root密码，查了下重置密码方法，记录一下。 重置方法 关闭mysql进程 可以使用命令来关闭： 123$ sudo /usr/local/mysql/support-files/mysql.server stopShutting down MySQL.. SUCCESS! 或者在 系统偏好设置 - MySQL 中点击 “Stop MySQL Server”。 进度mysql安全模式 1$ sudo /usr/local/mysql/bin/mysqld_safe --skip-grant-tables 这里会提示输入密码，就是你mac的密码就好了。 另开一个进程，直接使用root用户登录 12345$ sudo /usr/local/mysql/bin/mysql -u rootPassword:Welcome to the MySQL monitor. Commands end with ; or \g.Your MySQL connection id is 7Server version: 8.0.13 MySQL Community Server - GPL 修改root密码 12345678910111213mysql&gt; use mysql;Reading table information for completion of table and column namesYou can turn off this feature to get a quicker startup with -ADatabase changedmysql&gt; flush privileges;Query OK, 0 rows affected (0.01 sec)mysql&gt; alter user 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'XXXX';Query OK, 0 rows affected (0.16 sec)mysql&gt; quit;Bye 关闭mysql进程 这里建议还是用命令来关，通过 系统偏好设置 里面关，可能关闭失败。命令如下： 123$ sudo /usr/local/mysql/support-files/mysql.server stopShutting down MySQL.. SUCCESS! 再次启动mysql即可 1234$ sudo /usr/local/mysql/support-files/mysql.server restart ERROR! MySQL server PID file could not be found!Starting MySQL. SUCCESS! 注意 Mac sudo密码 网上有种方式是要启用mac的root用户，先su之后在操作。实践了一下，直接使用sudo前缀，用自己的mac用户密码就可以了。 mysql加密方式在重置密码的时候，如果使用的是： 1alter user 'root'@'localhost' IDENTIFIED BY 'XXXX'; 也是可以登录成功的，但是这样会使用默认加密方式，使用Navicat登录时会有个“caching_sha2_password”的错误。 需要将加密方式修改为普通方式(mysql_native_password)： 1alter user &apos;root&apos;@&apos;localhost&apos; IDENTIFIED WITH mysql_native_password BY &apos;XXXX&apos;;]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[PowerMock之Mock单例对象]]></title>
     <url>%2FPowerMock%E4%B9%8BMock%E5%8D%95%E4%BE%8B%E5%AF%B9%E8%B1%A1.html</url>
     <content type="text"><![CDATA[背景在使用PowerMock进行Mock对象来简化单元测试时，遇到单例的情况可能会出现空指针异常。情况如下： 原代码： 123456import SingletonApublic class Demo &#123; public int doTest() &#123; return SingletonA.getInstance().incr(1); &#125;&#125; 测试代码： 123456789101112@RunWith(PowerMockRunner.class)@PrepareForTest(&#123;SingletonA.class&#125;)public class demoTest &#123; private Demo demo; public void testDoTest() &#123; PowerMockito.mockStatic(SingletonA.class); PowerMockito.when(SingletonA.getInstance().incr(Mockito.any())).thenReturn(1); Assert.assertEquals(1, demo.doTest()); &#125;&#125; 结果就运行异常，在 PowerMockito.when(SingletonA.getInstance().incr(Mockito.any())).thenReturn(1); 这句提示NullPointException。 解决办法这里是由于Mock的是一个单例，获取之后其实是一个空的对象，那么自然没办法调用其方法（.incr()）。 解决办法是先mock一个单例对象并返回，再对这个对象的方法进行模拟。 代码如下： 12345678910111213141516@RunWith(PowerMockRunner.class)@PrepareForTest(&#123;SingletonA.class&#125;)public class demoTest &#123; private Demo demo; @Mock private SingletonA singletonA; public void testDoTest() &#123; PowerMockito.mockStatic(SingletonA.class); PowerMockito.when(SingletonA.getInstance()).thenReturn(singletonA); PowerMockito.when(singletonA.incr(Mockito.any())).thenReturn(1); Assert.assertEquals(1, demo.doTest()); &#125;&#125;]]></content>
@@ -1845,8 +1858,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>微信小程序</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -2021,8 +2034,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>小程序</tag>
         <tag>node</tag>
+        <tag>小程序</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[数据库之使用excel公式转驼峰格式]]></title>
+    <url>%2F%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%8B%E4%BD%BF%E7%94%A8excel%E5%85%AC%E5%BC%8F%E8%BD%AC%E9%A9%BC%E5%B3%B0%E6%A0%BC%E5%BC%8F.html</url>
+    <content type="text"><![CDATA[背景在将表结构转换为json格式时，需要把数据库字段名转换为驼峰格式，可以使用excel公式来快速实现。 方法直接使用公式： B2为原字符串所在表格位置。 1=LOWER(LEFT(B2,1))&amp;MID(SUBSTITUTE(PROPER(B2),"_",""),2,LEN(B2)) 原理如下： 公式 =PROPER(A2) =SUBSTITUTE(B2,”_”,””) =LOWER(LEFT(A2,1))&amp;MID(C2,2,LEN(A2)) =LOWER(LEFT(A2,1))&amp;MID(SUBSTITUTE(PROPER(A2),”_”,””),2,LEN(A2)) 结果 my_product_id My_Product_Id MyProductId myProductId myProductId 由于无法获取删除_后的字段明确长度，直接使用原长度即可（原长度必然大于删除后的长度）。]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>excel</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[数据库之日期与字符串转换]]></title>
     <url>%2F%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%8B%E6%97%A5%E6%9C%9F%E4%B8%8E%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2.html</url>
     <content type="text"><![CDATA[Oracle 日期转为字符串：to_char(date, format) 1select sysdate,to_char(sysdate,'yyyymmdd hh24:mi:ss')from dual; 字符串转为日期： to_date(string, format) 1select sysdate,to_date('20170615','yyyy-mm-dd hh24:mi:ss')from dual; MySQL 日期转为字符串：date_format(date, format) 1select date_fromat(sysdate(),'%Y-%m-%d %H:%i:%s') as result 字符串转为日期：str_to_date(string, format) 1select str_to_date('20191225111111', '%Y%m%d%H%i%s') as result]]></content>

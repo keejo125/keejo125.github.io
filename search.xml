@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[数据库之日期与字符串转换]]></title>
+    <url>%2F%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%8B%E6%97%A5%E6%9C%9F%E4%B8%8E%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2.html</url>
+    <content type="text"><![CDATA[Oracle 日期转为字符串：to_char(date, format) 1select sysdate,to_char(sysdate,'yyyymmdd hh24:mi:ss')from dual; 字符串转为日期： to_date(string, format) 1select sysdate,to_date('20170615','yyyy-mm-dd hh24:mi:ss')from dual; MySQL 日期转为字符串：date_format(date, format) 1select date_fromat(sysdate(),'%Y-%m-%d %H:%i:%s') as result 字符串转为日期：str_to_date(string, format) 1select str_to_date('20191225111111', '%Y%m%d%H%i%s') as result]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>MySQL</tag>
+        <tag>oracle</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[mysql之造数]]></title>
     <url>%2Fmysql%E4%B9%8B%E9%80%A0%E6%95%B0.html</url>
     <content type="text"><![CDATA[背景在进行编码自测的时候经常会涉及到数据库造数。当表字段很多时候，手工造数就比较麻烦，可以考虑使用工具进行造数。 造数工具还是比较多的，目前试用了下，使用基于python开源的datafaker还是比较方便的。 使用说明以mysql为例 安装datafaker 1pip install datafaker 安装mysql包 1pip install mysqlclient 使用mysql命令获取表结构参数 1show full columns from tablename 将结果中的Field、Type、Comment列获取放在excel里 构造meta.txt文件 datafaker造数主要通过meta文件进行规则配置，官方的例子如下： 1234567891011id||int||自增id[:inc(id,1)]name||varchar(20)||学生名字school||varchar(20)||学校名字[:enum(file://names.txt)]nickname||varchar(20)||学生小名[:enum(鬼泣, 高小王子, 歌神, 逗比)]age||int||学生年龄[:age]class_num||int||班级人数[:int(10, 100)]score||decimal(4,2)||成绩[:decimal(4,2,1)]phone||bigint||电话号码[:phone_number]email||varchar(64)||家庭网络邮箱[:email]ip||varchar(32)||IP地址[:ipv4]address||text||家庭地址[:address] 即前面获取的三列信息，通过||分割，如果有特殊规则，则在Comment后增加规则，详细规则可参考： https://github.com/gangly/datafaker/blob/master/doc/数据构造规则.md 屏幕打印造数命令 123456789101112131415$ datafaker rdb mysql+mysqldb://root:root@localhost:3600/test?charset=utf8 stu 10 --outprint --meta meta.txt --outspliter ',,'1,,鲍红,,人和中心,,高小王子,,3,,81,,55.6,,13197453222,,mwei@gmail.com,,192.100.224.255,,江苏省西宁市梁平朱路I座 9442042,,刘东,,清华中学,,高小王子,,3,,31,,52.4,,15206198472,,lili@kong.cn,,203.0.190.6,,内蒙古自治区嘉禾市兴山呼和浩特街E座 7064213,,匡静,,人和中心,,歌神,,9,,84,,72.51,,18944398099,,zouchao@gmail.com,,203.1.53.166,,安徽省永安市沈河惠州街x座 3454154,,王宇,,猪场,,逗比,,6,,89,,19.3,,18628114285,,na58@cai.net,,169.4.126.215,,山西省梧州县朝阳何路y座 8464305,,陆桂芝,,猪场,,逗比,,8,,99,,92.22,,13304570255,,na55@ti.cn,,168.136.127.200,,江苏省英县徐汇尹街C座 9082406,,顾阳,,猪场,,歌神,,9,,32,,43.14,,18025578420,,linping@pr.net,,174.50.222.39,,黑龍江省惠州县梁平大冶街Z座 6117367,,杨洁,,人和中心,,鬼泣,,6,,35,,81.25,,13654306263,,minzhong@xiaxia.cn,,100.57.79.2,,湖北省琳市沙湾汪街V座 5446608,,申璐,,人和中心,,鬼泣,,6,,14,,73.61,,13866020503,,changxiulan@chaoxia.cn,,198.248.254.56,,陕西省合山县东丽宁德街Q座 8100179,,申强,,广东中学,,逗比,,7,,48,,90.65,,13915915013,,ysun@chao.cn,,169.210.122.39,,甘肃省冬梅县城北六安街Z座 61975510,,李丹丹,,旧大院,,鬼泣,,3,,67,,87.63,,18899812516,,xiulanmo@qin.cn,,192.52.218.133,,湖南省宜都县萧山澳门街E座 791911generated records : 10printed records : 10time used: 0.458 s 写入mysql造数命令 1datafaker rdb mysql+mysqldb://root:root@localhost:3600/test?charset=utf8 stu 10 --meta meta.txt 注意 当类型是int(11)这种情况时，目前版本是会报错的： 1ValueError: empty range for randrange() (11,1, -10) 目前是可通过在meta.txt对应的行中，在comment中注明规则，如： 1class_num||int||班级人数[:int(10, 100)] 目前也提交对issue待解决。 更多可参考官方github：https://github.com/gangly/datafaker]]></content>
@@ -693,8 +706,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -733,8 +746,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -825,8 +838,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1617,8 +1630,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>pandas</tag>
         <tag>nlp</tag>
+        <tag>pandas</tag>
       </tags>
   </entry>
   <entry>
@@ -1832,8 +1845,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>

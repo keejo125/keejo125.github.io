@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[MyBatis之Result Maps collection already contains value异常]]></title>
+    <url>%2FMyBatis%E4%B9%8BResult-Maps-collection-already-contains-value%E5%BC%82%E5%B8%B8.html</url>
+    <content type="text"><![CDATA[背景在运行SpringBoot项目时，启动过程中出现异常，异常提示为： 1Result Maps collection already contains value for...BaseResultMap 排查从异常日志看出，问题出在Mapper.xml文件里面，提示有BaseResultMap这个结果集有多个。 那么到对应的mapper文件中确认一下，发现的确有重复定义，而且基本上整个文件都重复写了两遍。 原因一般在开发过程中，先建立了数据库表之后，通过MyBatis Generator进行逆向自动生成mapper.xml, DO对象定义以及Dao文件。本次使用的是better-mybatis-generator这个插件。 但要注意的是，当你对某个表格重复生成了两次，那么生成的文件不会覆盖之前的文件，而是在之前的文件后面追加了一遍。 解决办法可以通过删除重复部分解决。 但由于生成的文件内容比较长，我采取了整个删掉重新再次生成一遍的方式解决。]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>MyBatis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[数据库之使用excel公式转驼峰格式]]></title>
     <url>%2F%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%8B%E4%BD%BF%E7%94%A8excel%E5%85%AC%E5%BC%8F%E8%BD%AC%E9%A9%BC%E5%B3%B0%E6%A0%BC%E5%BC%8F.html</url>
     <content type="text"><![CDATA[背景在将表结构转换为json格式时，需要把数据库字段名转换为驼峰格式，可以使用excel公式来快速实现。 方法直接使用公式： B2为原字符串所在表格位置。 1=LOWER(LEFT(B2,1))&amp;MID(SUBSTITUTE(PROPER(B2),"_",""),2,LEN(B2)) 原理如下： 公式 =PROPER(A2) =SUBSTITUTE(B2,”_”,””) =LOWER(LEFT(A2,1))&amp;MID(C2,2,LEN(A2)) =LOWER(LEFT(A2,1))&amp;MID(SUBSTITUTE(PROPER(A2),”_”,””),2,LEN(A2)) 结果 my_product_id My_Product_Id MyProductId myProductId myProductId 由于无法获取删除_后的字段明确长度，直接使用原长度即可（原长度必然大于删除后的长度）。]]></content>
@@ -654,8 +666,8 @@
         <category>java</category>
       </categories>
       <tags>
-        <tag>oracle</tag>
         <tag>java</tag>
+        <tag>oracle</tag>
       </tags>
   </entry>
   <entry>
@@ -718,8 +730,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -758,8 +770,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -850,8 +862,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1642,8 +1654,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>nlp</tag>
         <tag>pandas</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>
@@ -1857,8 +1869,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1962,9 +1974,9 @@
       <tags>
         <tag>windows</tag>
         <tag>SuSE</tag>
-        <tag>Nginx</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
+        <tag>Nginx</tag>
         <tag>tsung</tag>
       </tags>
   </entry>

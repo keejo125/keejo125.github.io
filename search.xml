@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[idea之不支持发行版本5]]></title>
+    <url>%2Fidea%E4%B9%8B%E4%B8%8D%E6%94%AF%E6%8C%81%E5%8F%91%E8%A1%8C%E7%89%88%E6%9C%AC5.html</url>
+    <content type="text"><![CDATA[背景在maven项目中，引入一个新的依赖，然后编译运行的时候出现了报错，提示“不支持的发行版本5”，然后终止了编译。报错截图如下： 排查解决由于是新引入依赖导致的，在pom文件中把依赖注释后，问题解决。 但是发现同样的pom在别人的电脑上是可以运行的，那么应该是哪里设置有问题。 经过百度发现，原因在IDEA上。 本机的idea与其他正常运行的idea比版本较新，在idea上有几个配置java版本的地方，需要根据实际情况配置： 在“File” - “Project Structure”中，查看“Project” 和 “Module”下的Java版本是否与本机实际上一致： 在“Settings” - “Build，Execution，Deployment” - “Java Compiler” 中，查看版本是否一致： 可以发现，每个地方的版本都不大相同，新版idea（2019.03）中，默认的版本设置为11，而我本机实际上是8的版本。 把全部改成8之后，问题解决。]]></content>
+      <categories>
+        <category>javaÅ</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>idea</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[MyBatis之Result Maps collection already contains value异常]]></title>
     <url>%2FMyBatis%E4%B9%8BResult-Maps-collection-already-contains-value%E5%BC%82%E5%B8%B8.html</url>
     <content type="text"><![CDATA[背景在运行SpringBoot项目时，启动过程中出现异常，异常提示为： 1Result Maps collection already contains value for...BaseResultMap 排查从异常日志看出，问题出在Mapper.xml文件里面，提示有BaseResultMap这个结果集有多个。 那么到对应的mapper文件中确认一下，发现的确有重复定义，而且基本上整个文件都重复写了两遍。 原因一般在开发过程中，先建立了数据库表之后，通过MyBatis Generator进行逆向自动生成mapper.xml, DO对象定义以及Dao文件。本次使用的是better-mybatis-generator这个插件。 但要注意的是，当你对某个表格重复生成了两次，那么生成的文件不会覆盖之前的文件，而是在之前的文件后面追加了一遍。 解决办法可以通过删除重复部分解决。 但由于生成的文件内容比较长，我采取了整个删掉重新再次生成一遍的方式解决。]]></content>
@@ -1974,9 +1986,9 @@
       <tags>
         <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>Nginx</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
-        <tag>Nginx</tag>
         <tag>tsung</tag>
       </tags>
   </entry>

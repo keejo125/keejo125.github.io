@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[mybatis之配置sql语句输出]]></title>
+    <url>%2Fmybatis%E4%B9%8B%E9%85%8D%E7%BD%AEsql%E8%AF%AD%E5%8F%A5%E8%BE%93%E5%87%BA.html</url>
+    <content type="text"><![CDATA[背景目前spring boot项目一般通过mybatis管理数据库连接，在进行数据库mapper测试过程中，往往需要sql语句输出查看具体过程。记录一下配置日志输出。 配置方法有两种方法进行配置： 在spring的application.properties中进行配置： 1mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl 在mybatis-config.xml中进行配置: 1&lt;setting name="logImpl" value="STDOUT_LOGGING"/&gt;]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>MyBatis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[git之大小写不敏感问题]]></title>
     <url>%2Fgit%E4%B9%8B%E5%A4%A7%E5%B0%8F%E5%86%99%E4%B8%8D%E6%95%8F%E6%84%9F%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景一般在包命名中，规范要求都是小写。今天发现有一个包名(com.Mine)有一个大写，于是改成小写(com.mine)后整个提交，然后问题就发生了。 在后续文件更新过程中，发现拉取后的代码，回到了以前的版本。重新拉取代码库之后，之前改成小写的包名又变成了大写。 但是本地git认为已经是小写的了，如果你再把包改成小写，git无法识别到文件变化，导致无法提交。 于是陷入了死循环。 排查解决经过百度发现，原来git系统中默认是不区分大小写的。所以第一次改成小写推送之后，本地认为已经变成小写了，而远端库其实既存在大写，又存在小写两份数据。 在第二次更新代码的时候，其实更新到了小写的文件中，但拉取的时候拉取了大写的旧版本数据。 开启git大小写敏感： 通过运行命令： 1git config core.ignorecase false 这时候，我们再修改包名的大小写，git是可以识别到的。但是由于远端仓库已经目前已经存在了大写和小写两份数据。且我们并无权限直接操作远端仓库，于是该方法无效。 删除该包名，然后再次创建 该方法应该是有效的，但是由于第一次并没删除干净，第二次又提交了一次原大写包名下的内容，导致远程库又一次既存在大写包，又存在小写包，而且内容并不一致，导致工程中出现很多文件找不到对象的报错。 直接修改包名，并删除原大写包和小写包名下的所有内容 这个办法彻底解决了这次的问题。 总结git默认是大小写不敏感的，即使本地设置为大小写敏感，但是远端不敏感，其实用处不好，建议还是都保持一致。 在命名的时候对大小写要特别注意，可以通过删除再次创建的方式进行操作，但是还是要谨慎，如果命名没特殊要求，还是直接修改另一个包名比较方便。]]></content>
@@ -1677,8 +1689,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>pandas</tag>
         <tag>nlp</tag>
+        <tag>pandas</tag>
       </tags>
   </entry>
   <entry>
@@ -1942,8 +1954,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>微信小程序</tag>
         <tag>node</tag>
+        <tag>微信小程序</tag>
       </tags>
   </entry>
   <entry>
@@ -2118,8 +2130,8 @@
         <category>微信小程序</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>小程序</tag>
+        <tag>node</tag>
         <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>

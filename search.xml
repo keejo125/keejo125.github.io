@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[ppt之快速复制形状]]></title>
+    <url>%2Fppt%E4%B9%8B%E5%BF%AB%E9%80%9F%E5%A4%8D%E5%88%B6%E5%BD%A2%E7%8A%B6.html</url>
+    <content type="text"><![CDATA[背景在用PPT画图形的时候，经常涉及到组合和拆分。不知道为什么时不时就会发现图形莫名的被复制了好多遍。这个问题在最近终于找到了原因，原来是个乌龙事件。 快速复制在ppt中，ctrl键是快速复制的快捷键。当我们按住ctrl，然后拖动所选的内容，包括图片、文本框等，就会快速复制一份到拖动的地方。 而在office中，我们经常用ctrl来选中多个对象。所以当按照ctrl去选中多个对象时，如果鼠标发生了移动，那么就会出现一个复制。 建议在ppt中选中多个对象可以使用shift键，这样就可以避免同一个对象因为移动而被复制了多份的问题了。]]></content>
+      <categories>
+        <category>PPT</category>
+      </categories>
+      <tags>
+        <tag>PPT</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[mybatis之配置sql语句输出]]></title>
     <url>%2Fmybatis%E4%B9%8B%E9%85%8D%E7%BD%AEsql%E8%AF%AD%E5%8F%A5%E8%BE%93%E5%87%BA.html</url>
     <content type="text"><![CDATA[背景目前spring boot项目一般通过mybatis管理数据库连接，在进行数据库mapper测试过程中，往往需要sql语句输出查看具体过程。记录一下配置日志输出。 配置方法有两种方法进行配置： 在spring的application.properties中进行配置： 1mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl 在mybatis-config.xml中进行配置: 1&lt;setting name="logImpl" value="STDOUT_LOGGING"/&gt;]]></content>
@@ -2009,9 +2020,9 @@
       <tags>
         <tag>windows</tag>
         <tag>SuSE</tag>
+        <tag>Nginx</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
-        <tag>Nginx</tag>
         <tag>tsung</tag>
       </tags>
   </entry>

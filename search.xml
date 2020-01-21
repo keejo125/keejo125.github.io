@@ -765,8 +765,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -805,8 +805,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -897,8 +897,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1689,8 +1689,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>nlp</tag>
         <tag>pandas</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>
@@ -1904,8 +1904,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -2009,9 +2009,9 @@
       <tags>
         <tag>windows</tag>
         <tag>SuSE</tag>
-        <tag>Nginx</tag>
         <tag>高并发</tag>
         <tag>torando</tag>
+        <tag>Nginx</tag>
         <tag>tsung</tag>
       </tags>
   </entry>

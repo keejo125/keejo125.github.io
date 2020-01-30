@@ -1,0 +1,319 @@
+<!DOCTYPE html><html class="theme-next gemini use-motion" lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#222"><link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css"><meta name="baidu-site-verification" content="aJqK7wk5f5"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=6.6.0"><link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222"><script id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Gemini",version:"6.6.0",sidebar:{position:"left",display:"post",offset:12,b2t:!1,scrollpercent:!1,onmobile:!1},fancybox:!1,fastclick:!1,lazyload:!1,tabs:!0,motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><meta name="description" content="该内容我三节课《中台产品经理》学习笔记，主要以思维导图为主  大纲如下： 中台实践策略从0到1：从无到有设计思路 产品架构：往大的地方去  落地执行：从小的地址做  MVP设计思路 Minimum Viable Product  快速验证目标，快速试错 快速战略卡位 快速满足业务 尽早建立规范    需求筛选 产品内核  系统角度  系统是否可以运转   业务角度  业务是否可以开展   公司角度"><meta name="keywords" content="产品经理,中台"><meta property="og:type" content="article"><meta property="og:title" content="中台产品经理之中台实践策略"><meta property="og:url" content="http://keejo.coding.me/中台产品经理之中台实践策略.html"><meta property="og:site_name" content="郑小凯的个人博客"><meta property="og:description" content="该内容我三节课《中台产品经理》学习笔记，主要以思维导图为主  大纲如下： 中台实践策略从0到1：从无到有设计思路 产品架构：往大的地方去  落地执行：从小的地址做  MVP设计思路 Minimum Viable Product  快速验证目标，快速试错 快速战略卡位 快速满足业务 尽早建立规范    需求筛选 产品内核  系统角度  系统是否可以运转   业务角度  业务是否可以开展   公司角度"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="http://keejo.coding.me/中台产品经理之中台实践策略/中台实践策略.png"><meta property="og:updated_time" content="2020-01-30T08:30:55.468Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="中台产品经理之中台实践策略"><meta name="twitter:description" content="该内容我三节课《中台产品经理》学习笔记，主要以思维导图为主  大纲如下： 中台实践策略从0到1：从无到有设计思路 产品架构：往大的地方去  落地执行：从小的地址做  MVP设计思路 Minimum Viable Product  快速验证目标，快速试错 快速战略卡位 快速满足业务 尽早建立规范    需求筛选 产品内核  系统角度  系统是否可以运转   业务角度  业务是否可以开展   公司角度"><meta name="twitter:image" content="http://keejo.coding.me/中台产品经理之中台实践策略/中台实践策略.png"><link rel="canonical" href="http://keejo.coding.me/中台产品经理之中台实践策略.html"><script id="page.configurations">CONFIG.page={sidebar:""}</script><title>中台产品经理之中台实践策略 | 郑小凯的个人博客</title><noscript><style>.sidebar-inner,.use-motion .brand,.use-motion .collection-title,.use-motion .comments,.use-motion .menu-item,.use-motion .motion-element,.use-motion .pagination,.use-motion .post-block,.use-motion .post-body,.use-motion .post-header{opacity:initial}.use-motion .logo,.use-motion .site-subtitle,.use-motion .site-title{opacity:initial;top:initial}.use-motion .logo-line-before i{left:initial}.use-motion .logo-line-after i{right:initial}</style></noscript></head><body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">郑小凯的个人博客</span><span class="logo-line-after"><i></i></span></a></div><h1 class="site-subtitle" itemprop="description">知识总是要一点点积累的</h1></div><div class="site-nav-toggle"> <button aria-label="切换导航栏"><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br>归档</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br>搜索</a></li></ul><div class="site-search"><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class="search-icon"><i class="fa fa-search"></i></span><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span><div class="local-search-input-wrapper"> <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input"></div></div><div id="local-search-result"></div></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://keejo.coding.me/中台产品经理之中台实践策略.html"><span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person"><meta itemprop="name" content="郑小凯"><meta itemprop="description" content=""><meta itemprop="image" content="/images/random.png"></span><span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization"><meta itemprop="name" content="郑小凯的个人博客"></span><header class="post-header"><h2 class="post-title" itemprop="name headline">中台产品经理之中台实践策略</h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建时间：2020-01-30 16:26:42 / 修改时间：16:30:55" itemprop="dateCreated datePublished" datetime="2020-01-30T16:26:42+08:00">2020-01-30</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/产品/" itemprop="url" rel="index"><span itemprop="name">产品</span></a></span></span> <span class="post-comments-count"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-comment-o"></i></span> <a href="/中台产品经理之中台实践策略.html#comments" itemprop="discussionUrl"><span class="post-meta-item-text">评论数：</span><span class="post-comments-count valine-comment-count" data-xid="/中台产品经理之中台实践策略.html" itemprop="commentCount"></span></a></span> <span id="/中台产品经理之中台实践策略.html" class="leancloud_visitors" data-flag-title="中台产品经理之中台实践策略"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span> <span class="post-meta-item-text">阅读次数：</span><span class="leancloud-visitors-count"></span></span></div></header><div class="post-body" itemprop="articleBody"><p>该内容我三节课《中台产品经理》学习笔记，主要以思维导图为主</p><p><img src="/中台产品经理之中台实践策略/中台实践策略.png" alt="中台实践策略"></p><p>大纲如下：</p><h1 id="中台实践策略"><a href="#中台实践策略" class="headerlink" title="中台实践策略"></a>中台实践策略</h1><h2 id="从0到1：从无到有"><a href="#从0到1：从无到有" class="headerlink" title="从0到1：从无到有"></a>从0到1：从无到有</h2><h3 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h3><ul><li><p>产品架构：往大的地方去</p></li><li><p>落地执行：从小的地址做</p></li><li><p>MVP设计思路</p><p>Minimum Viable Product</p><ul><li>快速验证目标，快速试错</li><li>快速战略卡位</li><li>快速满足业务</li><li>尽早建立规范</li></ul></li></ul><h3 id="需求筛选"><a href="#需求筛选" class="headerlink" title="需求筛选"></a>需求筛选</h3><ul><li><p>产品内核</p><ul><li><p>系统角度</p><ul><li>系统是否可以运转</li></ul></li><li><p>业务角度</p><ul><li>业务是否可以开展</li></ul></li><li><p>公司角度</p><ul><li>是否有存在价值</li></ul></li></ul></li><li><p>战略价值</p><ul><li>对公司的战略价值</li><li>对部门的战略价值</li><li>对产品本身的战略价值</li></ul></li><li><p>开工条件</p><ul><li>产品设计</li><li>业务流程</li><li>业务模式</li><li>技术条件</li><li>业务资质</li></ul></li><li><p>合作意愿</p><ul><li>最具系统改造空间，有痛点，有求与中台</li><li>影响不大，不痛不痒，配合度一般，无难度</li><li>系统稳定，模式成熟，接入成本高，意愿差</li></ul></li></ul><h2 id="从1到N：从有到优"><a href="#从1到N：从有到优" class="headerlink" title="从1到N：从有到优"></a>从1到N：从有到优</h2><h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><ul><li><p>夯实基础能力</p><ul><li>核心功能、关键业务</li><li>借助OKR，避免产品失焦</li></ul></li><li><p>助理运营效率</p><ul><li>与业务频繁接触、了解痛点、明确问题</li></ul></li><li><p>助力研发效率</p><ul><li>平台化：系统集成统一、减少重复开发</li><li>标准化、组件化：支持前台系统灵活调用</li><li>产品化、商业化：支持对外输出</li></ul></li><li><p>提升数据表现</p><ul><li><p>收入指标</p><ul><li>GMV、毛利、客户覆盖率、市场占有率</li></ul></li><li><p>产品指标</p><ul><li>用户停留时长、转化率、跳出率、存留量、UV、PV</li></ul></li><li><p>内部效率（技术指标）</p><ul><li>需求响应速度、系统服务客户数、节约人力成本</li><li>接口调用量、服务响应速度、成功率、bug数</li></ul></li></ul></li></ul><h3 id="需求筛选-1"><a href="#需求筛选-1" class="headerlink" title="需求筛选"></a>需求筛选</h3><ul><li>业务叫的最凶</li><li>客户投诉最多</li><li>老板期望最高</li><li>产品价值最优</li></ul><h2 id="从N到1：推广整合"><a href="#从N到1：推广整合" class="headerlink" title="从N到1：推广整合"></a>从N到1：推广整合</h2><h3 id="挑战"><a href="#挑战" class="headerlink" title="挑战"></a>挑战</h3><ul><li><p>各业务单元系统及运营机制参差不齐</p><ul><li>成熟系统不想被整合</li><li>不成熟系统想借力</li><li>未成立业务需提前预见</li></ul></li><li><p>整合过程中、过程后，业务部门短期得不偿失</p><ul><li>接入成本</li><li>适应成本</li></ul></li><li><p>交出来、还回去</p><ul><li>对不适和中台建立的内容归还业务自行处理</li><li><p>判断标准</p><ul><li>业务角度：业务场景窄，复用低</li><li>研发角度：中台化成本高，研发成本未降低</li></ul></li></ul></li></ul><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ul><li><p>调研现状（摸底）</p><ul><li>简要系统分析报告</li></ul></li><li><p>调研完整业务需求</p><ul><li>需求调研报告</li></ul></li><li><p>对标行业标杆</p><ul><li>竞品分析报告</li></ul></li><li><p>深入梳理现有系统</p><ul><li>详细系统分析报告</li></ul></li><li><p>产品方案设计</p><ul><li>产品设计方案</li></ul></li><li><p>项目推进策略</p><ul><li>项目推进规划</li></ul></li><li><p>项目落地执行</p><ul><li>研发进度排期</li></ul></li></ul></div><div><div style="padding:10px 0;margin:20px auto;width:90%;text-align:center"><div></div> <button id="rewardButton" disable="enable" onclick='var qr=document.getElementById("QR");"none"===qr.style.display?qr.style.display="block":qr.style.display="none"'> <span>打赏</span></button><div id="QR" style="display:none"><div id="wechat" style="display:inline-block"> <img id="wechat_qr" src="/images/wechatpay.jpg" alt="郑小凯 微信支付"><p>微信支付</p></div></div></div></div><footer class="post-footer"><div class="post-tags"> <a href="/tags/产品经理/" rel="tag"># 产品经理</a> <a href="/tags/中台/" rel="tag"># 中台</a></div><div class="post-widgets"><div class="social_share"><div id="needsharebutton-postbottom"><span class="btn"><i class="fa fa-share-alt" aria-hidden="true"></i></span></div></div></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/ppt之快速复制形状.html" rel="next" title="ppt之快速复制形状"><i class="fa fa-chevron-left"></i> ppt之快速复制形状</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"></div></div></footer></div></article></div></div><div class="comments" id="comments"></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview-wrap"> 站点概览</li></ul><div class="site-overview-wrap sidebar-panel"><div class="site-overview"><div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/random.png" alt="郑小凯"><p class="site-author-name" itemprop="name">郑小凯</p><p class="site-description motion-element" itemprop="description"></p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives/"><span class="site-state-item-count">181</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/index.html"><span class="site-state-item-count">38</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/index.html"><span class="site-state-item-count">79</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"><span class="links-of-author-item"><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2tlZWpvMTI1" title="GitHub &rarr; https://github.com/keejo125"><i class="fa fa-fw fa-github"></i> GitHub</span></span><span class="links-of-author-item"><span class="exturl" data-url="bWFpbHRvOmtlZWpvQHFxLmNvbQ==" title="E-Mail &rarr; mailto:keejo@qq.com"><i class="fa fa-fw fa-envelope"></i> E-Mail</span></span></div><script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script><script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script><div class="widget-wrap"><h3 class="widget-title">标签云</h3><div id="myCanvasContainer" class="widget tagcloud"><canvas width="250" height="250" id="resCanvas" style=""><ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/IBM/">IBM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Json/">Json</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/">LeetCode</a><span class="tag-list-count">20</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Map/">Map</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/">MyBatis</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/">Nginx</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Notes/">Notes</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPT/">PPT</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PowerMock/">PowerMock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSL/">SSL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Set/">Set</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SuSE/">SuSE</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VMware/">VMware</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/celery/">celery</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/excel/">excel</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/">flask</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ftp/">ftp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gulp/">gulp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gunicorn/">gunicorn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html/">html</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html5/">html5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iCloud/">iCloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iPhone/">iPhone</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/idea/">idea</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logging/">logging</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logstash/">logstash</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mac/">mac</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/navicat/">navicat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nlp/">nlp</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/node/">node</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/oracle/">oracle</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/">pandas</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">62</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/requests/">requests</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/">selenium</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seo/">seo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/">sql</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlachemy/">sqlachemy</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/">ssh</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/torando/">torando</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tornado/">tornado</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tsung/">tsung</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/">windows</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wireshark/">wireshark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zypper/">zypper</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/中台/">中台</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/产品经理/">产品经理</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人工智能/">人工智能</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单元测试/">单元测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实践/">实践</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小程序/">小程序</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信小程序/">微信小程序</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信开发者工具/">微信开发者工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则表达式/">正则表达式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爬虫/">爬虫</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a><span class="tag-list-count">20</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络/">网络</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/腾讯云/">腾讯云</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/远程控制/">远程控制</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/邮件/">邮件</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阿里云/">阿里云</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/高并发/">高并发</a><span class="tag-list-count">1</span></li></ul></canvas></div></div></div></div><div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#中台实践策略"><span class="nav-number">1.</span> <span class="nav-text">中台实践策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从0到1：从无到有"><span class="nav-number">1.1.</span> <span class="nav-text">从0到1：从无到有</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#设计思路"><span class="nav-number">1.1.1.</span> <span class="nav-text">设计思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#需求筛选"><span class="nav-number">1.1.2.</span> <span class="nav-text">需求筛选</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从1到N：从有到优"><span class="nav-number">1.2.</span> <span class="nav-text">从1到N：从有到优</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#目标"><span class="nav-number">1.2.1.</span> <span class="nav-text">目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#需求筛选-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">需求筛选</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从N到1：推广整合"><span class="nav-number">1.3.</span> <span class="nav-text">从N到1：推广整合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#挑战"><span class="nav-number">1.3.1.</span> <span class="nav-text">挑战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤"><span class="nav-number">1.3.2.</span> <span class="nav-text">步骤</span></a></li></ol></li></ol></li></ol></div></div></div></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2020</span><span class="with-love" id="animate"><i class="fa fa-user"></i></span> <span class="author" itemprop="copyrightHolder">郑小凯</span></div><div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v3.8.0</div> <span class="post-meta-divider">|</span><div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Gemini</span> v6.6.0</div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i></div><div id="needsharebutton-float"><span class="btn"><i class="fa fa-share-alt" aria-hidden="true"></i></span></div></div><script>"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script src="/lib/jquery/index.js?v=2.1.3"></script><script src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script src="/js/src/utils.js?v=6.6.0"></script><script src="/js/src/motion.js?v=6.6.0"></script><script src="/js/src/affix.js?v=6.6.0"></script><script src="/js/src/schemes/pisces.js?v=6.6.0"></script><script src="/js/src/scrollspy.js?v=6.6.0"></script><script src="/js/src/post-details.js?v=6.6.0"></script><script src="/js/src/bootstrap.js?v=6.6.0"></script><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="//unpkg.com/valine/dist/Valine.min.js"></script><script>var GUEST=["nick","mail","link"],guest="nick,mail,link";guest=guest.split(",").filter(function(e){return-1<GUEST.indexOf(e)}),new Valine({el:"#comments",verify:!1,notify:!1,appId:"VReJdi8YmbJWURru28muWMF6-gzGzoHsz",appKey:"bI4Bykk0Rh0JQ90m5JFqrgtu",placeholder:"随便说点什么~",avatar:"wavatar",meta:guest,pageSize:"10",visitor:!0})</script><script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script src="/lib/needsharebutton/needsharebutton.js"></script><script>pbOptions={iconStyle:"box",boxForm:"horizontal",position:"bottomCenter",networks:"Weibo,Wechat,Douban,QQZone,Twitter,Facebook"},new needShareButton("#needsharebutton-postbottom",pbOptions),flOptions={iconStyle:"box",boxForm:"horizontal",position:"middleRight",networks:"Weibo,Wechat,Douban,QQZone,Twitter,Facebook"},new needShareButton("#needsharebutton-float",flOptions)</script><script src="/js/src/js.cookie.js?v=6.6.0"></script><script src="/js/src/scroll-cookie.js?v=6.6.0"></script><script src="/js/src/exturl.js?v=6.6.0"></script></body></html>

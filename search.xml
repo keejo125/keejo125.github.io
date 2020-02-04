@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[中台产品经理之中台产品设计]]></title>
+    <url>%2F%E4%B8%AD%E5%8F%B0%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86%E4%B9%8B%E4%B8%AD%E5%8F%B0%E4%BA%A7%E5%93%81%E8%AE%BE%E8%AE%A1.html</url>
+    <content type="text"><![CDATA[该内容我三节课《中台产品经理》学习笔记，主要以思维导图为主]]></content>
+      <categories>
+        <category>产品</category>
+      </categories>
+      <tags>
+        <tag>产品经理</tag>
+        <tag>中台</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[中台产品经理之中台的调研分析]]></title>
     <url>%2F%E4%B8%AD%E5%8F%B0%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86%E4%B9%8B%E4%B8%AD%E5%8F%B0%E7%9A%84%E8%B0%83%E7%A0%94%E5%88%86%E6%9E%90.html</url>
     <content type="text"><![CDATA[该内容我三节课《中台产品经理》学习笔记，主要以思维导图为主]]></content>
@@ -63,7 +75,7 @@
     <url>%2Fidea%E4%B9%8B%E4%B8%8D%E6%94%AF%E6%8C%81%E5%8F%91%E8%A1%8C%E7%89%88%E6%9C%AC5.html</url>
     <content type="text"><![CDATA[背景在maven项目中，引入一个新的依赖，然后编译运行的时候出现了报错，提示“不支持的发行版本5”，然后终止了编译。报错截图如下： 排查解决由于是新引入依赖导致的，在pom文件中把依赖注释后，问题解决。 但是发现同样的pom在别人的电脑上是可以运行的，那么应该是哪里设置有问题。 经过百度发现，原因在IDEA上。 本机的idea与其他正常运行的idea比版本较新，在idea上有几个配置java版本的地方，需要根据实际情况配置： 在“File” - “Project Structure”中，查看“Project” 和 “Module”下的Java版本是否与本机实际上一致： 在“Settings” - “Build，Execution，Deployment” - “Java Compiler” 中，查看版本是否一致： 可以发现，每个地方的版本都不大相同，新版idea（2019.03）中，默认的版本设置为11，而我本机实际上是8的版本。 把全部改成8之后，问题解决。]]></content>
       <categories>
-        <category>javaÅ</category>
+        <category>java</category>
       </categories>
       <tags>
         <tag>java</tag>

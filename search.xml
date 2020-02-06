@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[vscode之快速生成html5]]></title>
+    <url>%2Fvscode%E4%B9%8B%E5%BF%AB%E9%80%9F%E7%94%9F%E6%88%90html5.html</url>
+    <content type="text"><![CDATA[背景在前端编写中不可避免要写html，vscode有快捷方式可以生成基本的html模板 方法 新建一个文件，命名为demo.html 在页面输入一个! 按tab键即可 模板如下： 123456789101112&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;head&gt; &lt;meta charset="UTF-8"&gt; &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt; &lt;meta http-equiv="X-UA-Compatible" content="ie=edge"&gt; &lt;title&gt;Document&lt;/title&gt;&lt;/head&gt;&lt;body&gt; &lt;/body&gt;&lt;/html&gt;]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>vscode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[压力测试之ab使用]]></title>
     <url>%2F%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E4%B9%8Bab%E4%BD%BF%E7%94%A8.html</url>
     <content type="text"><![CDATA[背景目前开源的压测产品也比较多，由于目前仅进行自测，要求比较简单，综合考虑了一下，选用了ab工具进行，相对简单。 安装使用 安装ab工具 下载工具：https://www.apachehaus.com/cgi-bin/download.plx 这其实是Apache的httpd工具，ad压测工具仅仅是它的一个组件工具，所以我们无需按照这个页面的教程进行安装，直接用就好了。 将下在过来的zip包解压到我们对应的目录，比如： 1D:\httpd-2.4.41-o111c-x64-vc15-r2\ ad工具就在该根目录的bin文件夹下： 1D:\httpd-2.4.41-o111c-x64-vc15-r2\Apache24\bin 打开cmd，并切换到该目录，就可以输入ab -h就可以看到相关帮助了。官网的说明地址如下：http://httpd.apache.org/docs/2.4/programs/ab.html 案例：发起POST请求压测 新建一个txt文件，写好post请求需上送的参数，比如我们上送一个json数据，就新建一个postdata.txt文件，内容如下： 123&#123; "name":"ab"&#125; 打开cmd，运行如下命令： 1D:\httpd-2.4.41-o111c-x64-vc15-r2\Apache24\bin\ab -n 1000 -c 10 -p postdata.txt http://127.0.0.1:8080/test 这里要注意ab的路径、postdata.txt的路径要对。 -n：发起的请求数 -c：并发数 执行完成后即可看到压测结果。]]></content>
@@ -824,8 +835,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -864,8 +875,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -956,8 +967,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1963,8 +1974,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[vuepress部署样式异常问题]]></title>
+    <url>%2Fvuepress%E9%83%A8%E7%BD%B2%E6%A0%B7%E5%BC%8F%E5%BC%82%E5%B8%B8%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景为了方便查看eslint-plugin-vue规则，克隆了一份eslint-plugin-vue的git打算再本地部署一下。 该项目使用了vuepress，在package.json中可以看到，使用命令npm run docs:build可以生成打包完成的部署文件。 在.vuepress目录下的config.js进行打包配置，修改项目根目录（base配置）： 123456789// config.jsmodule.exports = &#123; base: '/eslint-plugin-vue/', title: 'eslint-plugin-vue', description: 'Official ESLint plugin for Vue.js', evergreen: true, head: [ ['link', &#123; rel: 'icon', href: '/favicon.png' &#125;] ], 此时在当前目录启动一个http-server访问会发现样式异常： 解决办法在打包生成的文件dist中新建一个目录eslint-plugin-vue（配置在config.js中的base目录） ，然后将打包生成的如下几个文件拷贝到该目录中。 assets developer-guide rules user-guide 然后再次刷新页面，页面展示就正常了 最终目录结构如下： 12345678910.└── eslint-plugin-vue ├── assets │ ├── css │ ├── fonts │ ├── img │ └── js ├── developer-guide ├── rules └── user-guide 其他说明该项目是基于vuepress的，而vuepress官网基本上是说配置base之后，将打包出来的dist文件整个上传至gitpage的对应目录即可。 但是在本地环境中，还是需要将index.html等一些基础的页面放在当前目录，不然http-server无法读取页面内容。 使用nginx等其他server来配置也是一样需要手工将文件目录分离一下。 如果base配置为空/那么不会有这种问题。 插件git地址：https://github.com/vuejs/eslint-plugin-vue]]></content>
+      <categories>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>vuepres</tag>
+        <tag>nginx</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[数据精细化分析]]></title>
     <url>%2F%E6%95%B0%E6%8D%AE%E7%B2%BE%E7%BB%86%E5%8C%96%E5%88%86%E6%9E%90.html</url>
     <content type="text"><![CDATA[该内容为三节课《数据精细化分析》学习笔记，主要以思维导图为主]]></content>
@@ -1807,8 +1819,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>nlp</tag>
         <tag>pandas</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>

@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[elementUI官方文档内网部署]]></title>
+    <url>%2FelementUI%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2.html</url>
+    <content type="text"><![CDATA[背景为了方便内网查看文档，克隆了一份elementUI的官方文档手册部署到内网，期间也遇到一些问题，记录一下。 内网部署方法 获取官方文档github地址并克隆 在elementUI官网可以很方便的找到饿了么前端的的github地址： https://github.com/ElemeFE/element 打包部署 查看项目的package.json可以看到可以运行的命令，其中如下命令可以进行部署 1"deploy:build": "npm run build:file &amp;&amp; cross-env NODE_ENV=production webpack --config build/webpack.demo.js &amp;&amp; echo element.eleme.io&gt;&gt;examples/element-ui/CNAME" 运行如下命令 1npm run deploy:build 获取打包后的文件 运行完之后生成打包目录：example\element-ui 在element-ui目录启动静态http服务器（需安装npm install http-server） 12345$ http-serverStarting up http-server, serving ./Available on: http://127.0.0.1:8080Hit CTRL-C to stop the server 在没有外网的情况下，发现白屏了。打开开发者工具会发现有几个js获取不到。 配置公共js 在外网环境下载这几个js文件： vue-router.min.js vue.runtime.min.js highlight.pack.b1f71b31-3c07-11e9-ba1a-55bba1877129.js 在element-ui目录下建立common目录，并把上面几个js文件放在其中 打开element-ui目录下的index.html文件修改js路径 原html为： 123&lt;script src="//shadow.elemecdn.com/npm/vue@2.5.21/dist/vue.runtime.min.js"&gt;&lt;/script&gt;&lt;script src="//shadow.elemecdn.com/npm/vue-router@3.0.1/dist/vue-router.min.js"&gt;&lt;/script&gt;&lt;script src="//shadow.elemecdn.com/app/element/highlight.pack.b1f71b31-3c07-11e9-ba1a-55bba1877129.js"&gt;&lt;/script&gt; 修改为： 123&lt;script src="common/vue.runtime.min.js"&gt;&lt;/script&gt;&lt;script src="common/vue-router.min.js"&gt;&lt;/script&gt;&lt;script src="common/highlight.pack.b1f71b31-3c07-11e9-ba1a-55bba1877129.js"&gt;&lt;/script&gt; 注意：以上目录可自行修改，可以匹配上就可以了。 再次打开浏览器页面，发现页面正常了 总结在静态网站搬运的时候尤其要注意打包路径的问题，如果在nginx上部署，也要注意下nginx配置上的路径和转换。]]></content>
+      <categories>
+        <category>node</category>
+      </categories>
+      <tags>
+        <tag>nginx</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[vuepress部署样式异常问题]]></title>
     <url>%2Fvuepress%E9%83%A8%E7%BD%B2%E6%A0%B7%E5%BC%8F%E5%BC%82%E5%B8%B8%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景为了方便查看eslint-plugin-vue规则，克隆了一份eslint-plugin-vue的git打算再本地部署一下。 该项目使用了vuepress，在package.json中可以看到，使用命令npm run docs:build可以生成打包完成的部署文件。 在.vuepress目录下的config.js进行打包配置，修改项目根目录（base配置）： 123456789// config.jsmodule.exports = &#123; base: '/eslint-plugin-vue/', title: 'eslint-plugin-vue', description: 'Official ESLint plugin for Vue.js', evergreen: true, head: [ ['link', &#123; rel: 'icon', href: '/favicon.png' &#125;] ], 此时在当前目录启动一个http-server访问会发现样式异常： 解决办法在打包生成的文件dist中新建一个目录eslint-plugin-vue（配置在config.js中的base目录） ，然后将打包生成的如下几个文件拷贝到该目录中。 assets developer-guide rules user-guide 然后再次刷新页面，页面展示就正常了 最终目录结构如下： 12345678910.└── eslint-plugin-vue ├── assets │ ├── css │ ├── fonts │ ├── img │ └── js ├── developer-guide ├── rules └── user-guide 其他说明该项目是基于vuepress的，而vuepress官网基本上是说配置base之后，将打包出来的dist文件整个上传至gitpage的对应目录即可。 但是在本地环境中，还是需要将index.html等一些基础的页面放在当前目录，不然http-server无法读取页面内容。 使用nginx等其他server来配置也是一样需要手工将文件目录分离一下。 如果base配置为空/那么不会有这种问题。 插件git地址：https://github.com/vuejs/eslint-plugin-vue]]></content>
@@ -8,8 +19,8 @@
         <category>node</category>
       </categories>
       <tags>
-        <tag>vuepres</tag>
         <tag>nginx</tag>
+        <tag>vuepres</tag>
       </tags>
   </entry>
   <entry>

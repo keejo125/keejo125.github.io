@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[elementUI官方文档内网部署]]></title>
     <url>%2FelementUI%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2.html</url>
-    <content type="text"><![CDATA[背景为了方便内网查看文档，克隆了一份elementUI的官方文档手册部署到内网，期间也遇到一些问题，记录一下。 内网部署方法 获取官方文档github地址并克隆 在elementUI官网可以很方便的找到饿了么前端的的github地址： https://github.com/ElemeFE/element 打包部署 查看项目的package.json可以看到可以运行的命令，其中如下命令可以进行部署 1"deploy:build": "npm run build:file &amp;&amp; cross-env NODE_ENV=production webpack --config build/webpack.demo.js &amp;&amp; echo element.eleme.io&gt;&gt;examples/element-ui/CNAME" 运行如下命令 1npm run deploy:build 获取打包后的文件 运行完之后生成打包目录：example\element-ui 在element-ui目录启动静态http服务器（需安装npm install http-server） 12345$ http-serverStarting up http-server, serving ./Available on: http://127.0.0.1:8080Hit CTRL-C to stop the server 在没有外网的情况下，发现白屏了。打开开发者工具会发现有几个js获取不到。 配置公共js 在外网环境下载这几个js文件： vue-router.min.js vue.runtime.min.js highlight.pack.b1f71b31-3c07-11e9-ba1a-55bba1877129.js 在element-ui目录下建立common目录，并把上面几个js文件放在其中 打开element-ui目录下的index.html文件修改js路径 原html为： 123&lt;script src="//shadow.elemecdn.com/npm/vue@2.5.21/dist/vue.runtime.min.js"&gt;&lt;/script&gt;&lt;script src="//shadow.elemecdn.com/npm/vue-router@3.0.1/dist/vue-router.min.js"&gt;&lt;/script&gt;&lt;script src="//shadow.elemecdn.com/app/element/highlight.pack.b1f71b31-3c07-11e9-ba1a-55bba1877129.js"&gt;&lt;/script&gt; 修改为： 123&lt;script src="common/vue.runtime.min.js"&gt;&lt;/script&gt;&lt;script src="common/vue-router.min.js"&gt;&lt;/script&gt;&lt;script src="common/highlight.pack.b1f71b31-3c07-11e9-ba1a-55bba1877129.js"&gt;&lt;/script&gt; 注意：以上目录可自行修改，可以匹配上就可以了。 再次打开浏览器页面，发现页面正常了 总结在静态网站搬运的时候尤其要注意打包路径的问题，如果在nginx上部署，也要注意下nginx配置上的路径和转换。]]></content>
+    <content type="text"><![CDATA[背景为了方便内网查看文档，克隆了一份elementUI的官方文档手册部署到内网，期间也遇到一些问题，记录一下。 内网部署方法 获取官方文档github地址并克隆 在elementUI官网可以很方便的找到饿了么前端的的github地址： https://github.com/ElemeFE/element 打包部署 查看项目的package.json可以看到可以运行的命令，其中如下命令可以进行部署 1"deploy:build": "npm run build:file &amp;&amp; cross-env NODE_ENV=production webpack --config build/webpack.demo.js &amp;&amp; echo element.eleme.io&gt;&gt;examples/element-ui/CNAME" 运行如下命令 1npm run deploy:build 获取打包后的文件 运行完之后生成打包目录：example\element-ui 在element-ui目录启动静态http服务器（需安装npm install http-server） 12345$ http-serverStarting up http-server, serving ./Available on: http://127.0.0.1:8080Hit CTRL-C to stop the server 在没有外网的情况下，发现白屏了。打开开发者工具会发现有几个js获取不到。 配置公共js 在外网环境下载这几个js文件： vue-router.min.js vue.runtime.min.js highlight.pack.b1f71b31-3c07-11e9-ba1a-55bba1877129.js color-brewer.css font_137970_p1tpzmomxp9cnmi.css 在element-ui目录下建立common目录，并把上面几个js和css文件放在其中 打开element-ui目录下的index.html文件修改js路径 原html为： 12345678// header 部分&lt;link rel="stylesheet" href="//at.alicdn.com/t/font_137970_p1tpzmomxp9cnmi.css"&gt;&lt;link rel="stylesheet" href="//shadow.elemecdn.com/npm/highlight.js@9.3.0/styles/color-brewer.css"&gt;// body 部分&lt;script src="//shadow.elemecdn.com/npm/vue@2.5.21/dist/vue.runtime.min.js"&gt;&lt;/script&gt;&lt;script src="//shadow.elemecdn.com/npm/vue-router@3.0.1/dist/vue-router.min.js"&gt;&lt;/script&gt;&lt;script src="//shadow.elemecdn.com/app/element/highlight.pack.b1f71b31-3c07-11e9-ba1a-55bba1877129.js"&gt;&lt;/script&gt; 修改为： 123456 &lt;link rel="stylesheet" href="common/font_137970_p1tpzmomxp9cnmi.css"&gt;&lt;link rel="stylesheet" href="common/color-brewer.css"&gt;&lt;script src="common/vue.runtime.min.js"&gt;&lt;/script&gt;&lt;script src="common/vue-router.min.js"&gt;&lt;/script&gt;&lt;script src="common/highlight.pack.b1f71b31-3c07-11e9-ba1a-55bba1877129.js"&gt;&lt;/script&gt; 注意：以上目录可自行修改，可以匹配上就可以了。 再次打开浏览器页面，发现页面正常了 总结在静态网站搬运的时候尤其要注意打包路径的问题，如果在nginx上部署，也要注意下nginx配置上的路径和转换。]]></content>
       <categories>
         <category>node</category>
       </categories>
@@ -906,8 +906,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -946,8 +946,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1038,8 +1038,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1830,8 +1830,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>pandas</tag>
         <tag>nlp</tag>
+        <tag>pandas</tag>
       </tags>
   </entry>
   <entry>
@@ -2045,8 +2045,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>

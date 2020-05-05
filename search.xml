@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[vue中props命名问题]]></title>
+    <url>%2Fvue%E4%B8%ADprops%E5%91%BD%E5%90%8D%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景在使用vscode+eslint-plugin-vue进行自动化代码风格修正的时候，发现插件自动把’template’部分的props的驼峰命名的变量改成了短横线（kebab-case）命名，而组件声明部分仍然为驼峰（camelCase）形式。 但实际并没有影响组件的正常运行。对这个问题查了下官网，原来是有说明的。 vue中Prop的命名官网针对prop命名有如下说明：Prop 的大小写 (camelCase vs kebab-case) HTML 中的 attribute 名是大小写不敏感的，所以浏览器会把所有大写字符解释为小写字符。这意味着当你使用 DOM 中的模板时，camelCase (驼峰命名法) 的 prop 名需要使用其等价的 kebab-case (短横线分隔命名) 命名 给了如下的例子： 1234567Vue.component(&apos;blog-post&apos;, &#123; // 在 JavaScript 中是 camelCase 的 props: [&apos;postTitle&apos;], template: &apos;&lt;h3&gt;&#123;&#123; postTitle &#125;&#125;&lt;/h3&gt;&apos;&#125;)&lt;!-- 在 HTML 中是 kebab-case 的 --&gt;&lt;blog-post post-title=&quot;hello!&quot;&gt;&lt;/blog-post&gt; 官网建议是在template部分中，我们使用短横线命名，post-title，在组件中使用postTitle是完全没有问题的。 一般情况，我们可能习惯了两边保持一致，都使用驼峰命名（即在template中也使用postTitle）。这样其实在html渲染的时候，还是会先渲染成post-title。 或者我们再js部分命名props时，也使用短横线post-title也是可以的。]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[elementUI官方文档内网部署]]></title>
     <url>%2FelementUI%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2.html</url>
     <content type="text"><![CDATA[背景为了方便内网查看文档，克隆了一份elementUI的官方文档手册部署到内网，期间也遇到一些问题，记录一下。 内网部署方法 获取官方文档github地址并克隆 在elementUI官网可以很方便的找到饿了么前端的的github地址： https://github.com/ElemeFE/element 打包部署 查看项目的package.json可以看到可以运行的命令，其中如下命令可以进行部署 1"deploy:build": "npm run build:file &amp;&amp; cross-env NODE_ENV=production webpack --config build/webpack.demo.js &amp;&amp; echo element.eleme.io&gt;&gt;examples/element-ui/CNAME" 运行如下命令 1npm run deploy:build 获取打包后的文件 运行完之后生成打包目录：example\element-ui 在element-ui目录启动静态http服务器（需安装npm install http-server） 12345$ http-serverStarting up http-server, serving ./Available on: http://127.0.0.1:8080Hit CTRL-C to stop the server 在没有外网的情况下，发现白屏了。打开开发者工具会发现有几个js获取不到。 配置公共js 在外网环境下载这几个js文件： vue-router.min.js vue.runtime.min.js highlight.pack.b1f71b31-3c07-11e9-ba1a-55bba1877129.js color-brewer.css font_137970_p1tpzmomxp9cnmi.css 在element-ui目录下建立common目录，并把上面几个js和css文件放在其中 打开element-ui目录下的index.html文件修改js路径 原html为： 12345678// header 部分&lt;link rel="stylesheet" href="//at.alicdn.com/t/font_137970_p1tpzmomxp9cnmi.css"&gt;&lt;link rel="stylesheet" href="//shadow.elemecdn.com/npm/highlight.js@9.3.0/styles/color-brewer.css"&gt;// body 部分&lt;script src="//shadow.elemecdn.com/npm/vue@2.5.21/dist/vue.runtime.min.js"&gt;&lt;/script&gt;&lt;script src="//shadow.elemecdn.com/npm/vue-router@3.0.1/dist/vue-router.min.js"&gt;&lt;/script&gt;&lt;script src="//shadow.elemecdn.com/app/element/highlight.pack.b1f71b31-3c07-11e9-ba1a-55bba1877129.js"&gt;&lt;/script&gt; 修改为： 123456 &lt;link rel="stylesheet" href="common/font_137970_p1tpzmomxp9cnmi.css"&gt;&lt;link rel="stylesheet" href="common/color-brewer.css"&gt;&lt;script src="common/vue.runtime.min.js"&gt;&lt;/script&gt;&lt;script src="common/vue-router.min.js"&gt;&lt;/script&gt;&lt;script src="common/highlight.pack.b1f71b31-3c07-11e9-ba1a-55bba1877129.js"&gt;&lt;/script&gt; 注意：以上目录可自行修改，可以匹配上就可以了。 再次打开浏览器页面，发现页面正常了 总结在静态网站搬运的时候尤其要注意打包路径的问题，如果在nginx上部署，也要注意下nginx配置上的路径和转换。]]></content>

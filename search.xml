@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[js耗时统计方法]]></title>
+    <url>%2Fjs%E8%80%97%E6%97%B6%E7%BB%9F%E8%AE%A1%E6%96%B9%E6%B3%95.html</url>
+    <content type="text"><![CDATA[背景在前端性能排查的时候，需要在js代码中记录时间，并通过console输出耗时情况。 耗时统计方法 开始位置记录时间 1const startTime = new Date().getTime() 结束位置记录输出耗时 1console.log('耗时：' + (new Date().getTime() - startTime) / 1000 + 's') 注意事项由于js是默认是异步的，尤其要注意是否需要await或者在.then里面输出。]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>javascript</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[vue中props命名问题]]></title>
     <url>%2Fvue%E4%B8%ADprops%E5%91%BD%E5%90%8D%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景在使用vscode+eslint-plugin-vue进行自动化代码风格修正的时候，发现插件自动把’template’部分的props的驼峰命名的变量改成了短横线（kebab-case）命名，而组件声明部分仍然为驼峰（camelCase）形式。 但实际并没有影响组件的正常运行。对这个问题查了下官网，原来是有说明的。 vue中Prop的命名官网针对prop命名有如下说明：Prop 的大小写 (camelCase vs kebab-case) HTML 中的 attribute 名是大小写不敏感的，所以浏览器会把所有大写字符解释为小写字符。这意味着当你使用 DOM 中的模板时，camelCase (驼峰命名法) 的 prop 名需要使用其等价的 kebab-case (短横线分隔命名) 命名 给了如下的例子： 1234567Vue.component(&apos;blog-post&apos;, &#123; // 在 JavaScript 中是 camelCase 的 props: [&apos;postTitle&apos;], template: &apos;&lt;h3&gt;&#123;&#123; postTitle &#125;&#125;&lt;/h3&gt;&apos;&#125;)&lt;!-- 在 HTML 中是 kebab-case 的 --&gt;&lt;blog-post post-title=&quot;hello!&quot;&gt;&lt;/blog-post&gt; 官网建议是在template部分中，我们使用短横线命名，post-title，在组件中使用postTitle是完全没有问题的。 一般情况，我们可能习惯了两边保持一致，都使用驼峰命名（即在template中也使用postTitle）。这样其实在html渲染的时候，还是会先渲染成post-title。 或者我们再js部分命名props时，也使用短横线post-title也是可以的。]]></content>
@@ -1841,8 +1852,8 @@
         <category>网络爬虫与数据分析</category>
       </categories>
       <tags>
-        <tag>nlp</tag>
         <tag>pandas</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>
@@ -2270,8 +2281,8 @@
         <category>node</category>
       </categories>
       <tags>
-        <tag>node</tag>
         <tag>javascript</tag>
+        <tag>node</tag>
       </tags>
   </entry>
   <entry>
@@ -2282,9 +2293,9 @@
         <category>微信小程序</category>
       </categories>
       <tags>
+        <tag>javascript</tag>
         <tag>小程序</tag>
         <tag>node</tag>
-        <tag>javascript</tag>
         <tag>腾讯云</tag>
         <tag>微信开发者工具</tag>
       </tags>

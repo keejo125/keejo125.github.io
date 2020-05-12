@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[引入SortableJS实现elementUItable拖动效果]]></title>
+    <url>%2F%E5%BC%95%E5%85%A5SortableJS%E5%AE%9E%E7%8E%B0elementUItable%E6%8B%96%E5%8A%A8%E6%95%88%E6%9E%9C.html</url>
+    <content type="text"><![CDATA[背景目前elmenetUI的表格是不支持拖动的，但表格行拖动要求往往比较常见。通过引入sortableJS可以方便的让elementUI组件中的table支持拖动效果。 网上大部分方案如下： sortableJS + 原生table sortableJS + 原生table + elementUI样式 使用vueDraggable组件：https://github.com/SortableJS/Vue.Draggable 直接操作elementUI的table组件较少，记录一下。 实施方案 引入sorableJS 1npm install sortablejs --save 创建表格组件，需要注意的是，必须设置row-key属性，否则在拖动展示时，会变成乱序 template部分 12345&lt;el-table row-key="id" :data="tableData" style="width: 100%"&gt; &lt;el-table-column prop="date" label="日期" width="180"&gt;&lt;/el-table-column&gt; &lt;el-table-column prop="name" label="姓名" width="180"&gt;&lt;/el-table-column&gt; &lt;el-table-column prop="address" label="地址"&gt;&lt;/el-table-column&gt; &lt;/el-table&gt; data部分 123456789101112131415161718192021222324252627282930data() &#123; return &#123; tableData: [ &#123; id: "1", date: "2016-05-02", name: "王小虎", address: "上海市普陀区金沙江路 1518 弄" &#125;, &#123; id: "2", date: "2016-05-04", name: "王小虎", address: "上海市普陀区金沙江路 1517 弄" &#125;, &#123; id: "3", date: "2016-05-01", name: "王小虎", address: "上海市普陀区金沙江路 1519 弄" &#125;, &#123; id: "4", date: "2016-05-03", name: "王小虎", address: "上海市普陀区金沙江路 1516 弄" &#125; ] &#125;; &#125;, 配置拖动操作 引入sorable 1import Sortable from "sortablejs"; 初始化sorable，并配置拖动事件 每次拖动的onEnd部分，通过index来splice来截取行，添加行，来更新data。 123456789101112131415mounted() &#123; this.rowDrag(); &#125;, methods: &#123; rowDrag() &#123; const tbody = document.querySelector(".el-table__body-wrapper tbody"); const that = this; Sortable.create(tbody, &#123; onEnd(&#123; newIndex, oldIndex &#125;) &#123; const currentRow = that.tableData.splice(oldIndex, 1)[0]; that.tableData.splice(newIndex, 0, currentRow); &#125; &#125;); &#125; &#125; 注意事项 如果没有设置row-key，拖动后会乱序 建议可以设置两个tableData，tableData 和 tableDataCopy。table用于展示，每次拖动后修改tableDataCopy。这样不影响拖动的展示效果，也可以实现拖动的数据处理。再某些特殊表格拖动时，如果修改的是同一个tableDate，可能会出现一些异常。 一个页面如果有多个表格，在拖动方法的时候需要注意，不建议有多个表格。]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>javascript</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[js耗时统计方法]]></title>
     <url>%2Fjs%E8%80%97%E6%97%B6%E7%BB%9F%E8%AE%A1%E6%96%B9%E6%B3%95.html</url>
     <content type="text"><![CDATA[背景在前端性能排查的时候，需要在js代码中记录时间，并通过console输出耗时情况。 耗时统计方法 开始位置记录时间 1const startTime = new Date().getTime() 结束位置记录输出耗时 1console.log('耗时：' + (new Date().getTime() - startTime) / 1000 + 's') 注意事项由于js是默认是异步的，尤其要注意是否需要await或者在.then里面输出。]]></content>
@@ -928,8 +939,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -968,8 +979,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -1060,8 +1071,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -2067,8 +2078,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>celery</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>

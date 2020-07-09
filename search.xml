@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[vue-cli工程启动异常问题:no-octal-escape.js:41]]></title>
+    <url>%2Fvue-cli%E5%B7%A5%E7%A8%8B%E5%90%AF%E5%8A%A8%E5%BC%82%E5%B8%B8%E9%97%AE%E9%A2%98-no-octal-escape-js-41.html</url>
+    <content type="text"><![CDATA[背景在使用vue-cli脚手架工具进行项目搭建时，按照官方教程完成搭建运行时，竟然启动报错了，报错信息如下： 12345678error in ./src/main.jsSyntax Error: F:\test\node_modules\eslint\lib\rules\no-octal-escape.js:41/$(?:[^\]|\.)*?\([0-3][0-7]&#123;1,2&#125;|[4-7][0-7]|0(?=[89])|[1-7])/su^SyntaxError: Invalid regular expression flagsat Array.forEach () 解决办法这个问题其实并不是eslint规则的不通过的问题，而是提示说eslint包的no-octal-escape.js这个文件存在错误。 到eslint的github上issue里找了下，果然发现了一些痕迹： https://github.com/eslint/eslint/issues/13207 官方认为可能是由于环境的node版本过低导致的，查看了一下本地的node版本，是8.9.4。 解决办法也就明确了： 升级node版本 降低eslint版本 为保持环境node版本一直，我最终将eslint版本降低到6.0.1，问题解决。]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[vue路由传参隐藏参数问题]]></title>
     <url>%2Fvue%E8%B7%AF%E7%94%B1%E4%BC%A0%E5%8F%82%E9%9A%90%E8%97%8F%E5%8F%82%E6%95%B0%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景在微前端项目中不同页面切换时，原采用this.$router.push({name:xxx,query:{xxx:xxx})的方式。 跳转时的参数会直接以键值对的形式展示在url上。考虑到安全问题需要将传递参数隐藏。 路由传参方案 使用params方式传参 将路由切换时的传参方式由query修改为params，那么参数不会显示在url中，可实现项目要求。 this.$router.push({name:xxx, params:{xxx:xxx}}) 但是由于页面初始化时（created阶段）会使用到传递的参数，于是在后期测试时发现，该方式下，如果用户刷新页面，那么页面初始化时获取不到传递的参数会产生报错。 那么要解决传参后页面刷新问题，产生了两个方案： 使用动态路由方式（折中方案X） 将原路由跳转方式改为动态路由方式/route/:id 该方案需要注意以下几点： 在微前端情况下，不同的路由被认为是不同的组件。故原query方式下，该页面只允许打开一次，改为动态路由之后，当动态路由上的值不同，就可以打开多个。需要注意业务逻辑是否允许。 动态路由需注意每个参数是否都是必填，是否存在中间某个参数为空的情况。对于可能为空的参数，需要增加分隔符来确保位置准确。 该方案仍会将传参的值显示在url路径上，虽然隐藏了key值，所以仅作为折中方案，并不推荐。 在store中保留传递参数 在每次路由跳转进入之后，需做一个判断。如果携带了参数，那么将参数保存（或者更新）到store中，如果未携带参数，那么从store中获取对应的参数。 该方案用到了本地存储，需要注意的是： 如果该页面涉及到多个组件，那么子组件需注意不能直接从$route.params取值了，需通过props传递，或者从store中获取。 结论最后采取的方案是：将路由传参方式修改为params，然后在store中保存路由传参的方式。 注意事项由于前期子组件中存在直接从$route.params取值的情况，于是试图将路由跳转传递的参数重新放回到$route.params中，尝试如下： 在created中直接赋值：this.$route.params={} 程序报错，提示$route.params只读，故该方案失败。 使用this.$route.replace({name:xxx,params{xxx:xxx}})重定向 试图通过重定向的方式，再次将参数写入$route中，事实证明，当路由跳转到自身时，不会再次出发created()钩子函数，故该方案也失败。]]></content>

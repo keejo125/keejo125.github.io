@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[nginx提供文件共享下载及中文乱码问题]]></title>
+    <url>%2Fnginx%E6%8F%90%E4%BE%9B%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB%E4%B8%8B%E8%BD%BD%E5%8F%8A%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景经常会有将本地文件目录通过web方式共享出去的需求，发现nginx自带了这方面的功能，可以快速提供网页版的文件浏览器。 配置方法在nginx的配置文件中进行如下配置： 123456789101112server &#123; listen 2333; server_name localhost; location / &#123; root D:\share autoindex on; autoindex_exact_size off; autoindex_localtime on; charset utf-8; &#125;&#125; 说明： 重点是需要配置autoindex on，配置之后就就可以展示root目录中的文件目录了。 其余配置作用如下： autoindex_exact_size:默认为on，显示出文件的确切大小，单位是bytes。改为off后，显示出文件的大概大小，单位是kB或者MB或者GB。 autoindex_localtime :默认为off，显示的文件时间为GMT时间。改为on后，显示的文件时间为文件的服务器时间。 charset：配置nginx处理的字符集，否则可能会出现中文乱码的问题。]]></content>
+      <categories>
+        <category>中间件</category>
+        <category>nginx</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[vue-cli工程启动异常问题:no-octal-escape.js:41]]></title>
     <url>%2Fvue-cli%E5%B7%A5%E7%A8%8B%E5%90%AF%E5%8A%A8%E5%BC%82%E5%B8%B8%E9%97%AE%E9%A2%98-no-octal-escape-js-41.html</url>
     <content type="text"><![CDATA[背景在使用vue-cli脚手架工具进行项目搭建时，按照官方教程完成搭建运行时，竟然启动报错了，报错信息如下： 12345678error in ./src/main.jsSyntax Error: F:\test\node_modules\eslint\lib\rules\no-octal-escape.js:41/$(?:[^\]|\.)*?\([0-3][0-7]&#123;1,2&#125;|[4-7][0-7]|0(?=[89])|[1-7])/su^SyntaxError: Invalid regular expression flagsat Array.forEach () 解决办法这个问题其实并不是eslint规则的不通过的问题，而是提示说eslint包的no-octal-escape.js这个文件存在错误。 到eslint的github上issue里找了下，果然发现了一些痕迹： https://github.com/eslint/eslint/issues/13207 官方认为可能是由于环境的node版本过低导致的，查看了一下本地的node版本，是8.9.4。 解决办法也就明确了： 升级node版本 降低eslint版本 为保持环境node版本一直，我最终将eslint版本降低到6.0.1，问题解决。]]></content>

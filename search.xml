@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[PowerMock之Checked exception is invalid for this method]]></title>
+    <url>%2FPowerMock%E4%B9%8BChecked-exception-is-invalid-for-this-method.html</url>
+    <content type="text"><![CDATA[背景在调用第三方RPC接口时，该接口未声明异常，但可能由于网络或者其他原因导致运行异常，故手工增加了try…catch…来进行异常处理。 故在使用PowerMock进行单元测试时，需要对这个未声明异常的方法进行Mock抛出异常。 开始代码如下： 1PowerMockito.when(rpcService.invoke(aaa)).thenThrow(new Exception()) 结果运行的时候提示如下错误： 1Checked exception is invalid for this method! 解决办法该提示其实是告诉我们必须抛出一个特定的异常，而不能直接抛出Exception异常。 所以直接将抛出的异常改成RuntimeException即可。 1PowerMockito.when(rpcService.invoke(aaa)).thenThrow(new RuntimeException())]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>PowerMock</tag>
+        <tag>单元测试</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[nginx提供文件共享下载及中文乱码问题]]></title>
     <url>%2Fnginx%E6%8F%90%E4%BE%9B%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB%E4%B8%8B%E8%BD%BD%E5%8F%8A%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[背景经常会有将本地文件目录通过web方式共享出去的需求，发现nginx自带了这方面的功能，可以快速提供网页版的文件浏览器。 配置方法在nginx的配置文件中进行如下配置： 123456789101112server &#123; listen 2333; server_name localhost; location / &#123; root D:\share autoindex on; autoindex_exact_size off; autoindex_localtime on; charset utf-8; &#125;&#125; 说明： 重点是需要配置autoindex on，配置之后就就可以展示root目录中的文件目录了。 其余配置作用如下： autoindex_exact_size:默认为on，显示出文件的确切大小，单位是bytes。改为off后，显示出文件的大概大小，单位是kB或者MB或者GB。 autoindex_localtime :默认为off，显示的文件时间为GMT时间。改为on后，显示的文件时间为文件的服务器时间。 charset：配置nginx处理的字符集，否则可能会出现中文乱码的问题。]]></content>
@@ -973,8 +986,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1013,8 +1026,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -1105,8 +1118,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>
@@ -2112,8 +2125,8 @@
         <category>flask</category>
       </categories>
       <tags>
-        <tag>celery</tag>
         <tag>python</tag>
+        <tag>celery</tag>
       </tags>
   </entry>
   <entry>

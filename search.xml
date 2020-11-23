@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[nginx缓存实践]]></title>
+    <url>%2Fnginx%E7%BC%93%E5%AD%98%E5%AE%9E%E8%B7%B5.html</url>
+    <content type="text"><![CDATA[背景Nginx可作为前端静态的部署容器，也可作为代理服务器。在做为代理服务器的时候，可以通过配置缓存将代理内容缓存在本地，从而加速后续的访问。 配置方法及说明 http模块部分 1234567891011121314151617181920212223 #gzipgzip on; #开启gzip压缩输出，减少网络传输 gzip_min_length 1k; #设置允许压缩的页面最小字节数，建议设置成大于等于1K gzip_buffers 4 64k; #设置系统获取几个单位的缓存用于存储gzip的压缩结果数据流 gzip_http_version 1.1; #用于识别http协议的版本 gzip_comp_level 2; #压缩比，1－9 gzip_types text/plain application/x-javascript text/css application/xml application/javascript image/jpg image/jpeg image/gif image/png; #指定压缩类型gzip_vary on; #在响应头加个Vary:Accept-Encoding#proxyproxy_connect_timeout 30; #代理连接超时时间proxy_read_timeout 130; #代理接收超时时间proxy_send_timeout 30; #代理发送超时时间proxy_buffering on; #开启代理缓冲proxy_buffer_size 4k; #从后端服务器读取用户头信息的缓冲区大小proxy_buffers 512 4k; #proxy_buffers缓冲区，nginx针对单个连接缓存来自后端的响应proxy_busy_buffers_size 64k; #高负荷下缓冲大小proxy_cache_path html/cache levels=1:2 keys_zone=cache_img:500m inactive=10d max_size=5g use_temp_path=off; #代理缓存配置# levels=1:2表示创建两级目录结构，缓存目录的第一集目录是1个字符，第二级目录是2个字符，比如/data/cache/proxy_cache/2/e8/，如果都放在一级目录下的话，文件量很大，会导致文件访问变慢。# keys_zone=cache_img:500m 设置存储所有缓存kye和相关信息的共享内存区，1M大约能存储8000个key。#inactive=10d 指定被缓存的内容多久不被访问将从缓存中移除，以保证内容的新鲜，默认为10分钟。#max_size=5g 最大缓存阈值，&quot;cache manager&quot; 进程会监控最大缓存大小，当缓存达到该阈值时，该进程姜葱缓存中移除最最少访问的内容（LRU）。#use_temp_path 如果为on，则内容首先被写入临时文件（proxy_temp_path），然后重命名到proxy_cache_path指定的目录；如果设置为off，则内容直接被写入到proxy_cache_path指定的目录，如果需要cache建议off。 location模块部分 12345678910111213# 图片缓存 location /fss_test &#123; proxy_pass http://localhost:81; proxy_cache cache_img; # 指定使用哪个共享内存区存储缓存信息，在http中配置cache_img proxy_cache_key $request_uri; #设置缓存使用的key，默认为完整的访问URL，根据实际情况设置缓存key proxy_cache_valid 200 304 302 10m; #为不同的响应状态码设置缓存时间。如果是proxy_cache_vaild 5s，则200、301、302响应都将被缓存。 add_header cache-status $upstream_cache_status; #在响应头中添加缓存命中的状态。 proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504; #当对缓存内容的过期时间不敏感，或者后端服务处问题时，及时缓存的内容不新鲜也总比返回错误给用户强（托底），此时缓存状态为STALE。 proxy_hide_header &quot;Vary&quot;; # 由于调用自身，解决header有两个Vary的问题 # proxy_cache_revalidate on; #当缓存过期后，如果开启此参数，则会发出一次if-modified-since或if-none-match条件请求，如果后端返回304，则此时缓存状态为REVALIDATED，我们将得到两个好处，节省带宽和减少磁盘的次数。需要后端对该请求进行处理 proxy_cache_lock on; #当多个客户端同时请求同一份内容时，如果开启proxy_cache_lock，则只有一个请求被发送到后端。其他请求将等待该请求的返回。当第一个请求返回后，其他相同请求将从缓存中获取内容返回。当第一个请求超过了proxy_cache_lock_timeout超时时间（默认5s），则其他请求将同时请求到后端来获取响应，且响应不会被缓存。启用lock可以应对Dog-pile effect（缓存风暴，又称狗堆） proxy_cache_lock_age 5;#超时后第二个请求会进来构建缓存，并且第一个请求直接返回 &#125; 注意事项 nginx可以作为前端静态资源的容器（配置root），也可作为代理转发（配置proxy_pass)。只有当作为代理转发的才会产生缓存。即同时配置root和proxy cache是不生效的。 proxy_cache_revalidate配置开启可以通过发起请求确认是否有变化来刷新缓存，但需要后端配合处理。若后端未对包含if-modified-since或if-none-match条件的请求返回，则会等待请求超时后（默认为1min），再次请求后端。]]></content>
+      <categories>
+        <category>中间件</category>
+        <category>nginx</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[PowerMock之Checked exception is invalid for this method]]></title>
     <url>%2FPowerMock%E4%B9%8BChecked-exception-is-invalid-for-this-method.html</url>
     <content type="text"><![CDATA[背景在调用第三方RPC接口时，该接口未声明异常，但可能由于网络或者其他原因导致运行异常，故手工增加了try…catch…来进行异常处理。 故在使用PowerMock进行单元测试时，需要对这个未声明异常的方法进行Mock抛出异常。 开始代码如下： 1PowerMockito.when(rpcService.invoke(aaa)).thenThrow(new Exception()) 结果运行的时候提示如下错误： 1Checked exception is invalid for this method! 解决办法该提示其实是告诉我们必须抛出一个特定的异常，而不能直接抛出Exception异常。 所以直接将抛出的异常改成RuntimeException即可。 1PowerMockito.when(rpcService.invoke(aaa)).thenThrow(new RuntimeException())]]></content>

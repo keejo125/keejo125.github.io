@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Error异常捕获方法]]></title>
+    <url>%2FError%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E6%96%B9%E6%B3%95.html</url>
+    <content type="text"><![CDATA[背景在调用Class.forName(name)方法后去java类的时候，当该类不存在时，会报出错误，而且没有被捕获到。 12345try&#123; System.out.println(Class.forName("xxx"));&#125;catch(Exception e) &#123; System.out.println("error")&#125; 解决办法在使用Class.forName()方法时，当类不存在时，会抛出NoClassDefFoundError。这是个错误类，而非异常。所以不会被Exception捕获，可以通过Error捕获。 捕获方法： 12345try&#123; System.out.println(Class.forName("xxx"));&#125;catch(Error e)&#123; System.out.println("error")&#125;]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>oracle</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[prettier版本导致无法编译问题]]></title>
     <url>%2Fprettier%E7%89%88%E6%9C%AC%E5%AF%BC%E8%87%B4%E6%97%A0%E6%B3%95%E7%BC%96%E8%AF%91%E9%97%AE%E9%A2%98.html</url>
     <content type="text"><![CDATA[问题现象今天在vscode写代码的时候，ide提示paas这个单词拼写有误，于是顺手通过vscode自带的问题修复，将paas加入到用户词典。然后问题就出来了，保存之后vscode自动重新编译就提示失败，报错信息如下： 1234Failed to compile with 1 errorsThis dependency was not found:* module in ./node_modules/prettier/third-party.jsTo install it, you can run: npm install --save module 根据提示安装了module这个包之后，反而报错问题更多了。 解决办法在网上查了下，仅找到了一个类似的案例，提示third-party.js异常的。 https://stackoverflow.com/questions/63635792/syntaxerror-unexpected-reserved-word-prettier-third-party-js/65320398 最后文章作者是用修改prettier的版本解决的。将prettier的版本升级到2.1.1 参考该作者的方法检查了下，当前我用的版本是1.18.2，将其指定到2.1.1后再次编译，果然好了。 故上述问题应该也是版本冲突的原因了。]]></content>
@@ -322,9 +334,9 @@
         <category>数据库</category>
       </categories>
       <tags>
+        <tag>oracle</tag>
         <tag>数据库</tag>
         <tag>MySQL</tag>
-        <tag>oracle</tag>
       </tags>
   </entry>
   <entry>
@@ -448,8 +460,8 @@
         <category>oracle</category>
       </categories>
       <tags>
-        <tag>数据库</tag>
         <tag>oracle</tag>
+        <tag>数据库</tag>
         <tag>sql</tag>
       </tags>
   </entry>
@@ -1046,8 +1058,8 @@
         <category>oracle</category>
       </categories>
       <tags>
-        <tag>数据库</tag>
         <tag>oracle</tag>
+        <tag>数据库</tag>
         <tag>sql</tag>
       </tags>
   </entry>
@@ -1073,8 +1085,8 @@
         <category>oracle</category>
       </categories>
       <tags>
-        <tag>数据库</tag>
         <tag>oracle</tag>
+        <tag>数据库</tag>
         <tag>sql</tag>
       </tags>
   </entry>
@@ -2335,8 +2347,8 @@
         <category>oracle</category>
       </categories>
       <tags>
-        <tag>数据库</tag>
         <tag>oracle</tag>
+        <tag>数据库</tag>
         <tag>sql</tag>
       </tags>
   </entry>

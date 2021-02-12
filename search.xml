@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Mybatis之tab的坑]]></title>
+    <url>%2FMybatis%E4%B9%8Btab%E7%9A%84%E5%9D%91.html</url>
+    <content type="text"><![CDATA[背景最近在springboot项目中，拉取最新代码后运行报了个mybatis的错。 1Error creating document instanc. Cause: org.xml.sax.SAXParseException:.... 排查解决根据报错，应该是mapper.xml有问题。 用idea打开对象的mapper文件，发现果然是有标红的。标红的地方提示： 1The content of element type "resultMap" must match *(constructor?,id*,result*,association*,collection*,discriminator?)*. 但mapper文件看起来毫无问题。一点点注释排查之后发现，有个resultMap标签前面有个tab，删掉或者换成空格之后就好了。 原因百度查了一圈，的确有些同学也遇到了这个mybatis的坑。 在用mybatis的时候，切忌不要用tab。]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>MyBatis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Error异常捕获方法]]></title>
     <url>%2FError%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E6%96%B9%E6%B3%95.html</url>
     <content type="text"><![CDATA[背景在调用Class.forName(name)方法后去java类的时候，当该类不存在时，会报出错误，而且没有被捕获到。 12345try&#123; System.out.println(Class.forName("xxx"));&#125;catch(Exception e) &#123; System.out.println("error")&#125; 解决办法在使用Class.forName()方法时，当类不存在时，会抛出NoClassDefFoundError。这是个错误类，而非异常。所以不会被Exception捕获，可以通过Error捕获。 捕获方法： 12345try&#123; System.out.println(Class.forName("xxx"));&#125;catch(Error e)&#123; System.out.println("error")&#125;]]></content>

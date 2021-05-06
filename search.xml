@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[css之元素换行处理]]></title>
+    <url>%2Fcss%E4%B9%8B%E5%85%83%E7%B4%A0%E6%8D%A2%E8%A1%8C%E5%A4%84%E7%90%86.html</url>
+    <content type="text"><![CDATA[需求根据后端返回的列表长度，渲染出N个方块。5个方块一行，超过5个则自动换行。 最终效果如下： 实现方法使用元素换行，重点在于需要给外层的容器固定宽度，然后采用flex或float均可实现。 使用flex布局，结合flex-warp进行换行。参考代码如下： 123456789101112131415161718192021222324&lt;html&gt;&lt;head&gt;&lt;style type="text/css"&gt;.container &#123;display: flex; width: 120px; flex-wrap: wrap&#125;.block &#123;width: 14px; height: 14px; background: green; margin: 4px;&#125;&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div class="container"&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt; 使用float布局，超过宽度自动换行 123456789101112131415161718192021222324&lt;html&gt;&lt;head&gt;&lt;style type="text/css"&gt;.container &#123; width: 120px;&#125;.block &#123;width: 14px; height: 14px; background: green; margin: 4px; float: left&#125;&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div class="container"&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>css</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Mybatis之tab的坑]]></title>
     <url>%2FMybatis%E4%B9%8Btab%E7%9A%84%E5%9D%91.html</url>
     <content type="text"><![CDATA[背景最近在springboot项目中，拉取最新代码后运行报了个mybatis的错。 1Error creating document instanc. Cause: org.xml.sax.SAXParseException:.... 排查解决根据报错，应该是mapper.xml有问题。 用idea打开对象的mapper文件，发现果然是有标红的。标红的地方提示： 1The content of element type "resultMap" must match *(constructor?,id*,result*,association*,collection*,discriminator?)*. 但mapper文件看起来毫无问题。一点点注释排查之后发现，有个resultMap标签前面有个tab，删掉或者换成空格之后就好了。 原因百度查了一圈，的确有些同学也遇到了这个mybatis的坑。 在用mybatis的时候，切忌不要用tab。]]></content>

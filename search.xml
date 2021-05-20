@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[F2之tooltip重复展示问题]]></title>
+    <url>%2FF2%E4%B9%8Btooltip%E9%87%8D%E5%A4%8D%E5%B1%95%E7%A4%BA%E9%97%AE%E9%A2%98.html</url>
+    <content type="text"><![CDATA[背景F2是阿里出品的专门为移动端数据可视化方案，在移动端做图表展示的时候可以较好的展示。 当展示面积图时，配合使用的tooltip会展示重复的信息，如下图所示： 问题原因先查询下github上F2项目的issue，可以发现这是个存量的bug https://github.com/antvis/F2/issues/440 当需要展示面积图时，配置代码如下： 12chart.line().position('date*value')chart.area().position('date*value') 当line和area的颜色一致时，会进行去重处理，而当颜色不一致时，会分别展示line的值和area的值。从而导致重复展示的问题。 https://github.com/antvis/g2plot/commit/e03be5f95ad814713759e5156769d9aa9f5be4fe.patch 上图中，area采用了渐变色效果，与line的颜色不一致。 解决办法 方法一：将line和area的颜色保持一致即可，但当一个图表上有多条线时，颜色会覆盖，不美观。 方法二：对于多条线的场景只使用line，不用area。 方法三：在配置chart.tooltip的时候，在onshow方法中手工进行去重。需要注意的是，由于tooltip所使用的items具体地址不详，不能简单的通过去重和重新赋值的方法。需要使用splice的方式直接修改原来的items进行。实现代码如下： 1234567891011onShow: function(ev) &#123; const items = ev.items for (let i = 0; i &lt; items.length; i++) &#123; for (let j = i + 1; j &lt; items.length; j++) &#123; if (items[i].name === items[j].name) &#123; items.splice(j, 1) j-- &#125; &#125; &#125; &#125;]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>F2</tag>
+        <tag>数据可视化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[css之元素换行处理]]></title>
     <url>%2Fcss%E4%B9%8B%E5%85%83%E7%B4%A0%E6%8D%A2%E8%A1%8C%E5%A4%84%E7%90%86.html</url>
     <content type="text"><![CDATA[需求根据后端返回的列表长度，渲染出N个方块。5个方块一行，超过5个则自动换行。 最终效果如下： 实现方法使用元素换行，重点在于需要给外层的容器固定宽度，然后采用flex或float均可实现。 使用flex布局，结合flex-warp进行换行。参考代码如下： 123456789101112131415161718192021222324&lt;html&gt;&lt;head&gt;&lt;style type="text/css"&gt;.container &#123;display: flex; width: 120px; flex-wrap: wrap&#125;.block &#123;width: 14px; height: 14px; background: green; margin: 4px;&#125;&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div class="container"&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt; 使用float布局，超过宽度自动换行 123456789101112131415161718192021222324&lt;html&gt;&lt;head&gt;&lt;style type="text/css"&gt;.container &#123; width: 120px;&#125;.block &#123;width: 14px; height: 14px; background: green; margin: 4px; float: left&#125;&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div class="container"&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;div class="block" &gt;&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;]]></content>
